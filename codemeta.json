@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "http://orcid.org/0000-0003-0363-9929",
+      "@type": "Person",
+      "email": "kevin.shook@usask.ca",
+      "name": "Kevin Shook",
+      "affiliation": "Centre for Hydrology, University of Saskatchewan"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/CentreForHydrology/WDPM",
+  "datePublished": "2020-05-04",
+  "dateModified": "2020-05-04",
+  "dateCreated": "2020-05-04",
+  "description": "Models the spatial distribution of water on the Canadian Prairies",
+  "keywords": "C, Python, hydrology, Canadian Prairies, water distribution, connected fraction",
+  "license": "GPL v3.0",
+  "title": "WDPM, the Wetland DEM Ponding Model",
+  "version": "v1.0.0"
+}
