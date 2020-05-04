@@ -15,14 +15,13 @@ authors:
     orcid: 0000-0002-3513-6237
     affiliation: 2
   - name: John W Pomeroy
-    orcid:
     affiliation: 1
 affiliations:
  - name: Centre for Hydrology, University of Saskatchewan
    index: 1
  - name: Department of Computer Science, University of Saskatchewan
    index: 2
-date: 07 November 2019
+date: 03 May 2020
 bibliography: paper.bib
 
 # Summary
