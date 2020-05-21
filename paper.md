@@ -34,7 +34,7 @@ The hydrography of the Prairies of western North America, including Canada, is u
 The WDPM was developed to solve the problems described above. The model distributes simulated water over a digital elevation model (DEM), which is an array of land surface elevations. The program has three modules:
 - **add**, which adds specified depth of water to the DEM. Addition of water could be caused by rainfall, but in the Prairies it is more commonly due to snowmelt runoff.
 - **subtract**, which subtracts a specified depth of water from the DEM. Subtraction of water may be due to infiltration to the soils, but in the Prairies it is more commonly caused by evaporation.
--  **drain**, which drains water from the lowest point in the DEM.
+- **drain**, which drains water from the lowest point in the DEM.
 
 WDPM does not attempt to compute the magnitudes of the additive or subtractive fluxes, which must be established by measurement or through the use of a physically based model of Prairie hydrology such as the Cold Regions Hydrological Modelling platform (CRHM) [@pomeroyColdRegionsHydrological2007].
 
@@ -42,7 +42,7 @@ The  model output is the depth of water over each cell of the DEM.
  
 All modules use the algorithm of @shapiroMAPCALCAlgebraGIS1992 to redistribute the simulated water. This algorithm is iterative. In each iteration, the excess water, which is the depth of water required to be removed to make the surface flat, is computed for each DEM cell. As shown in \autoref{fig:waterflow}, water can be distributed to a lower cell or to a higher cell with insufficient water. In each iteration, up one-eighth of available water can be distributed to any of the neighbouring cells. The algorithm is repeated until the water surface is flat, which is determined by the difference between successive values of the matrix every 1000 iterations. When the maximum cell difference is within a specified tolerance or the volume of water draining in 1000 iterations is smaller than a specified value, then the program terminates and the water depth is written to an ArcGIS .asc (ASCII) file.
 
-![Schematic diagram of water flow from a DEM cell using WDPM.\label{fig:waterflow}](WaterFlowDiagram.png).
+![Schematic diagram of water flow from a DEM cell using WDPM.\label{fig:waterflow}](WaterFlowDiagram.png)
 
 
 The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), it was decided to refactor the code. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code, as it permits the use of CPUs and/or GPUs. Using OpenCL, the matrix was subdivided as shown in \autoref{fig:opencl}, where each colour represents a separate thread. Because the matrix locations of each thread are separated by 3 rows and columns, the points are independent and race conditions are avoided. The refactoring of the WDPM was successful in greatly reducing execution time. 
@@ -79,6 +79,7 @@ The WDPM is licensed under GPL 3.
 
 # Acknowlegements
 
-Funding for the refactoring of WDPM was provided by Agriculture and Agri-food Canada.
+Funding for the refactoring of WDPM was provided by Agriculture and Agri-food Canada. Much of the OpenCL code
+and the Python GUI were written by Oluwaseun Sharomi.
 
 # References
