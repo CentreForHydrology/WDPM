@@ -47,7 +47,7 @@ All modules use the algorithm of @shapiroMAPCALCAlgebraGIS1992 to redistribute t
 
 The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), it was decided to refactor the code. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code, as it permits the use of CPUs and/or GPUs. Using OpenCL, the matrix was subdivided as shown in \autoref{fig:opencl}, where each colour represents a separate thread. Because the matrix locations of each thread are separated by 3 rows and columns, the points are independent and race conditions are avoided. The refactoring of the WDPM was successful in greatly reducing execution time. 
 
-![Schematic diagram of WDPM matrix subdivision for OpenCL. Each colour represents a separate thread. \label{fig:opencl}](opencl4.png).
+![Schematic diagram of WDPM matrix subdivision for OpenCL. Each colour represents a separate thread.\label{fig:opencl}](opencl4.png)
 
 
 # Examples
@@ -60,12 +60,11 @@ When the **drain** module was applied, the water in the stream channel was able 
 
 Following the addition and draining of water, 200 mm of water was removed using the **subtract** module. As shown in \autoref{fig:subtract}, the ponds are reduced in size, and many of the smaller ones have disappeared.
 
-![Plot of WDPM simulation of water (in blue) and dry ground for addition of 300 mm of water. Smith Creek sub-basin 5. \label{fig:add}](300_0_0_0_u.png).
+![Plot of WDPM simulation of water (in blue) and dry ground for addition of 300 mm of water. Smith Creek sub-basin 5.\label{fig:add}](300_0_0_0_u.png)
 
+![Plot of WDPM simulation of water (in blue) and dry ground for draining folllowing the addition of 300 mm of water. Smith Creek sub-basin 5.\label{fig:drain}](300_0_0_0_d.png)
 
-![Plot of WDPM simulation of water (in blue) and dry ground for draining folllowing the addition of 300 mm of water. Smith Creek sub-basin 5. \label{fig:drain}](300_0_0_0_d.png).
-
-![Plot of WDPM simulation of water (in blue) and dry ground for the removal of 200mm of water following the addition of 300 mm of water and draining. Smith Creek sub-basin 5. \label{fig:subtract}](300_200_0_0_d.png).
+![Plot of WDPM simulation of water (in blue) and dry ground for the removal of 200mm of water following the addition of 300 mm of water and draining. Smith Creek sub-basin 5.\label{fig:subtract}](300_200_0_0_d.png)
 
 
 The WDPM is very computationally expensive, requiring many thousands or millions of iterations, particularly to drain water from the DEM (the addition and subtraction of water being less expensive). 
