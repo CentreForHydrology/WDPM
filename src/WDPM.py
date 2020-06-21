@@ -7,6 +7,7 @@ import subprocess
 import threading
 import time
 import textwrap
+import lzma
 
 lock = threading.Lock()
 try:
@@ -1305,7 +1306,7 @@ class Size(wx.Frame):
 
 	def OnOpen1(self,event):
 		self.dirname1 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname1,"", "*.asc", wx.OPEN)   
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname1,"", "*.asc", wx.FD_OPEN)   
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename1=dlg.GetFilename()
 			self.dirname1=dlg.GetPath()
@@ -1315,7 +1316,7 @@ class Size(wx.Frame):
 
 	def OnOpen2(self,event):
 		self.dirname2 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname2,"", "*.asc", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname2,"", "*.asc", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			    self.filename2=dlg.GetFilename()
 			    self.dirname2=dlg.GetPath()
@@ -1325,7 +1326,7 @@ class Size(wx.Frame):
 		
 	def OnOpen3(self,event):
 		self.dirname3 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname3,"", "*.asc", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname3,"", "*.asc", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename3=dlg.GetFilename()
 			self.dirname3=dlg.GetPath()
@@ -1335,7 +1336,7 @@ class Size(wx.Frame):
 		
 	def OnOpen4(self,event):
 		self.dirname4 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname4,"", "*.asc", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname4,"", "*.asc", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename4=dlg.GetFilename()
 			self.dirname4=dlg.GetPath()
@@ -1345,7 +1346,7 @@ class Size(wx.Frame):
 		
 	def OnOpen5(self,event):
 		self.dirname5 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname5,"", "*.txt", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname5,"", "*.txt", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename5=dlg.GetFilename()
 			self.dirname5=dlg.GetPath()
