@@ -684,7 +684,6 @@ class Size(wx.Frame):
 		reportfilepath=open(os.path.join(self.txt0a.GetValue(),"cmap.txt"), "w")
 		platx = platform.system()
 		if platx=='Darwin' or platx=='Linux':
-			print("CALLING CMAP BLACK")
 			cmd = ['./cmap_black.sh', self.txt9xa.GetValue()]
 			self.processx = subprocess.Popen(cmd, stdout=reportfilepath, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
 		else:
