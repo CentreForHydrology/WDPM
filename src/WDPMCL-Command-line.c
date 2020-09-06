@@ -99,22 +99,22 @@ cl_device_id create_device(int opencl) {
    /* Access a device */
    if (opencl == 0){
       err = clGetDeviceIDs(platforms[opencl+1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
+      if( (err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM) ) {
 	  err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (try switching to CPU)");
 	  exit(1);   
       }
    }
    
    if (opencl == 1){
       err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
+      if( (err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM) ) {
 	  err = clGetDeviceIDs(platforms[opencl-1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (try switching to GPU)");
 	  exit(1);   
       }
    }
