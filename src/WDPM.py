@@ -77,7 +77,7 @@ class CharValidator(wx.PyValidator):
 
 	def OnChar(self, evt):
 		key=chr(evt.GetKeyCode())
-		if self.flag == "no-alpha" and key in string.letters:
+		if self.flag == "no-alpha" and key in string.ascii_letters:
 		    return
 		if self.flag == "no-digit" and key in string.digits:
 		    return
@@ -522,7 +522,7 @@ class Size(wx.Frame):
 		if res==wx.ID_YES:
 		    self.process.kill()
 		    self.endbutton.Enable(False)
-		    print "==== Simulation Terminated ===="
+		    print("==== Simulation Terminated ====")
 		    
 		dlg.Destroy()
 
@@ -574,7 +574,7 @@ class Size(wx.Frame):
 			try:
 			    os.remove(reportfilepath)
 			except Exception:
-			    print "Unable to remove file: report.txt"
+			    print ("Unable to remove file: report.txt")
 
 	def enqueue_output(self, cmd):
 		lock.acquire()
@@ -589,7 +589,7 @@ class Size(wx.Frame):
 				readstuff = self.rep1.read()
 				if readstuff != '':
 				    #self.redir.write(readstuff)
-				    print "Please wait ........................"
+				    print ("Please wait ........................")
 				if self.process0.poll() is not None:
 				    self.flagz = 0
 				    break
@@ -671,7 +671,7 @@ class Size(wx.Frame):
 
 	def OnOpenDEM(self,event):
 		self.dirname5x = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename5=dlg.GetFilename()
 			self.dirname5x=dlg.GetPath()
@@ -684,6 +684,7 @@ class Size(wx.Frame):
 		reportfilepath=open(os.path.join(self.txt0a.GetValue(),"cmap.txt"), "w")
 		platx = platform.system()
 		if platx=='Darwin' or platx=='Linux':
+			print("CALLING CMAP BLACK")
 			cmd = ['./cmap_black.sh', self.txt9xa.GetValue()]
 			self.processx = subprocess.Popen(cmd, stdout=reportfilepath, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
 		else:
@@ -768,7 +769,7 @@ class Size(wx.Frame):
 			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 			   
 			if plat=='Darwin' or plat=='Linux':
@@ -836,7 +837,7 @@ class Size(wx.Frame):
 			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 
 			if demfilename=='':
@@ -924,7 +925,7 @@ class Size(wx.Frame):
 			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 
 			if method2=="GPU":
