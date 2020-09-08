@@ -3,11 +3,13 @@
 #define KERNEL_FUNC2 "subtract"
 #define KERNEL_FUNC3 "ddrain"
 
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#define CL_TARGET_OPENCL_VERSION 220
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+//#define CL_TARGET_OPENCL_VERSION 220
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
+#include <sys/time.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -98,23 +100,23 @@ cl_device_id create_device(int opencl) {
 
    /* Access a device */
    if (opencl == 0){
-      err = clGetDeviceIDs(platforms[opencl+1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
-	  err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
+      err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
+      if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
+	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (Try switch to CPU)");
 	  exit(1);   
       }
    }
    
    if (opencl == 1){
-      err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
-	  err = clGetDeviceIDs(platforms[opencl-1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
+      err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
+      if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
+	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (Try switvh to GPU");
 	  exit(1);   
       }
    }
