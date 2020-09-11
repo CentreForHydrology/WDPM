@@ -27,7 +27,7 @@ bibliography: paper.bib
 
 # Summary
 
-The hydrography of the Prairies of western North America, including Canada, is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detended and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in Prairie basins dominated by depressional storage. When the depressions are filled, the detended water may overflow to another depression, though a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated Prairie basin that contributes flow to the outlet will change dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models. 
+The hydrography of the Prairies of western North America, including Canada, is unusual in that the landscape is flat and recently formed due to the effects of Pleistocene glaciation and a semi-arid climate since Holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detained by and sometimes stored in the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in Prairie basins dominated by depressional storage. When the depressions are filled, the detained water may overflow to another depression, though a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated Prairie basin that contributes flow to the outlet will change dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models. 
 
 # Program description
 
@@ -54,7 +54,7 @@ The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepre
 
 The WDPM is distributed with a sample DEM data set, which represents a small (~10 km^2^) sub-basin in southeastern Saskatchewan. The sub-basin (Smith Creek sub-basin 5) is described fully in @shookStorageDynamicsSimulations2013. The DEM measured 471 x 483 elements with a horizontal resolution of 10 m and a vertical precision of less than 1 mm.
 
-In the first step, 300 mm of water was added, using the **add** module, distributed evenly over the basin. All of the water was allowed to run off. Prior to the addition of water, the basin was empty.  \autoref{fig:add} shows the extent of water (depths greater than 1 mm) resulting from the WDPM simulation. The accumulation of water in the depressions is clearly visible. Because the edge of the DEM acts like a dam, water in the stream channel is unable to leave the basin, causing it to back up. This unrealistic behaviour was the reason for the development of the **drain** module.
+In the first step, 300 mm of water were added, using the **add** module, distributed evenly over the basin. All of the water was allowed to run off. Prior to the addition of water, the basin was empty.  \autoref{fig:add} shows the extent of water (depths greater than 1 mm) resulting from the WDPM simulation. The accumulation of water in the depressions is clearly visible. Because the edge of the DEM acts like a dam, water in the stream channel is unable to leave the basin, causing it to back up. This unrealistic behaviour was the reason for the development of the **drain** module.
 
 When the **drain** module was applied, the water in the stream channel was able to drain from the lowest point in basin, which is located at the basin outlet at the mouth of the stream. As shown in \autoref{fig:drain}, the resulting distribution of water is a more realistic representation of the state of the basin after the cessation of runoff. 
 
@@ -68,13 +68,13 @@ Following the addition and draining of water, 200 mm of water was removed using 
 
 
 The WDPM is very computationally expensive, requiring many thousands or millions of iterations, particularly to drain water from the DEM (the addition and subtraction of water being less expensive). 
-In the examples above, the addition of 300 mm of water, smoothed to a resolution of 100 mm, required 7000 iterations. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 332,000 iterations and took 981 s on a system with an Intel i7 (4 cores, 8 threads) running Linux. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations - the minimum possible. 
+In the examples above, the addition of 300 mm of water, smoothed to a resolution of 100 mm, required 7000 iterations. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 332,000 iterations and took 981 s on a system with an Intel i7 CPU (4 cores, 8 threads) running Linux. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations - the minimum possible. 
 
-Despite the computational cost, the program's great advantage is that it can simulate any storage state within a complex system of Prairie depressions.  This capability makes it useful for mapping the flooplains from non-riverine floods in the Canadian Prairies. The program outputs have been verified by remote sensing of recent floods in this region, and WDPM has been used to develop a simpler parametric model that is more easily incorporated in hydrological models [@shookStorageDynamicsSimulations2013]. The program's floodplain mapping capabiltiies
+Despite the computational cost, the program's great advantage is that it can simulate any storage state within a complex system of Prairie depressions.  This capability makes it useful for mapping the flooplains from non-riverine floods in the Canadian Prairies. The program outputs have been verified by remote sensing of recent floods in this region, and WDPM has been used to develop a simpler parametric model that is more easily incorporated in hydrological models [@shookStorageDynamicsSimulations2013]. The program's floodplain mapping capabilties
 have made it useful for operational flood hazard mapping [@armstrongUSINGWETLANDPONDING2013a] in the Prairies by several government agencies and by private consultants.
 
 # Licence
-The WDPM is licensed under GPL 3.
+The WDPM is licensed under the GNU GPL v3.
 
 # Acknowlegements
 
