@@ -1,4 +1,3 @@
-import wx
 import os
 import sys
 import string
@@ -7,20 +6,17 @@ import subprocess
 import threading
 import time
 import textwrap
-import lzma
+
+import wx
+from queue import Queue, Empty  # python 3.x
 
 lock = threading.Lock()
-try:
-    from Queue import Queue, Empty
-except ImportError:
-    from queue import Queue, Empty  # python 3.x
 
-
-if os.path.isfile('runoff.cl')==True:
+if os.path.isfile('runoff.cl'):
     pass
 else:
     raise AssertionError("runoff.cl not present. Exiting now")
-if os.path.isfile('colormap_black.txt')==True:
+if os.path.isfile('colormap_black.txt'):
     pass
 else:
     raise AssertionError("colormap_black.txt not present. Exiting now")
@@ -29,26 +25,15 @@ platx = platform.system()
 
 
 if platx=='Darwin' or platx=='Linux':
-	if os.path.isfile('cmap_black.sh')==True:
+	if os.path.isfile('cmap_black.sh'):
 	    pass
 	else:
 	    raise AssertionError("cmap_black.sh not present. Exiting now")
 
-	if os.path.isfile('WDPMCL')==True:
+	if os.path.isfile('WDPMCL'):
 	    pass
 	else:
 	    raise AssertionError("WDPMCL not present. Exiting now")
-else:
-	import win32com.client
-	if os.path.isfile('cmap.bat')==True:
-	    pass
-	else:
-	    raise AssertionError("cmap.bat not present. Exiting now")
-	
-	if os.path.isfile('WDPMCL.exe')==True:
-	    pass
-	else:
-	    raise AssertionError("WDPMCL.exe not present. Exiting now")
 
 class RedirectText:
 	def __init__(self,aWxTextCtrl):
@@ -59,7 +44,7 @@ class RedirectText:
 
 class CharValidator(wx.PyValidator):
 	def __init__(self,flag):
-		wx.PyValidator.__init__(self)
+		wx.Validator.__init__(self)
 		self.flag=flag
 		self.Bind(wx.EVT_CHAR, self.OnChar)
 
@@ -77,7 +62,7 @@ class CharValidator(wx.PyValidator):
 
 	def OnChar(self, evt):
 		key=chr(evt.GetKeyCode())
-		if self.flag == "no-alpha" and key in string.letters:
+		if self.flag == "no-alpha" and key in string.ascii_letters:
 		    return
 		if self.flag == "no-digit" and key in string.digits:
 		    return
@@ -85,26 +70,26 @@ class CharValidator(wx.PyValidator):
 
 class Size(wx.Frame):
 	def __init__(self, parent, id_):
-		wx.Frame.__init__(self, parent, id_, 'WDPM Program', size=(1366, 768),
+		wx.Frame.__init__(self, parent, id_, 'Wetland DEM Ponding Model', size=(1300, 850),
 				  style=wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.RESIZE_BORDER|wx.SYSTEM_MENU|
 				  wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
-		self.panel = wx.PyScrolledWindow(self, id_)
+		self.panel = wx.ScrolledWindow(self, id_)
 		#self.panel=wx.Panel(self)
-		x=25
+		x=35
 		y=5
 		
-		self.lblname9xa = wx.StaticText(self.panel, label="Output to .PNG", pos=(10,23*x))
-		self.txt9xa = wx.TextCtrl(self.panel, -1, pos=(8*x, 23*x), size=(2.5*x, x-y))
-		self.button19xa = wx.Button(self.panel, -1, "Browse", pos=(10.5*x,23*x), size=(2.5*x, x-y))
+		self.lblname9xa = wx.StaticText(self.panel, label="Output to .PNG", pos=(10,25*x))
+		self.txt9xa = wx.TextCtrl(self.panel, -1, pos=(round(8*x), round(25*x)), size=(round(2.5*x), round(x-y)))
+		self.button19xa = wx.Button(self.panel, -1, "Browse", pos=(round(10.5*x),round(25*x)), size=(round(2.5*x), round(x-y)))
 		self.button19xa.Bind(wx.EVT_BUTTON, self.OnOpenDEM)
-		self.Convert=wx.Button(self.panel, label="Convert", pos=(13*x,23*x), size=(2.5*x, x-y))
+		self.Convert=wx.Button(self.panel, label="Convert", pos=(round(13*x),round(25*x)), size=(round(2.5*x), round(x-y)))
 		self.Convert.Bind(wx.EVT_BUTTON, self.BitmapConvert)
 		self.txt9xa.Enable(False)
 		self.button19xa.Enable(False)
 		self.Convert.Enable(False)
-		self.runbutton=wx.Button(self.panel, label="Start", pos=(10,22*x), size=(2.5*x, x-y))
-		self.clearbutton=wx.Button(self.panel, label="Clear", pos=(8*x,22*x), size=(2.5*x, x-y))
-		self.endbutton=wx.Button(self.panel, label="End", pos=(13*x,22*x), size=(2.5*x, x-y))
+		self.runbutton=wx.Button(self.panel, label="Start", pos=(round(10),round(24*x)), size=(round(2.5*x), round(x-y)))
+		self.clearbutton=wx.Button(self.panel, label="Clear", pos=(8*x,24*x), size=(round(2.5*x), x-y))
+		self.endbutton=wx.Button(self.panel, label="End", pos=(13*x,24*x), size=(round(2.5*x), x-y))
 		self.Bind(wx.EVT_BUTTON, self.RunSim, self.runbutton)
 		self.Bind(wx.EVT_BUTTON, self.OnClearScreen, self.clearbutton)		
 		self.Bind(wx.EVT_BUTTON, self.OnAbortButton, self.endbutton)
@@ -116,8 +101,8 @@ class Size(wx.Frame):
 		filez = wx.Menu()
 		quit = wx.MenuItem(filez, 1, '&Quit\tCtrl+Q')
 		about = wx.MenuItem(filez, 3, '&About\tCtrl+A')
-		filez.AppendItem(quit)
-		filez.AppendItem(about)
+		filez.Append(quit)
+		filez.Append(about)
 		self.Bind(wx.EVT_MENU, self.OnQuit, id=1)
 		self.Bind(wx.EVT_MENU, self.OnAbout, id=3)
 		menubar.Append(filez, '&File')
@@ -126,22 +111,23 @@ class Size(wx.Frame):
 
 		self.lblname0a = wx.StaticText(self.panel, label="Working Directory:", pos=(10,x))
 		self.txt0a = wx.TextCtrl(self.panel, -1, pos=(8*x, x), size=(5*x, x-y))
-		self.button00a = wx.Button(self.panel, -1, "Browse", pos=(13*x,x), size=(2.5*x, x-y))
+		self.button00a = wx.Button(self.panel, -1, "Browse", pos=(13*x,x), size=(round(2.5*x), x-y))
 		self.button00a.Bind(wx.EVT_BUTTON, self.OnOpen0)
 		methods = [" ", "add", "subtract", "drain", "TextFile"]
 		self.lblname0 = wx.StaticText(self.panel, label="Methods:", pos=(10,2*x))
 		self.combo = wx.ComboBox(self.panel, -1, pos=(8*x, 2*x), size=(5*x, x-y), choices=methods, style=wx.CB_READONLY)
-		wx.EVT_COMBOBOX(self,self.combo.GetId(),self.Verify)
+		#wx.EVT_COMBOBOX(self,self.combo.GetId(),self.Verify)
+		self.combo.Bind(wx.EVT_COMBOBOX, self.Verify)
 		#self.button10 = wx.Button(self.panel, -1, "Verify", pos=(13*x,2*x), size=(2.5*x, x-y))
 		#self.button10.Bind(wx.EVT_BUTTON, self.Verify)
 		self.combo.Enable(False)
 		self.lblname1 = wx.StaticText(self.panel, label="DEM File:", pos=(10,3*x))
 		self.txt1 = wx.TextCtrl(self.panel, -1, pos=(8*x, 3*x), size=(5*x, x-y))
-		self.button11 = wx.Button(self.panel, -1, "Browse", pos=(13*x,3*x), size=(2.5*x, x-y))
+		self.button11 = wx.Button(self.panel, -1, "Browse", pos=(13*x,3*x), size=(round(2.5*x), x-y))
 		self.button11.Bind(wx.EVT_BUTTON, self.OnOpen1)
 		self.lblname2 = wx.StaticText(self.panel, label="Water File:", pos=(10,4*x))
 		self.txt2 = wx.TextCtrl(self.panel, -1, pos=(8*x, 4*x), size=(5*x, x-y),value='NULL')
-		self.button12 = wx.Button(self.panel, -1, "Browse", pos=(13*x,4*x), size=(2.5*x, x-y))
+		self.button12 = wx.Button(self.panel, -1, "Browse", pos=(13*x,4*x), size=(round(2.5*x), x-y))
 		self.button12.Bind(wx.EVT_BUTTON, self.OnOpen2)
 		self.lblname3 = wx.StaticText(self.panel, label="Output File:", pos=(10,5*x))
 		self.txt3 = wx.TextCtrl(self.panel, -1, pos=(8*x, 5*x), size=(5*x, x-y),value='water.asc')
@@ -172,21 +158,27 @@ class Size(wx.Frame):
 		methods1 = [" ", "Serial CPU", "OpenCL"]
 		self.lblname8 = wx.StaticText(self.panel, label="Serial/OpenCL:", pos=(10,18*x))
 		self.combo8 = wx.ComboBox(self.panel, -1, pos=(8*x, 18*x), size=(5*x, x-y), choices=methods1, style=wx.CB_READONLY)
-		self.button18 = wx.Button(self.panel, -1, "Process", pos=(13*x,18*x), size=(2.5*x, x-y))
+		self.button18 = wx.Button(self.panel, -1, "Process", pos=(13*x,18*x), size=(round(2.5*x), x-y))
 		self.button18.Bind(wx.EVT_BUTTON, self.Process)                   
 		methods2 = [" ", "GPU", "CPU"]
 		self.lblname9 = wx.StaticText(self.panel, label="OpenCL CPU/GPU:", pos=(10,19*x))
 		self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x, 19*x), size=(5*x, x-y), 
-			                  choices=methods2, style=wx.CB_READONLY)                
+			                  choices=methods2, style=wx.CB_READONLY) 
+		#************************	                  
+		self.lblname10 = wx.StaticText(self.panel, label="Zero depth threshold value (mm):", pos=(10,20*x))
+		self.editname10 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,20*x),value='0',validator=CharValidator("no-alpha"))
+		self.lblname11 = wx.StaticText(self.panel, label="Iteration limitation (0 if no limitation):", pos=(10,21*x))
+		self.editname11 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,21*x),value='0',validator=CharValidator("no-alpha")) 
+		#************************              
 		## Load variables from a file
-		self.lblname9a0 = wx.StaticText(self.panel, label="Load from file", pos=(10,20*x))
-		self.lblname9a = wx.StaticText(self.panel, label="Text File:", pos=(10,21*x))
-		self.txt9a = wx.TextCtrl(self.panel, -1, pos=(8*x, 21*x), size=(5*x, x-y))
-		self.button19a = wx.Button(self.panel, -1, "Browse", pos=(13*x,21*x), size=(2.5*x, x-y))
+		self.lblname9a0 = wx.StaticText(self.panel, label="Load from file", pos=(10,22*x))
+		self.lblname9a = wx.StaticText(self.panel, label="Text File:", pos=(10,23*x))
+		self.txt9a = wx.TextCtrl(self.panel, -1, pos=(8*x, 23*x), size=(5*x, x-y))
+		self.button19a = wx.Button(self.panel, -1, "Browse", pos=(13*x,23*x), size=(round(2.5*x), x-y))
 		self.button19a.Bind(wx.EVT_BUTTON, self.OnOpen5)
 		self.log = wx.TextCtrl(self.panel, -1, pos=(16*x, x), size=(25*x, 22*x), 
 			               style = wx.TE_MULTILINE|wx.TE_READONLY)
-		font1 = wx.Font(11, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Courier')
+		font1 = wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, 'Consolas')
 		self.log.SetFont(font1)
 		self.lblname9.Enable(False)
 		self.combo9.Enable(False)
@@ -224,14 +216,14 @@ class Size(wx.Frame):
 		sys.stdout=self.redir
 		sys.stderr=self.redir
 
-		self.panel.SetScrollbars( 150, 80,  10, 10 )
+		self.panel.SetScrollbars( 150, 90,  10, 11 )
 		self.panel.SetScrollRate( 3, 3 )
 
 
 	def OnAbout(self, event):
-		dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model - Serial/OpenCL version\t\n'
+		dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model version 2.0\t\n'
 				       '\n'
-				       'Copyright (C) 2010,2012, 2014 Kevin Shook, Centre for Hydrology \n'
+				       'Copyright (c) 2010, 2012, 2014, 2020 Kevin Shook, Centre for Hydrology \n'
 				       '--------------------------------------------------------------------\n'
 				       '\n'
 				       'This program is free software: you can redistribute\n'
@@ -250,7 +242,7 @@ class Size(wx.Frame):
 				       'From the algorithm of Shapiro, M., & Westervelt, J. (1992). \n'
 				       'An Algebra for GIS and Image Processing (pp. 1-22).\n'
 				       '\n'
-				       'Developed by Oluwaseun Sharomi and Raymond Spiteri\n'
+				       'Developed by Oluwaseun Sharomi, Raymond Spiteri and Tonghe Liu\n'
 				       'Numerical Simulation Laboratory, University of Saskatchewan.\n',
 				       'About', wx.OK | wx.ICON_INFORMATION)
 		dlg.ShowModal()
@@ -291,6 +283,9 @@ class Size(wx.Frame):
 		self.button12.Enable(True)
 		self.button19a.Enable(True)
 		method = self.combo.GetValue()
+		#method_option = ['add','subtract','drain','Textfile']
+		#for i in range (0, 4)
+		#	if method == method_option[i]
 		if method=='add':
 			self.lblname5.Enable(True)
 			self.editname5.Enable(True)
@@ -314,9 +309,7 @@ class Size(wx.Frame):
 			self.txt2.Enable(True)
 			self.button12.Enable(True)
 			self.txt3.Enable(True)
-			#self.button13.Enable(True)
-			self.txt4.Enable(True)
-			#self.button14.Enable(True)		  
+			self.txt4.Enable(True)		  
 			self.lblname8.Enable(True)
 			self.combo8.Enable(True)
 			self.button18.Enable(True)
@@ -344,9 +337,7 @@ class Size(wx.Frame):
 			self.txt2.Enable(True)
 			self.button12.Enable(True)
 			self.txt3.Enable(True)
-			#self.button13.Enable(True)
-			self.txt4.Enable(True)
-			#self.button14.Enable(True)		  
+			self.txt4.Enable(True)		  
 			self.lblname8.Enable(True)
 			self.combo8.Enable(True)
 			self.button18.Enable(True)
@@ -374,9 +365,7 @@ class Size(wx.Frame):
 			self.txt2.Enable(True)
 			self.button12.Enable(True)
 			self.txt3.Enable(True)
-			#self.button13.Enable(True)
-			self.txt4.Enable(True)
-			#self.button14.Enable(True)		  
+			self.txt4.Enable(True)		  
 			self.lblname8.Enable(True)
 			self.combo8.Enable(True)
 			self.button18.Enable(True)
@@ -404,9 +393,7 @@ class Size(wx.Frame):
 			self.txt2.Enable(False)
 			self.button12.Enable(False)
 			self.txt3.Enable(False)
-			#self.button13.Enable(False)
-			self.txt4.Enable(False)
-			#self.button14.Enable(False)		  
+			self.txt4.Enable(False)		  
 			self.lblname8.Enable(False)
 			self.combo8.Enable(False)
 			self.button18.Enable(False)
@@ -522,7 +509,7 @@ class Size(wx.Frame):
 		if res==wx.ID_YES:
 		    self.process.kill()
 		    self.endbutton.Enable(False)
-		    print "==== Simulation Terminated ===="
+		    print ("==== Simulation Terminated ====")
 		    
 		dlg.Destroy()
 
@@ -570,11 +557,11 @@ class Size(wx.Frame):
 
 	def Reportremove(self):
 		reportfilepath=os.path.join(self.txt0a.GetValue(),"report.txt")
-		if os.path.isfile(reportfilepath)==True:
+		if os.path.isfile(reportfilepath):
 			try:
 			    os.remove(reportfilepath)
 			except Exception:
-			    print "Unable to remove file: report.txt"
+			    print ("Unable to remove file: report.txt")
 
 	def enqueue_output(self, cmd):
 		lock.acquire()
@@ -589,7 +576,7 @@ class Size(wx.Frame):
 				readstuff = self.rep1.read()
 				if readstuff != '':
 				    #self.redir.write(readstuff)
-				    print "Please wait ........................"
+				    print ("Please wait ........................")
 				if self.process0.poll() is not None:
 				    self.flagz = 0
 				    break
@@ -631,18 +618,10 @@ class Size(wx.Frame):
 		finally:
 		    	lock.release()
 
-	def Module(self,cmd,cmd2):
+	def Module2(self,cmd):
 		self.clearbutton.Enable(True)
 		self.endbutton.Enable(True)
 		self.runbutton.Enable(False)
-		self.Reportremove()
-		reportfilepath=open(os.path.join(self.txt0a.GetValue(),"report.txt"), "w")
-		self.process0 = subprocess.Popen(cmd, stdout=reportfilepath, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-		self.thread = threading.Thread(target=self.enqueue_output, args=(cmd2,))
-		self.thread.daemon = True
-		self.thread.start()
-
-	def Module2(self,cmd):
 		self.Reportremove()
 		reportfilepath=open(os.path.join(self.txt0a.GetValue(),"report.txt"), "w")
 		self.process = subprocess.Popen(cmd, stdout=reportfilepath, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
@@ -671,7 +650,7 @@ class Size(wx.Frame):
 
 	def OnOpenDEM(self,event):
 		self.dirname5x = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.OPEN)     
+		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.FD_OPEN)     
 		if dlg.ShowModal()==wx.ID_OK:
 			self.filename5=dlg.GetFilename()
 			self.dirname5x=dlg.GetPath()
@@ -696,12 +675,8 @@ class Size(wx.Frame):
 	def RunSim(self,event):
 		time.sleep(1)
 		self.log.Clear()
-		self.log.Enable(False)
+		self.log.Enable(True)
 		self.RunSimulationOptimized()
-		#if self.cbs1a.GetValue()==True:
-		#    self.RunSimulationOptimized()
-		#else:
-		#    self.RunSimulation()
 
 	def RunSimulationOptimized(self):
 		solver=os.getcwd()+"/WDPMCL"
@@ -709,7 +684,7 @@ class Size(wx.Frame):
 		method = self.combo.GetValue()
 		plat = platform.system()
 		checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
-		if os.path.isfile(checkpointfilenamex)==True:
+		if os.path.isfile(checkpointfilenamex):
 		    os.remove(checkpointfilenamex)
 		if method=='add':
 			demfilename = str(self.txt1.GetValue())
@@ -724,6 +699,8 @@ class Size(wx.Frame):
 			waterdeptha = str(self.editname5.GetValue()) 
 			runoffrac = str(self.editname6.GetValue())
 			elevationtol = str(self.editname7.GetValue())
+			threshold = str(self.editname10.GetValue())
+			limitation = str(self.editname11.GetValue())
 			if method1=="Serial CPU":
 			  method1="0"
 			elif method1=="OpenCL":
@@ -763,52 +740,17 @@ class Size(wx.Frame):
 			   self.OnErrorRunOff()
 			   plat='error'
 			   
-			if os.path.isfile("self.txt1.GetValue()")==True:
+			if os.path.isfile("self.txt1.GetValue()"):
 			    pass
-			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
+			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 			   
-			if plat=='Darwin' or plat=='Linux':
-				if checkpointfilename == "NULL":
-					cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-					       checkpointfilenamex, waterdeptha, runoffrac, elevationtol, method1, method2, "0"]
-					cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-					       checkpointfilenamex, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "0"]
-						cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
-			elif plat=='error':
-				self.MainError()			     
-			else:
-				if checkpointfilename == "NULL":
-					cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-					       checkpointfilenamex, waterdeptha, runoffrac, elevationtol, method1, method2, "0"]
-					cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-					       checkpointfilenamex, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "0"]
-						cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
+			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+				checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+			self.Module2(cmd)
 		elif method=='subtract':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -821,6 +763,8 @@ class Size(wx.Frame):
 			method2 = self.combo9.GetValue()  
 			waterdepths = str(self.editname5a.GetValue())
 			elevationtol = str(self.editname7a.GetValue())
+			threshold = str(self.editname10.GetValue())
+			limitation = str(self.editname11.GetValue())
 			if method1=="Serial CPU":
 			  method1="0"
 			elif method1=="OpenCL":
@@ -831,12 +775,12 @@ class Size(wx.Frame):
 			elif method2=="CPU":
 			  method2="1"	
 
-			if os.path.isfile("self.txt1.GetValue()")==True:
+			if os.path.isfile("self.txt1.GetValue()"):
 			    pass
-			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
+			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 
 			if demfilename=='':
@@ -864,44 +808,9 @@ class Size(wx.Frame):
 			if waterdepths=='':
 			   self.OnErrorDepthS()
 			   plat='error'
-			if plat=='Darwin' or plat=='Linux':
-				if checkpointfilename == "NULL":
-					cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, waterdepths, elevationtol, method1, method2, "0"]
-					cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, waterdepths, elevationtol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilename, waterdepths, elevationtol, method1, method2,"1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, waterdepths, elevationtol, method1, method2, "0"]
-						cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, waterdepths, elevationtol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
-			elif plat=='error':
-				self.MainError()
-			else:
-				if checkpointfilename == "NULL":
-					cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, waterdepths, elevationtol, method1, method2, "0"]
-					cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, waterdepths, elevationtol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilename, waterdepths, elevationtol, method1, method2,"1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, waterdepths, elevationtol, method1, method2, "0"]
-						cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, waterdepths, elevationtol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
+			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+				checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
+			self.Module2(cmd)
 		elif method=='drain':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -914,17 +823,19 @@ class Size(wx.Frame):
 			method2 = self.combo9.GetValue()
 			draintol = str(self.editname6b.GetValue())
 			elevationtol = str(self.editname7b.GetValue())
+			threshold = str(self.editname10.GetValue())
+			limitation = str(self.editname11.GetValue())
 			if method1=="Serial CPU":
 			  method1="0"
 			elif method1=="OpenCL":
 			  method1="1"
 
-			if os.path.isfile("self.txt1.GetValue()")==True:
+			if os.path.isfile("self.txt1.GetValue()"):
 			    pass
-			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
+			if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
 			    pass
 			else:
-			    print "DEM file not present. Use the Browse button to locate file."
+			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
 
 			if method2=="GPU":
@@ -956,44 +867,9 @@ class Size(wx.Frame):
 			if draintol=='':
 			   self.OnErrorDrain()
 			   plat='error'
-			if plat=='Darwin' or plat=='Linux':
-				if checkpointfilename == "NULL":
-					cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, elevationtol, draintol, method1, method2, "0"]
-					cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, elevationtol, draintol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilename, elevationtol, draintol, method1, method2,"1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, elevationtol, draintol, method1, method2, "0"]
-						cmd1 = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, elevationtol, draintol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
-			elif plat=='error':
-				self.MainError()
-			else:
-				if checkpointfilename == "NULL":
-					cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, elevationtol, draintol, method1, method2, "0"]
-					cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-						checkpointfilenamex, elevationtol, draintol, method1, method2, "1"]
-					self.Module(cmd0,cmd1)
-				else:
-					if os.path.isfile(checkpointfilename)==True:
-						cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilename, elevationtol, draintol, method1, method2,"1"]
-						self.Module2(cmd)
-					else:
-						cmd0 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, elevationtol, draintol, method1, method2, "0"]
-						cmd1 = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-							checkpointfilenamex, elevationtol, draintol, method1, method2, "1"]
-						self.Module(cmd0,cmd1)
+			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+				checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
+			self.Module2(cmd)
 		elif method=='TextFile':
 			filename = str(self.txt9a.GetValue())
 			if filename=='':
@@ -1003,286 +879,34 @@ class Size(wx.Frame):
 				newfile2 = os.path.join(self.txt0a.GetValue(),"input2.in")
 				f = open(filename,'r')
 				data_list = f.readlines()
-				with open(newfile1, "w") as output:
-					for i in range(len(data_list)):
-						if i==4:
-							if data_list[i].strip()=="NULL":
-								checkpointf=os.path.join(self.txt0a.GetValue(),"temp.asc")
-								output.write(checkpointf)
-								output.write("\n")
-						else:
-						    output.write(data_list[i])
-					output.write("\n")
-					output.write("0")
-				with open(newfile2, "w") as output:
-					for i in range(len(data_list)):
-						if i==4:
-							if data_list[i].strip()=="NULL":
-								checkpointf=os.path.join(self.txt0a.GetValue(),"temp.asc")
-								output.write(checkpointf)
-								output.write("\n")
-						else:
-						    output.write(data_list[i])
-					output.write("\n")
-					output.write("1")
+				filelist = [newfile1, newfile2]
+				for j in range(0, 2):
+					with open(filelist[j], "w") as output:
+						for i in range(len(data_list)):
+							if i==4:
+								if data_list[i].strip()=="NULL":
+									checkpointf=os.path.join(self.txt0a.GetValue(),"temp.asc")
+									output.write(checkpointf)
+									output.write("\n")
+							else:
+							    output.write(data_list[i])
+						output.write("\n")
+						output.write("0")
 				if plat=='Darwin' or plat=='Linux':
 					if data_list[4].strip() == "NULL":
 						cmd0 = [solver, newfile1]
 						cmd1 = [solver, newfile2]
-						self.Module(cmd0,cmd1)
+						self.Module2(cmd1)
 					else:
-						if os.path.isfile(data_list[4].strip())==True:
+						if os.path.isfile(data_list[4].strip()):
 							cmd = [solver, newfile]
 							self.Module2(cmd)
 						else:
 						    cmd0 = [solver, newfile1]
 						    cmd1 = [solver, newfile2]
-						    self.Module(cmd0,cmd1)
+						    self.Module2(cmd1)
 				elif plat=='error':
 					self.MainError()
-				else:
-					if data_list[4].strip() == "NULL":
-						cmd0 = [solverw, newfile1]
-						cmd1 = [solverw, newfile2]
-						self.Module(cmd0,cmd1)
-					else:
-						if os.path.isfile(data_list[4].strip())==True:
-							cmd = [solverw, newfile]
-							self.Module2(cmd)
-						else:
-						    cmd0 = [solverw, newfile1]
-						    cmd1 = [solverw, newfile2]
-						    self.Module(cmd0,cmd1)
-
-
-	#def RunSimulation(self):
-	#	solver=os.getcwd()+"/WDPMCL"
-	#	solverw=os.getcwd()+"\WDPMCL.exe"
-	#	method = self.combo.GetValue()
-	#	plat = platform.system() 
-	#	if method=='add':
-	#		demfilename = str(self.txt1.GetValue())
-	#		waterfilename = str(self.txt2.GetValue())
-	#		wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-	#		checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
-	#		if os.path.isfile(checkpointfilenamex)==True:
-	#		    os.remove(checkpointfilenamex)
-	#		if self.txt4.GetValue()=='NULL':
-	#		   checkpointfilename = str(self.txt4.GetValue())
-	#		else:
-	#		   checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-	#		method1 = self.combo8.GetValue()
-	#		method2 = self.combo9.GetValue()
-	#		waterdeptha = str(self.editname5.GetValue()) 
-	#		runoffrac = str(self.editname6.GetValue())
-	#		elevationtol = str(self.editname7.GetValue())
-	#		if method1=="Serial CPU":
-	#		  method1="0"
-	#		elif method1=="OpenCL":
-	#		  method1="1"
-	#		  
-	#		if method2=="GPU":
-	#		  method2="0"
-	#		elif method2=="CPU":
-	#		  method2="1"	
-	#
-	#		if demfilename=='':
-	#		  self.OnErrorDem()
-	#		  plat='error'
-	#		if waterfilename=='':
-	#		  self.OnErrorWater()
-	#		  plat='error'
-	#		if wateroutputfilename=='':
-	#		  self.OnErrorOutput()
-	#		  plat='error'
-	#		if checkpointfilename=='':
-	#		  self.OnErrorCheckpoint()
-	#		  plat='error'
-	#		if method1=='':
-	#		  self.OnErrorM1()
-	#		  plat='error'
-	#		if method1=='1':
-	#		  if method2=='':
-	#		      self.OnErrorM2()
-	#		      plat='error'
-	#		if elevationtol=='':
-	#		   self.OnErrorElev()
-	#		   plat='error'
-	#		if waterdeptha=='':
-	#		   self.OnErrorDepthA()
-	#		   plat='error'
-	#		if runoffrac=='':
-	#		   self.OnErrorRunOff()
-	#		   plat='error'
-	#		   
-	#		if os.path.isfile("self.txt1.GetValue()")==True:
-	#		    pass
-	#		if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
-	#		    pass
-	#		else:
-	#		    print "DEM file not present. Use the Browse button to locate file."
-	#		    plat="error"
-	#		   
-	#		if plat=='Darwin' or plat=='Linux':
-	#			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-	#			       checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#		elif plat=='error':
-	#			self.MainError()			     
-	#		else:
-	#			cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-	#				checkpointfilenamex, waterdeptha, runoffrac, elevationtol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#	elif method=='subtract':
-	#		demfilename = str(self.txt1.GetValue())
-	#		waterfilename = str(self.txt2.GetValue())
-	#		wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-	#		if self.txt4.GetValue()=='NULL':
-	#		   checkpointfilename = str(self.txt4.GetValue())
-	#		else:
-	#		   checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-	#		method1 = self.combo8.GetValue()
-	#		method2 = self.combo9.GetValue()  
-	#		waterdepths = str(self.editname5a.GetValue())
-	#		elevationtol = str(self.editname7a.GetValue())
-	#		if method1=="Serial CPU":
-	#		  method1="0"
-	#		elif method1=="OpenCL":
-	#		  method1="1"
-	#		  
-	#		if method2=="GPU":
-	#		  method2="0"
-	#		elif method2=="CPU":
-	#		  method2="1"	
-	#
-	#		if os.path.isfile("self.txt1.GetValue()")==True:
-	#		    pass
-	#		if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
-	#		    pass
-	#		else:
-	#		    print "DEM file not present. Use the Browse button to locate file."
-	#		    plat="error"
-	#
-	#		if demfilename=='':
-	#		  self.OnErrorDem()
-	#		  plat='error'
-	#		if waterfilename=='':
-	#		  self.OnErrorWater()
-	#		  plat='error'
-	#		if wateroutputfilename=='':
-	#		  self.OnErrorOutput()
-	#		  plat='error'
-	#		if checkpointfilename=='':
-	#		  self.OnErrorCheckpoint()
-	#		  plat='error'
-	#		if method1=='':
-	#		  self.OnErrorM1()
-	#		  plat='error'
-	#		if method1=='1':
-	#		  if method2=='':
-	#		      self.OnErrorM2()
-	#		      plat='error'
-	#		if elevationtol=='':
-	#		   self.OnErrorElev()
-	#		   plat='error'
-	#		if waterdepths=='':
-	#		   self.OnErrorDepthS()
-	#		   plat='error'
-	#		if plat=='Darwin' or plat=='Linux':
-	#			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-	#			       checkpointfilename, waterdepths, elevationtol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#		elif plat=='error':
-	#			self.MainError()
-	#		else:
-	#			cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-	#			       checkpointfilename, waterdepths, elevationtol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#	elif method=='drain':
-	#		demfilename = str(self.txt1.GetValue())
-	#		waterfilename = str(self.txt2.GetValue())
-	#		wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-	#		if self.txt4.GetValue()=='NULL':
-	#		   checkpointfilename = str(self.txt4.GetValue())
-	#		else:
-	#		   checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-	#		method1 = self.combo8.GetValue()
-	#		method2 = self.combo9.GetValue()
-	#		draintol = str(self.editname6b.GetValue())
-	#		elevationtol = str(self.editname7b.GetValue())
-	#		if method1=="Serial CPU":
-	#		  method1="0"
-	#		elif method1=="OpenCL":
-	#		  method1="1"
-	#
-	#		if os.path.isfile("self.txt1.GetValue()")==True:
-	#		    pass
-	#		if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue())))==True:
-	#		    pass
-	#		else:
-	#		    print "DEM file not present. Use the Browse button to locate file."
-	#		    plat="error"
-	#
-	#		if method2=="GPU":
-	#		  method2="0"
-	#		elif method2=="CPU":
-	#		  method2="1"	
-	#
-	#		if demfilename=='':
-	#		  self.OnErrorDem()
-	#		  plat='error'
-	#		if waterfilename=='':
-	#		  self.OnErrorWater()
-	#		  plat='error'
-	#		if wateroutputfilename=='':
-	#		  self.OnErrorOutput()
-	#		  plat='error'
-	#		if checkpointfilename=='':
-	#		  self.OnErrorCheckpoint()
-	#		if method1=='':
-	#		  self.OnErrorM1()
-	#		  plat='error'
-	#		if method1=='1':
-	#		  if method2=='':
-	#		      self.OnErrorM2()
-	#		      plat='error'
-	#		if elevationtol=='':
-	#		   self.OnErrorElev()
-	#		   plat='error'
-	#		if draintol=='':
-	#		   self.OnErrorDrain()
-	#		   plat='error'
-	#		if plat=='Darwin' or plat=='Linux':
-	#			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-	#			       checkpointfilename, elevationtol, draintol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#		elif plat=='error':
-	#			self.MainError()
-	#		else:
-	#			cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
-	#			       checkpointfilename, elevationtol, draintol, method1, method2, "1"]
-	#			self.Module2(cmd)
-	#	elif method=='TextFile':
-	#		filename = str(self.txt9a.GetValue())
-	#		if filename=='':
-	#			self.OnErrorFile()
-	#		else:
-	#			newfile = os.path.join(self.txt0a.GetValue(),"input.in")
-	#			f = open(filename,'r')
-	#			data_list = f.readlines()
-	#			with open(newfile, "w") as output:
-	#				for i in range(len(data_list)):
-	#					    output.write(data_list[i])
-	#				output.write("\n")
-	#				output.write("1")
-	#			if plat=='Darwin' or plat=='Linux':
-	#				cmd = [solver, newfile]
-	#				self.Module2(cmd)
-	#			elif plat=='error':
-	#				self.MainError()
-	#			else:
-	#				cmd = [solver, newfile]
-	#				self.Module2(cmd)
 
 	def EndSimulation(self, event):
 		if self.flagz == 1:
@@ -1356,7 +980,7 @@ class Size(wx.Frame):
 		dlg.Destroy()
 
 if __name__=='__main__':
-  app=wx.PySimpleApp(redirect=False)
+  app=wx.App(redirect=False)
   frame=Size(parent=None,id_=-1)
   frame.Show()
   app.MainLoop()

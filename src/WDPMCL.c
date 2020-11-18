@@ -3,11 +3,13 @@
 #define KERNEL_FUNC2 "subtract"
 #define KERNEL_FUNC3 "ddrain"
 
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#define CL_TARGET_OPENCL_VERSION 220
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+//#define CL_TARGET_OPENCL_VERSION 220
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
+#include <sys/time.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -21,6 +23,7 @@
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
+#include <sys/malloc.h>
 #else
 #include <CL/cl.h>
 #endif
@@ -98,23 +101,23 @@ cl_device_id create_device(int opencl) {
 
    /* Access a device */
    if (opencl == 0){
-      err = clGetDeviceIDs(platforms[opencl+1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
-	  err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
+      err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
+      if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
+	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (Try switch to CPU)");
 	  exit(1);   
       }
    }
    
    if (opencl == 1){
-      err = clGetDeviceIDs(platforms[opencl], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
-      if(err == CL_DEVICE_NOT_FOUND) {
-	  err = clGetDeviceIDs(platforms[opencl-1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
+      err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
+      if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
+	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
       }
       if(err < 0) {
-	  perror("Couldn't access any devices");
+	  perror("Couldn't access any devices (Try switvh to GPU");
 	  exit(1);   
       }
    }
@@ -142,7 +145,7 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char* filename)
    rewind(program_handle);
    program_buffer = (char*)malloc(program_size + 1);
    program_buffer[program_size] = '\0';
-   fread(program_buffer, sizeof(char), program_size, program_handle);
+   if(fread(program_buffer, sizeof(char), program_size, program_handle)==1){};
    fclose(program_handle);
 
    /* Create program from file */
@@ -259,7 +262,7 @@ void print_arg_list();
 void print_narg_list();
 void print_args (char demfile[80], char waterfile[80], char outputfile[80],
                       char scratchfile[80], double addwater, double subtractwater, double rof, 
-		            double eltol, double draintol, char *, int cpu);
+		            double eltol, double draintol, char *, int cpu, double thres, int iteration_limit, int gpu);
 void print_results(double initial_vol, double final_vol, double drainvol, double waterfrac,
                        double meanwater, double draindepth, double maxdepth);
 void runoffa(int centerrow, int centercol, double missingvalue);
@@ -294,14 +297,15 @@ int main(int argc, char *argv[])
     char DEMFileName[80], OutputFileName[80], outformat[80];
     char InParameterFileName[80], WaterFileName[80], sliceformat[80];
     char ScratchFileName[80], drain_tolerancestring[10];
-    char elevation_tolerancestring[10], addstring[10];
-    char subtractstring[10], rofstring[10], CpuString[10], GpuString[10];
+    char elevation_tolerancestring[10], addstring[10], iteration_limitstring[10];
+    char subtractstring[10], rofstring[10], CpuString[10], GpuString[10], threshold[20];
     
     double max_diff, elevation_tolerance, drain_tolerance;
     double cellsize, cellarea, addwater, subtractwater, rof;
+    double thres; //threshhold
     double diffdrain, olddrain, mindrain, drainn;
-    bool done;
-    int i, j, k, arg_count,basincount, watercount, row, col;
+    bool done, isKillSwitch, gracefulExit;
+    int i, j, k, arg_count,basincount, watercount, row, col, iteration_limit;
     int slice, boundary, cpu, gpu;
     
     int *widths, *startcols, *endcols, *boundarystartcols, *boundaryendcols;
@@ -319,21 +323,42 @@ int main(int argc, char *argv[])
 	    case 1:
 		print_narg_list();
 		exit(42);	  
-	    case 2:            
-		filez=fopen(argv[1],"r");
-		int i=1;
-		while(!feof(filez))
-		{               
-		    fscanf(filez,"%s",input);              
-		    if (i==1){ strcpy(activity, input); } 
-		    i++;                 
-		}            
-		fclose(filez);
+	    case 2:
+	    	if(strcmp(argv[1], "add")==0) 
+	    	{
+	    		strcpy(activity, argv[1]);
+			print_arg_list();
+			exit(42);
+	    	}
+	    	else if(strcmp(argv[1], "subtract")==0)  
+	    	{
+	    		strcpy(activity, argv[1]);
+			print_arg_list();
+			exit(42);
+	    	}
+	    	else if(strcmp(argv[1], "drain")==0)   
+	    	{
+	    		strcpy(activity, argv[1]);
+			print_arg_list();
+			exit(42);
+	    	}  
+	    	else
+	    	{    
+			filez=fopen(argv[1],"r");
+			int i=1;
+			while(!feof(filez))
+			{               
+		    		if(fscanf(filez,"%s",input)==1){};              
+		    		if (i==1){ strcpy(activity, input); } 
+		    		i++;                 
+			}          
+			fclose(filez);
+		}
 		break;
-	    case 10:
+	    case 12:
 		strcpy(activity, argv[1]);
 		break;		
-	    case 11:
+	    case 13:
 		strcpy(activity, argv[1]);
 		break;
 	    default:
@@ -355,7 +380,7 @@ int main(int argc, char *argv[])
 		int i=1;
 		while(!feof(filez))
 		{               
-		    fscanf(filez,"%s",input);
+		    if(fscanf(filez,"%s",input)==1){};
 		    if (i==2){ strcpy(DEMFileName, input); }
 		    if (i==3){ strcpy(WaterFileName, input); }
 		    if (i==4){ strcpy(OutputFileName, input); }
@@ -365,11 +390,13 @@ int main(int argc, char *argv[])
 		    if (i==8){ strcpy(elevation_tolerancestring, input); }                
 		    if (i==9){ strcpy(CpuString, input); }
 		    if (i==10){ strcpy(GpuString, input); } 
+		    if (i==11){strcpy(threshold, input);}
+		    if (i==12){strcpy(iteration_limitstring, input);}
 		    i++;                 
 		}            
 		fclose(filez);
 		break;
-	    case 11:
+	    case 13:
 		strcpy(DEMFileName, argv[2]);
 		strcpy(WaterFileName, argv[3]);
 		strcpy(OutputFileName, argv[4]);
@@ -379,6 +406,8 @@ int main(int argc, char *argv[])
 		strcpy(elevation_tolerancestring, argv[8]);
 		strcpy(CpuString, argv[9]);
 		strcpy(GpuString, argv[10]);
+		strcpy(threshold, argv[11]);
+		strcpy(iteration_limitstring, argv[12]);
 		break;
 	    default:
 		print_arg_list();
@@ -390,13 +419,24 @@ int main(int argc, char *argv[])
 	elevation_tolerance=atof(elevation_tolerancestring);
 	cpu = (int)atof(CpuString);
 	gpu = (int)atof(GpuString);
+	thres = (double)atof(threshold);
+	iteration_limit = (int)atof(iteration_limitstring);
+	if (iteration_limit == 0) {
+            isKillSwitch = false;
+        }
+        else 
+        {
+            isKillSwitch = true;
+        }
+	//printf("the threshold value we choose is %1.10f \n", thres);
 	// write parameters to stdout
 	print_args(DEMFileName, WaterFileName, OutputFileName, ScratchFileName,
-		addwater, 0, rof, elevation_tolerance, 0, activity, cpu);
+		addwater, 0, rof, elevation_tolerance, 0, activity, cpu, thres, iteration_limit, gpu);
 	
 	// convert parameters from mm to m
 	elevation_tolerance = elevation_tolerance/1000.0;
-	addwater= addwater/1000.0;	
+	addwater= addwater/1000.0;
+	thres = thres/1000;	
     }
     else if (strcmp(activity, "subtract") == 0) {
 	switch (argc)
@@ -406,7 +446,7 @@ int main(int argc, char *argv[])
 		int i=1;
 		while(!feof(filez))
 		{               
-		    fscanf(filez,"%s",input);
+		    if(fscanf(filez,"%s",input)==1){};
 		    if (i==2){ strcpy(DEMFileName, input); }
 		    if (i==3){ strcpy(WaterFileName, input); }
 		    if (i==4){ strcpy(OutputFileName, input); }
@@ -415,11 +455,13 @@ int main(int argc, char *argv[])
 		    if (i==7){ strcpy(elevation_tolerancestring, input); }                
 		    if (i==8){ strcpy(CpuString, input); } 
 		    if (i==9){ strcpy(GpuString, input); }
+		    if (i==10){strcpy(threshold, input);}
+		    if (i==11){ strcpy(iteration_limitstring, input); }
 		    i++;                 
 		}            
 		fclose(filez);
 		break;
-	    case 10:
+	    case 12:
 		strcpy(DEMFileName, argv[2]);
 		strcpy(WaterFileName, argv[3]);
 		strcpy(OutputFileName, argv[4]);
@@ -428,6 +470,8 @@ int main(int argc, char *argv[])
 		strcpy(elevation_tolerancestring, argv[7]);
 		strcpy(CpuString, argv[8]);
 		strcpy(GpuString, argv[9]);
+		strcpy(threshold, argv[10]);
+		strcpy(iteration_limitstring, argv[11]);
 		break;
 	    default:
 		print_arg_list();
@@ -436,15 +480,25 @@ int main(int argc, char *argv[])
 	// convert parameter strings to integer and reals
 	subtractwater=atof(subtractstring);
 	elevation_tolerance=atof(elevation_tolerancestring);
+	iteration_limit = (int)atof(iteration_limitstring); 
+        if (iteration_limit == 0) {
+            isKillSwitch = false;
+        }
+        else 
+        {
+            isKillSwitch = true;
+        }
 	cpu = (int)atof(CpuString);
-	gpu = (int)atof(GpuString);		
+	gpu = (int)atof(GpuString);
+	thres = (double)atof(threshold);		
 	// write parameters to stdout
 	print_args(DEMFileName, WaterFileName, OutputFileName, ScratchFileName,
-		0, subtractwater, 0, elevation_tolerance, 0, activity, cpu);
+		0, subtractwater, 0, elevation_tolerance, 0, activity, cpu, thres, iteration_limit, gpu);
 	
 	// convert parameters from mm to m
 	elevation_tolerance = elevation_tolerance/1000.0;	
 	subtractwater = subtractwater/1000;
+	thres = thres/1000;
     }
     else  if (strcmp(activity, "drain") == 0) {
 	switch (argc)
@@ -454,7 +508,7 @@ int main(int argc, char *argv[])
 		int i=1;
 		while(!feof(filez))
 		{               
-		    fscanf(filez,"%s",input);
+		    if(fscanf(filez,"%s",input)==1){};
 		    if (i==2){ strcpy(DEMFileName, input); }
 		    if (i==3){ strcpy(WaterFileName, input); }
 		    if (i==4){ strcpy(OutputFileName, input); }
@@ -463,11 +517,13 @@ int main(int argc, char *argv[])
 		    if (i==7){ strcpy(drain_tolerancestring, input); }                
 		    if (i==8){ strcpy(CpuString, input); }
 		    if (i==9){ strcpy(GpuString, input); } 
+		    if (i==10){strcpy(threshold, input);}
+		    if (i==11){ strcpy(iteration_limitstring, input); }
 		    i++;                 
 		}            
 		fclose(filez);
 		break;
-	    case 10:
+	    case 12:
 		strcpy(DEMFileName, argv[2]);
 		strcpy(WaterFileName, argv[3]);
 		strcpy(OutputFileName, argv[4]);
@@ -476,6 +532,8 @@ int main(int argc, char *argv[])
 		strcpy(drain_tolerancestring, argv[7]);
 		strcpy(CpuString, argv[8]);
 		strcpy(GpuString, argv[9]);
+		strcpy(threshold, argv[10]);
+		strcpy(iteration_limitstring, argv[11]); 
 		break;
 	    default:
 		print_arg_list();
@@ -483,14 +541,24 @@ int main(int argc, char *argv[])
 	}  
 	// convert parameter strings to integer and reals
 	elevation_tolerance=atof(elevation_tolerancestring);
-	drain_tolerance=atof(drain_tolerancestring);	
+	drain_tolerance=atof(drain_tolerancestring);
+	iteration_limit = (int)atof(iteration_limitstring); 
+        if (iteration_limit == 0) {
+            isKillSwitch = false;
+        }
+        else 
+        {
+            isKillSwitch = true;
+        }	
 	cpu = (int)atof(CpuString);
 	gpu = (int)atof(GpuString);
+	thres = (double)atof(threshold);
 	// write parameters to stdout
 	print_args(DEMFileName, WaterFileName, OutputFileName, ScratchFileName,
-		0, 0, 0,  elevation_tolerance, drain_tolerance, activity, cpu);
+		0, 0, 0,  elevation_tolerance, drain_tolerance, activity, cpu, thres, iteration_limit, gpu);
 	// convert parameters from mm to m
-	elevation_tolerance = elevation_tolerance/1000.0;		
+	elevation_tolerance = elevation_tolerance/1000.0;
+	thres = thres/1000;		
     }
     
 
@@ -513,7 +581,7 @@ int main(int argc, char *argv[])
 	i=1;
 	while(i<=6)
 	{
-	fscanf(fgheader, "%30s %lf", dem_header_name, &dem_header_value[i]);
+	if(fscanf(fgheader, "%30s %lf", dem_header_name, &dem_header_value[i])==1){};
 	strcpy(dem_header_line[i], dem_header_name);       
 	i++;
 	}      
@@ -573,14 +641,6 @@ int main(int argc, char *argv[])
     {
 	  /* Create device and context */
 	  device = create_device(gpu);
-	  if (gpu==0){
-	    printf("%40s\n","Using OpenCL GPU for Computation"); 
-	  }
-	  if (gpu==1)
-	  {
-	    printf("%40s\n","Using OpenCL CPU for Computation"); 
-	  }
-	  
 	  context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
 	  
 	  if(err < 0) {
@@ -630,6 +690,8 @@ int main(int argc, char *argv[])
                }
          }
     }
+    
+    watercount = 0; 
     char *temp1, *temp2;
     if (strcmp(activity, "add") == 0) {
          // get water volume at beginning
@@ -1017,7 +1079,20 @@ int main(int argc, char *argv[])
          
          print_basin_summary(basin_area, initial_vol, drainrow, draincol, bigdem[drainrow][draincol]);
          print_iteration_summary_headings();
-    }      
+    }  
+    
+    
+    for(int i=0; i<numrows; i++)
+    {
+    	for(int j=0; j<numcols; j++)
+    	{
+    		if(water[i][j]>0)
+    		{
+    			watercount++;
+    		}
+    	}
+    }
+    //printf("the initial water count is %d \n", watercount);
     
 
     
@@ -1027,7 +1102,18 @@ int main(int argc, char *argv[])
     int oi, oj;
     // do a set of iterations and then test for convergence
     gettimeofday(&starttime, NULL);
-    while (done == false){        
+    while (done == false){   
+    for(i=0; i<numrows+2; i++)
+	      {
+	  	  for(j=0; j<numcols+2; j++)
+	  	  {
+			if(bigwater[i][j]<thres)
+			{
+				bigwater[i][j] = 0;
+				//printf("1");
+			}
+		  }
+	      }     
 	if (strcmp(activity, "drain") == 0) {   
 	    olddrain = totaldrain;	  
 	}	      
@@ -1064,6 +1150,10 @@ int main(int argc, char *argv[])
 				    for(col=oj; col<=numcols; col+=(offset-1)){
 					if (bigwater[row][col] > 0.0 && (bigdem[row][col] > missingvalue)){
 					    runoffs(row, col, missingvalue);
+					    /*if(bigwater[i][j]>1)
+					    {
+					    printf("%lf ", bigwater[i][j]);
+					    }*/
 					}	 
 				    }
 				}
@@ -1181,7 +1271,7 @@ int main(int argc, char *argv[])
 		    clReleaseEvent(event);	
 		    totaldrain=btotaldrain[0];
 		    totaldrain =  totaldrain + drain(drainrow,draincol);
-		}		
+		}	
 	    }
 	    err= clEnqueueReadBuffer(queue, d_bigwater, CL_FALSE, 0, bytes, bbigwater, 0, NULL, &event);
 	    exitOnFail(err, "read bigwater from device");
@@ -1203,6 +1293,7 @@ int main(int argc, char *argv[])
     
 	    k = k+IterationNum;
 	  }
+	      
 	    
 	  for(i=0; i<numrows+2; i++){
 	      for(j=0; j<numcols+2; j++){        
@@ -1250,28 +1341,49 @@ int main(int argc, char *argv[])
 	// check to see if finished	 
 	 if (strcmp(activity, "drain") == 0) {
 	    temp1 = upcase(ScratchFileName);
-	    if (max_diff <= elevation_tolerance || diffdrain < drain_tolerance) {  
-		done = true;
-	    }
-	    else if (strcmp(temp1, "NULL")!=0) {
+	    if(iteration_limit > 0)
+	    {
+	        if (max_diff <= elevation_tolerance || diffdrain < drain_tolerance || (k >= iteration_limit)) {  
+		    done = true;
+	        }
+	        else if (strcmp(temp1, "NULL")!=0) {
 		// write output to ArcGIS file
 		// convert back to small arrays
-		for(i=0; i<numrows; i++){
-		    for(j=0; j<numcols; j++){
-			water[i][j]=bigwater[i+1][j+1];
-		    }
-		}	    
-		write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+		    for(i=0; i<numrows; i++){
+		        for(j=0; j<numcols; j++){
+			    water[i][j]=bigwater[i+1][j+1];
+		        }
+		    }	    
+		    write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+	        }
+	    }
+	    else if(iteration_limit == 0)
+	    {
+	        if (max_diff <= elevation_tolerance || diffdrain < drain_tolerance) {  
+		    done = true;
+	        }
+	        else if (strcmp(temp1, "NULL")!=0) {
+		// write output to ArcGIS file
+		// convert back to small arrays
+		    for(i=0; i<numrows; i++){
+		        for(j=0; j<numcols; j++){
+			    water[i][j]=bigwater[i+1][j+1];
+		        }
+		    }	    
+		    write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+	        }
 	    }
 	    free(temp1);
 	 }
 	 else
 	 {
 	    temp1 = upcase(ScratchFileName);
-	    if (max_diff <= elevation_tolerance) {  
-		done = true;
-	    }
-	    else if (strcmp(temp1, "NULL")!=0) {
+	    if(iteration_limit > 0)
+	    {
+	        if ((max_diff <= elevation_tolerance)||(k >= iteration_limit)) {  
+		    done = true;
+	        }
+	        else if (strcmp(temp1, "NULL")!=0) {
 		// write output to ArcGIS file
 		// convert back to small arrays
 		for(i=0; i<numrows; i++){
@@ -1289,8 +1401,36 @@ int main(int argc, char *argv[])
 			}
 		    }	      
 		}	    
-		write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+		    write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+	        }
 	    }
+	    else if(iteration_limit == 0)
+	    {
+	    if ((max_diff <= elevation_tolerance)) {  
+		    done = true;
+	        }
+	        else if (strcmp(temp1, "NULL")!=0) {
+		// write output to ArcGIS file
+		// convert back to small arrays
+		for(i=0; i<numrows; i++){
+		    for(j=0; j<numcols; j++){
+			water[i][j]=bigwater[i+1][j+1];
+		    }
+		}
+
+		if (strcmp(activity, "add") == 0) {
+		    for(i=0; i<numrows; i++){
+			for(j=0; j<numcols; j++){
+			    if(dem[i][j]<=missingvalue){
+				water[i][j]=missingvalue;
+			    }
+			}
+		    }	      
+		}	    
+		    write_gis(ScratchFileName, numrows, numcols, dem_header_line, dem_header_value);
+	        }
+	    }
+	    
 	    free(temp1);
 	 }      
         
@@ -1320,7 +1460,7 @@ int main(int argc, char *argv[])
 	    }
 	}
     }
-
+	//printf("calculated watercount: %d \n", watercount);
     watertotal=0;
     for(i=0; i<numrows; i++){
 	for(j=0; j<numcols; j++){
@@ -1350,6 +1490,18 @@ int main(int argc, char *argv[])
     }
 
     waterfrac = (float)watercount/(float)basincount;
+    watercount = 0;
+    for(int i=0; i<numrows; i++)
+    {
+    	for(int j=0; j<numcols; j++)
+    	{
+    		if(water[i][j]>0)
+    		{
+    			watercount++;
+    		}
+    	}
+    }
+   // printf("the final water count is %d \n", watercount);
     
     if (strcmp(activity, "drain") == 0) {
 	drainvol = totaldrain*cellarea;
@@ -1468,16 +1620,16 @@ void read_water_array(char filename[80], int numrows, int numcols) {
     fwarray=fopen(filename,"r");
     int row;
     int col;
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0]);                                        
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};
+    if(fscanf(fwarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){};                                        
     for (row=0; row < numrows; row++){
         for (col=0; col < numcols; col++)
         {
-            fscanf(fwarray,"%lf",&water[row][col]);
+            if(fscanf(fwarray,"%lf",&water[row][col])==1){}
         }      
      } 
     fclose(fwarray);
@@ -1491,16 +1643,16 @@ void read_dem_array(char filename[80], int numrows, int numcols) {
     fdarray=fopen(filename,"r");
     int row;
     int col;
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);
-    fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0]);                                        
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}
+    if(fscanf(fdarray,"%s %lf", dem_header_name, &dem_header_value[0])==1){}                                      
     for (row=0; row < numrows; row++){
         for (col=0; col < numcols; col++)
         {
-            fscanf(fdarray,"%lf",&dem[row][col]);
+            if(fscanf(fdarray,"%lf",&dem[row][col])==1){};
         }      
      } 
     fclose(fdarray);
@@ -1525,16 +1677,10 @@ void read_gis_header(char filename[80], bool print_output, char* header_line[8],
 void print_copyright(char *activity){
     printf("%s\n", "                                                                   ");
     printf("%s\n", "                                                                   ");
-    if (strcmp(activity, "add") == 0) {
-      printf("%s\n", "WDPM_add 1.0 - Wetland DEM Ponding Model - parallel version");
-    }
-    else if (strcmp(activity, "subtract") == 0) {
-      printf("%s\n", "WDPM_subtract 1.0 - Wetland DEM Ponding Model - parallel version");
-    }
-    else  if (strcmp(activity, "drain") == 0) {
-      printf("%s\n", "WDPM_drain 1.0 - Wetland DEM Ponding Model - parallel version");
-    }
-    printf("%s\n", "Copyright (C) 2010,2012 Kevin Shook, Centre for Hydrology");
+    printf("%s\n", "Wetland DEM Ponding Model version 2.0");
+    printf("%s\n", "Copyright (c) 2010, 2012, 2014, 2020 Kevin Shook, Centre for Hydrology");
+    printf("%s\n", "Developed by Oluwaseun Sharomi, Raymond Spiteri and Tonghe Liu");
+    printf("%s\n", "Numerical Simulation Laboratory, University of Saskatchewan.\n");
     printf("%s\n", "--------------------------------------------------------------------");
     printf("%s\n", "                                                                   ");
     printf("%s\n", "This program is free software: you can redistribute it and/or modify");
@@ -1582,15 +1728,16 @@ void print_arg_list(){
     else if (strcmp(activity,"drain")==0){
       printf("%s\n", "Drain module specified"); 
     }    
-    printf("%s\n", "Path and Name of Report file");
-    printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string)");
+    //printf("%s\n", "Path and Name of Report file");
+    printf("%s\n", "DEM file name (string) ");
+    printf("%s\n", "Water file name (string) - Optional, Use NULL to omit");
     printf("%s\n", "Output file name (string)");
-    printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");
+    printf("%s\n", "Scratch file name (string) - Optional, use NULL to omit");
     if (strcmp(activity,"add")==0){
       printf("%s\n", "Depth of water to add (mm) (real)");
       printf("%s\n", "Water runoff fraction (real)"); 
       printf("%s\n", "Elevation tolerance (mm) (real)");    
+
     }
     else if (strcmp(activity,"subtract")==0){
       printf("%s\n", "Depth of water to remove (mm) (real)"); 
@@ -1601,16 +1748,17 @@ void print_arg_list(){
       printf("%s\n", "Drain tolerance (m3) (real)"); 
     }    
     printf("%s\n", "Specify 0 for serial CPU and 1 for opencl "); 
-    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");    
+    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");  
+    printf("%s\n", "Zero depth threshold (mm) (real)");
+    printf("%s\n", "Maximum number of iterations (integer) - Optional, Use 0 to omit ");
     printf("%s\n", "                                          ");
 }
 
 
 void print_narg_list(){
     printf("%s\n", "Module name: add");
-    printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string)");
+    printf("%s\n", "Water file name (string) - Optional, use --NULL-- to omit");
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");
     printf("%s\n", "Depth of water to add (mm) (real)");
@@ -1618,37 +1766,43 @@ void print_narg_list(){
     printf("%s\n", "Elevation tolerance (mm) (real)");       
     printf("%s\n", "Specify 0 for serial CPU and 1 for opencl "); 
     printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");    
+    printf("%s\n", "Zero depth threshold (mm) (real) "); 
+    printf("%s\n", "Maximum number of iterations (integer) - Optional, Use 0 to omit");
     printf("%s\n", "                                          "); 
     printf("%s\n", "                                          ");
     printf("%s\n", "Module name: subtract");
     printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string)");
+    printf("%s\n", "Water file name (string) - Optional, use --NULL-- to omit");
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");      
     printf("%s\n", "Depth of water to remove (mm) (real)"); 
     printf("%s\n", "Elevation tolerance (mm) (real)");      
     printf("%s\n", "Specify 0 for serial CPU and 1 for opencl "); 
-    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");    
+    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU "); 
+    printf("%s\n", "Zero depth threshold (mm) (real) ");   
+    printf("%s\n", "Maximum number of iterations (integer) - Optional, Use 0 to omit ");
     printf("%s\n", "                                          ");    
     printf("%s\n", "                                          ");
     printf("%s\n", "Module name: drain");
     printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string)");
+    printf("%s\n", "Water file name (string) - Optional, use --NULL-- to omit");
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");      
     printf("%s\n", "Elevation tolerance (mm) (real)");
     printf("%s\n", "Drain tolerance (m3) (real)");      
     printf("%s\n", "Specify 0 for serial CPU and 1 for opencl "); 
-    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");    
+    printf("%s\n", "Specify 0 for OpenCL CPU and 1 for opencl GPU ");
+    printf("%s\n", "Zero depth threshold (mm) (real) ");
+    printf("%s\n", "Maximum number of iterations (integer) - Optional, Use 0 to omit");    
     printf("%s\n", "                                          ");      
 }
 
 
 void print_args (char demfile[80], char waterfile[80], char outputfile[80],
                       char scratchfile[80], double addwater, double subtractwater, double rof, 
-		             double eltol, double draintol, char *activity, int cpu){
+		             double eltol, double draintol, char *activity, int cpu, double thres, int iteration_limit, int gpu){
     printf("%30s\n", "WDPM Parameters");
     printf("%30s %s\n", "Function used:", activity); 
     printf("%30s %s\n", "DEM file:", demfile);
@@ -1659,14 +1813,25 @@ void print_args (char demfile[80], char waterfile[80], char outputfile[80],
       printf("%30s %0.1f %s\n", "Water added:", addwater, "mm");
       printf("%30s %0.1f\n", "Runoff fraction:", rof); 
       printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");
+      printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm");
     }
     if (strcmp(activity,"subtract")==0){
       printf("%30s %0.1f %s\n", "Water subtracted:", subtractwater, "mm");
-      printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");   
+      printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");  
+      printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm"); 
     }    
     if (strcmp(activity,"drain")==0){
       printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");
-      printf("%30s %0.1f %s\n", "Drain tolerance:", draintol, "m3");           
+      printf("%30s %0.1f %s\n", "Drain tolerance:", draintol, "m3");  
+      printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm");         
+    }
+    if(iteration_limit == 0)
+    {
+    	printf("%30s\n", "No iteration limitation is set");
+    }
+    else
+    {
+    	printf("%30s %d\n", "Maximum number of iterations:", iteration_limit);
     }
     if (cpu==0){
       printf("%s\n", "               ");
@@ -1676,7 +1841,16 @@ void print_args (char demfile[80], char waterfile[80], char outputfile[80],
     {
       printf("%s\n", "               ");
       printf("%41s\n", "Using Parallel OpenCL for Computation");
+      if (gpu==0){
+	    printf("%40s\n","Using OpenCL GPU for Computation"); 
+	  }
+	  if (gpu==1)
+	  {
+	    printf("%40s\n","Using OpenCL CPU for Computation"); 
+	  }
+    
     }
+     
     
 }
 

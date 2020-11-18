@@ -39,7 +39,7 @@ The WDPM was developed to solve the problems described above. The model distribu
 WDPM does not attempt to compute the magnitudes of the additive or subtractive fluxes, which must be established by measurement or through the use of a physically based model of Prairie hydrology such as the Cold Regions Hydrological Modelling platform (CRHM) [@pomeroyColdRegionsHydrological2007].
 
 The  model output is the depth of water over each cell of the DEM.
- 
+
 All modules use the algorithm of @shapiroMAPCALCAlgebraGIS1992 to redistribute the simulated water. This algorithm is iterative. In each iteration, the excess water, which is the depth of water required to be removed to make the surface flat, is computed for each DEM cell. As shown in \autoref{fig:waterflow}, water can be distributed to a lower cell or to a higher cell with insufficient water. In each iteration, up one-eighth of available water can be distributed to any of the neighbouring cells. The algorithm is repeated until the water surface is flat, which is determined by the difference between successive values of the matrix every 1000 iterations. When the maximum cell difference is within a specified tolerance or the volume of water draining in 1000 iterations is smaller than a specified value, then the program terminates and the water depth is written to an ArcGIS .asc (ASCII) file.
 
 ![Schematic diagram of water flow from a DEM cell using WDPM.\label{fig:waterflow}](WaterFlowDiagram.png)
@@ -68,10 +68,10 @@ Following the addition and draining of water, 200 mm of water was removed using 
 
 
 The WDPM is very computationally expensive, requiring many thousands or millions of iterations, particularly to drain water from the DEM (the addition and subtraction of water being less expensive). 
-In the examples above, the addition of 300 mm of water, smoothed to a resolution of 100 mm, required 7000 iterations. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 332,000 iterations and took 981 s on a system with an Intel i7 (4 cores, 8 threads) running Linux. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations - the minimum possible. 
+In the examples above, the addition of 300 mm of water, smoothed to a resolution of 100 mm, required 7000 iterations. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 332,000 iterations and took 981 s on a system with an Intel i7 (4 cores, 8 threads) running Linux. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations, which the minimum possible, as the program checks for convergence every 1,000 iterations. 
 
-Despite the computational cost, the program's great advantage is that it can simulate any storage state within a complex system of Prairie depressions.  This capability makes it useful for mapping the flooplains from non-riverine floods in the Canadian Prairies. The program outputs have been verified by remote sensing of recent floods in this region, and WDPM has been used to develop a simpler parametric model that is more easily incorporated in hydrological models [@shookStorageDynamicsSimulations2013]. The program's floodplain mapping capabiltiies
-have made it useful for operational flood hazard mapping [@armstrongUSINGWETLANDPONDING2013a] in the Prairies by several government agencies and by private consultants.
+Despite the computational cost, the program's great advantage is that it can simulate any storage state within a complex system of Prairie depressions.  This capability makes it useful for mapping the flooplains from non-riverine floods in the Canadian Prairies. The program outputs have been verified by remote sensing of recent floods in this region, and WDPM has been used to develop a simpler parametric model that is more easily incorporated in hydrological models [@shookStorageDynamicsSimulations2013]. The program's floodplain mapping capabiltiies for researchers [@elboshyFrameworkPluvialFlood2019; @thapaGarbageGarbageOut2019; @kissPredictiveMappingWetland2018; @schellenbergHydrologyDeltaMarsh2017; ]
+and for operational flood hazard mappingin the Prairies by government agencies [@armstrongUSINGWETLANDPONDING2013a] and by private consultants [@venemahenrydavidClimateAdaptationUsing2020; @venemahenrydavidFloodRiskMapping2020] .
 
 # Licence
 The WDPM is licensed under GPL 3.

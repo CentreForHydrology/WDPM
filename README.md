@@ -7,4 +7,26 @@ Shook, K., J. W. Pomeroy, C. Spence, and L. Boychuk (2013), Storage dynamics sim
 
 Please cite all uses of the program.
 
-The executable files are too large to be distributed through GitHub. They are available at http://www.usask.ca/hydrology/WDPM.php along with additional documentation. 
+Several presentations on using WDPM are available at https://research-groups.usask.ca/hydrology/modelling/wdpm.php.
+
+## Folders and files
+
+src - contains program source code files:
+
+​	WDPMCL.c - WDPM main line. Can be executed from the command line or from the GUI
+
+​	runoff.cl - OpenCL kernel which does the water smoothing
+
+​	WDPM.py - GUI for running the program. Written in Python 3.
+
+​	cmap_black.sh - shell script for converting model output to an image on Linux or MacOS 
+
+​	cmap.bat - shell script for converting model output to an image on Windows
+
+dem - contains a sample digital elevation model (DEM) for use with the WDPM:
+
+​	basin5.asc - DEM of sub-basin 5 at Smith Creek in SW Saskatchewan.
+
+paper - contains files for creating the paper 'WDPM: the Wetland DEM Ponding Model'
+
+manual - contains the user manual
