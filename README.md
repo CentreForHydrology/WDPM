@@ -11,22 +11,21 @@ Several presentations on using WDPM are available at https://research-groups.usa
 
 ## Folders and files
 
-src - contains program source code files:
+**src** - contains program source code files:
 
-​	WDPMCL.c - WDPM main line. Can be executed from the command line or from the GUI
+- WDPMCL.c - WDPM main line. Can be executed from the command line or from the GUI
+- runoff.cl - OpenCL kernel which does the water smoothing
+- WDPM.py - GUI for running the program. Written in Python 3.
+- CMakeLists.txt - configuration file for building the program using cmake.
+- cmap_black.sh - shell script for converting model output to an image on Linux or MacOS 
+- cmap.bat - shell script for converting model output to an image on Windows  
 
-​	runoff.cl - OpenCL kernel which does the water smoothing
+**OpenCL_install** - contains scripts for installing OpenCL drivers
 
-​	WDPM.py - GUI for running the program. Written in Python 3.
+**dem** - contains a sample digital elevation model (DEM) for use with the WDPM:
 
-​	cmap_black.sh - shell script for converting model output to an image on Linux or MacOS 
+- basin5.asc - DEM of sub-basin 5 at Smith Creek in SW Saskatchewan.
 
-​	cmap.bat - shell script for converting model output to an image on Windows
+**paper** - contains files for the paper 'WDPM: the Wetland DEM Ponding Model'
 
-dem - contains a sample digital elevation model (DEM) for use with the WDPM:
-
-​	basin5.asc - DEM of sub-basin 5 at Smith Creek in SW Saskatchewan.
-
-paper - contains files for creating the paper 'WDPM: the Wetland DEM Ponding Model'
-
-manual - contains the user manual
+**manual** - contains the user manual
