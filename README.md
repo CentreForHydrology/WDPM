@@ -28,4 +28,4 @@ Several presentations on using WDPM are available at https://research-groups.usa
 
 **paper** - contains files for the paper 'WDPM: the Wetland DEM Ponding Model'
 
-**manual** - contains the user manual
+**manual** - contains the user manual .pdf file as well as the document Lyx file and images used
