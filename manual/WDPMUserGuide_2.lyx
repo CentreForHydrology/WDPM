@@ -53,6 +53,7 @@
 %\let\OrgIndex\index 
 %\renewcommand*{\index}[1]{\OrgIndex{#1}}
 \usepackage{dcolumn}
+\usepackage{breakurl}
 \end_preamble
 \options refpage,intoc,bibliography=totoc,index=totoc,BCOR7.5mm,captions=tableheading
 \use_default_options false
@@ -3726,6 +3727,36 @@ pip3 install -U wxPython
  
 \end_layout
 
+\begin_layout Standard
+Unfortunately, there is an issue with 
+\family typewriter
+wxPython
+\family default
+ on Ubuntu 20.04 (and distributions based on it), as it uses 
+\family typewriter
+libpng-dev
+\family default
+ version 1.6, while 
+\family typewriter
+wxPython
+\family default
+ requires version 1.2.
+ You can find instructions on how to install the older versions of 
+\family typewriter
+libpng-dev
+\family default
+ at 
+\begin_inset CommandInset href
+LatexCommand href
+name "www.pixelstech.net/article/1599647177-Problem-and-Solution-for-Installing-wxPython-on-Ubuntu-20-04"
+target "www.pixelstech.net/article/1599647177-Problem-and-Solution-for-Installing-wxPython-on-Ubuntu-20-04"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 GDAL
 \end_layout
@@ -5945,8 +5976,8 @@ noprefix "false"
  It is recommended that a zero depth threshold value of 0.005 mm be used
  in most cases, particularly for studies where the contributing fraction
  of a basin is estimated by the volume of water remaining after drainage.
- If this is not a concern, and the general arrangement of water is the only
- interest, then a coarser threshold may be justified.
+ If the general arrangement of water is the only interest, then a coarser
+ threshold may be justified.
 \end_layout
 
 \begin_layout Standard
