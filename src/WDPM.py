@@ -1,14 +1,14 @@
 import os
-import sys
-import string
 import platform
+import queue
+import string
 import subprocess
+import sys
+import textwrap
 import threading
 import time
-import textwrap
 
 import wx
-from queue import Queue, Empty  # python 3.x
 
 lock = threading.Lock()
 
@@ -747,10 +747,15 @@ class Size(wx.Frame):
 			else:
 			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
-			   
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
-			self.Module2(cmd)
+			
+			if plat=='Darwin' or plat=='Linux':   
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+				self.Module2(cmd)
 		elif method=='subtract':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -808,9 +813,14 @@ class Size(wx.Frame):
 			if waterdepths=='':
 			   self.OnErrorDepthS()
 			   plat='error'
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
-			self.Module2(cmd)
+			if plat=='Darwin' or plat=='Linux':
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
 		elif method=='drain':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -867,46 +877,25 @@ class Size(wx.Frame):
 			if draintol=='':
 			   self.OnErrorDrain()
 			   plat='error'
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
-			self.Module2(cmd)
+			if plat=='Darwin' or plat=='Linux':
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
 		elif method=='TextFile':
 			filename = str(self.txt9a.GetValue())
 			if filename=='':
 				self.OnErrorFile()
 			else:
-				newfile1 = os.path.join(self.txt0a.GetValue(),"input1.in")
-				newfile2 = os.path.join(self.txt0a.GetValue(),"input2.in")
-				f = open(filename,'r')
-				data_list = f.readlines()
-				filelist = [newfile1, newfile2]
-				for j in range(0, 2):
-					with open(filelist[j], "w") as output:
-						for i in range(len(data_list)):
-							if i==4:
-								if data_list[i].strip()=="NULL":
-									checkpointf=os.path.join(self.txt0a.GetValue(),"temp.asc")
-									output.write(checkpointf)
-									output.write("\n")
-							else:
-							    output.write(data_list[i])
-						output.write("\n")
-						output.write("0")
 				if plat=='Darwin' or plat=='Linux':
-					if data_list[4].strip() == "NULL":
-						cmd0 = [solver, newfile1]
-						cmd1 = [solver, newfile2]
-						self.Module2(cmd1)
-					else:
-						if os.path.isfile(data_list[4].strip()):
-							cmd = [solver, newfile]
-							self.Module2(cmd)
-						else:
-						    cmd0 = [solver, newfile1]
-						    cmd1 = [solver, newfile2]
-						    self.Module2(cmd1)
-				elif plat=='error':
-					self.MainError()
+					cmd = [solver, filename]
+					self.Module2(cmd)
+				else:
+					cmd = [solverw, filename]
+					self.Module2(cmd)
 
 	def EndSimulation(self, event):
 		if self.flagz == 1:
