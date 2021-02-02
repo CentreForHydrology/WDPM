@@ -1,14 +1,14 @@
 import os
-import sys
-import string
 import platform
+import queue
+import string
 import subprocess
+import sys
+import textwrap
 import threading
 import time
-import textwrap
 
 import wx
-from queue import Queue, Empty  # python 3.x
 
 lock = threading.Lock()
 
@@ -70,7 +70,7 @@ class CharValidator(wx.PyValidator):
 
 class Size(wx.Frame):
 	def __init__(self, parent, id_):
-		wx.Frame.__init__(self, parent, id_, 'Wetland DEM Ponding Model', size=(1300, 850),
+		wx.Frame.__init__(self, parent, id_, 'WDPM Program', size=(1300, 850),
 				  style=wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.RESIZE_BORDER|wx.SYSTEM_MENU|
 				  wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
 		self.panel = wx.ScrolledWindow(self, id_)
@@ -165,9 +165,9 @@ class Size(wx.Frame):
 		self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x, 19*x), size=(5*x, x-y), 
 			                  choices=methods2, style=wx.CB_READONLY) 
 		#************************	                  
-		self.lblname10 = wx.StaticText(self.panel, label="Zero depth threshold value (mm):", pos=(10,20*x))
+		self.lblname10 = wx.StaticText(self.panel, label="threshold value (mm):", pos=(10,20*x))
 		self.editname10 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,20*x),value='0',validator=CharValidator("no-alpha"))
-		self.lblname11 = wx.StaticText(self.panel, label="Iteration limitation (0 if no limitation):", pos=(10,21*x))
+		self.lblname11 = wx.StaticText(self.panel, label="iteration limitation (0 if no limitation):", pos=(10,21*x))
 		self.editname11 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,21*x),value='0',validator=CharValidator("no-alpha")) 
 		#************************              
 		## Load variables from a file
@@ -221,9 +221,9 @@ class Size(wx.Frame):
 
 
 	def OnAbout(self, event):
-		dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model version 2.0\t\n'
+		dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model - Serial/OpenCL version\t\n'
 				       '\n'
-				       'Copyright (c) 2010, 2012, 2014, 2020 Kevin Shook, Centre for Hydrology \n'
+				       'Copyright (C) 2010,2012, 2014 Kevin Shook, Centre for Hydrology \n'
 				       '--------------------------------------------------------------------\n'
 				       '\n'
 				       'This program is free software: you can redistribute\n'
@@ -242,7 +242,7 @@ class Size(wx.Frame):
 				       'From the algorithm of Shapiro, M., & Westervelt, J. (1992). \n'
 				       'An Algebra for GIS and Image Processing (pp. 1-22).\n'
 				       '\n'
-				       'Developed by Oluwaseun Sharomi, Raymond Spiteri and Tonghe Liu\n'
+				       'Developed by Oluwaseun Sharomi and Raymond Spiteri\n'
 				       'Numerical Simulation Laboratory, University of Saskatchewan.\n',
 				       'About', wx.OK | wx.ICON_INFORMATION)
 		dlg.ShowModal()
@@ -747,10 +747,15 @@ class Size(wx.Frame):
 			else:
 			    print ("DEM file not present. Use the Browse button to locate file.")
 			    plat="error"
-			   
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
-			self.Module2(cmd)
+			
+			if plat=='Darwin' or plat=='Linux':   
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+				self.Module2(cmd)
 		elif method=='subtract':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -808,9 +813,14 @@ class Size(wx.Frame):
 			if waterdepths=='':
 			   self.OnErrorDepthS()
 			   plat='error'
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
-			self.Module2(cmd)
+			if plat=='Darwin' or plat=='Linux':
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, waterdepths, elevationtol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
 		elif method=='drain':
 			demfilename = str(self.txt1.GetValue())
 			waterfilename = str(self.txt2.GetValue())
@@ -867,46 +877,25 @@ class Size(wx.Frame):
 			if draintol=='':
 			   self.OnErrorDrain()
 			   plat='error'
-			cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
-				checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
-			self.Module2(cmd)
+			if plat=='Darwin' or plat=='Linux':
+				cmd = [solver, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
+			else:
+				cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename, 
+					checkpointfilename, elevationtol, draintol, method1, method2,threshold, limitation]
+				self.Module2(cmd)
 		elif method=='TextFile':
 			filename = str(self.txt9a.GetValue())
 			if filename=='':
 				self.OnErrorFile()
 			else:
-				newfile1 = os.path.join(self.txt0a.GetValue(),"input1.in")
-				newfile2 = os.path.join(self.txt0a.GetValue(),"input2.in")
-				f = open(filename,'r')
-				data_list = f.readlines()
-				filelist = [newfile1, newfile2]
-				for j in range(0, 2):
-					with open(filelist[j], "w") as output:
-						for i in range(len(data_list)):
-							if i==4:
-								if data_list[i].strip()=="NULL":
-									checkpointf=os.path.join(self.txt0a.GetValue(),"temp.asc")
-									output.write(checkpointf)
-									output.write("\n")
-							else:
-							    output.write(data_list[i])
-						output.write("\n")
-						output.write("0")
 				if plat=='Darwin' or plat=='Linux':
-					if data_list[4].strip() == "NULL":
-						cmd0 = [solver, newfile1]
-						cmd1 = [solver, newfile2]
-						self.Module2(cmd1)
-					else:
-						if os.path.isfile(data_list[4].strip()):
-							cmd = [solver, newfile]
-							self.Module2(cmd)
-						else:
-						    cmd0 = [solver, newfile1]
-						    cmd1 = [solver, newfile2]
-						    self.Module2(cmd1)
-				elif plat=='error':
-					self.MainError()
+					cmd = [solver, filename]
+					self.Module2(cmd)
+				else:
+					cmd = [solverw, filename]
+					self.Module2(cmd)
 
 	def EndSimulation(self, event):
 		if self.flagz == 1:
