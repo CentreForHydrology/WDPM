@@ -4229,6 +4229,20 @@ The WDPM can be run either from the graphic user interface (GUI) or from
  the command line.
  Most users will prefer the GUI, but the command line version is useful
  to run the WDPM in scripts.
+ Note that if you are running the WDPM under Linux or MacOS, all three executabl
+e files 
+\family typewriter
+WDPMCL
+\family default
+, 
+\family typewriter
+runoff.cl
+\family default
+ and 
+\family typewriter
+WDPM.py
+\family default
+ must have their permissions set to allow execution.
 \end_layout
 
 \begin_layout Section
