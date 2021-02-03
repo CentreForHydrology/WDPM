@@ -1,3 +1,32 @@
+"""
+Wetland DEM Ponding Model version 2.0
+Copyright (c) 2010, 2012, 2014, 2020 Kevin Shook, Centre for Hydrology
+Developed by Oluwaseun Sharomi, Raymond Spiteri and Tonghe Liu
+Numerical Simulation Laboratory, University of Saskatchewan.
+
+--------------------------------------------------------------------
+                                                                   
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+                                                                   
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+                                                                   
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                                                                   
+This program adds water to an ArcGIS ASCII file of water runoff
+and redistributes water over the DEM
+From the algorithm of Shapiro, M., & Westervelt, J. (1992).
+An Algebra for GIS and Image Processing (pp. 1-22).
+"""
+
+
+
 import os
 import platform
 import queue
@@ -74,10 +103,10 @@ class Size(wx.Frame):
 				  style=wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.RESIZE_BORDER|wx.SYSTEM_MENU|
 				  wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
 		self.panel = wx.ScrolledWindow(self, id_)
-		#self.panel=wx.Panel(self)
 		x=35
 		y=5
 		
+		## Generate picture (text and button)
 		self.lblname9xa = wx.StaticText(self.panel, label="Output to .PNG", pos=(10,25*x))
 		self.txt9xa = wx.TextCtrl(self.panel, -1, pos=(round(8*x), round(25*x)), size=(round(2.5*x), round(x-y)))
 		self.button19xa = wx.Button(self.panel, -1, "Browse", pos=(round(10.5*x),round(25*x)), size=(round(2.5*x), round(x-y)))
@@ -87,6 +116,8 @@ class Size(wx.Frame):
 		self.txt9xa.Enable(False)
 		self.button19xa.Enable(False)
 		self.Convert.Enable(False)
+		
+		## Run the module (text and button)
 		self.runbutton=wx.Button(self.panel, label="Start", pos=(round(10),round(24*x)), size=(round(2.5*x), round(x-y)))
 		self.clearbutton=wx.Button(self.panel, label="Clear", pos=(8*x,24*x), size=(round(2.5*x), x-y))
 		self.endbutton=wx.Button(self.panel, label="End", pos=(13*x,24*x), size=(round(2.5*x), x-y))
@@ -96,6 +127,8 @@ class Size(wx.Frame):
 		self.runbutton.Enable(False)
 		self.endbutton.Enable(False)
 		self.Bind(wx.EVT_CLOSE,self.EndSimulation)
+		
+		## Menu (text and button)
 		self.flagz = 0
 		menubar = wx.MenuBar()
 		filez = wx.Menu()
@@ -108,19 +141,21 @@ class Size(wx.Frame):
 		menubar.Append(filez, '&File')
 		self.SetMenuBar(menubar)
 		self.Show(True)
-
+		
+		## Working directory (text and button)
 		self.lblname0a = wx.StaticText(self.panel, label="Working Directory:", pos=(10,x))
 		self.txt0a = wx.TextCtrl(self.panel, -1, pos=(8*x, x), size=(5*x, x-y))
 		self.button00a = wx.Button(self.panel, -1, "Browse", pos=(13*x,x), size=(round(2.5*x), x-y))
 		self.button00a.Bind(wx.EVT_BUTTON, self.OnOpen0)
+		
+		## Choose module (text and button)
 		methods = [" ", "add", "subtract", "drain", "TextFile"]
 		self.lblname0 = wx.StaticText(self.panel, label="Methods:", pos=(10,2*x))
 		self.combo = wx.ComboBox(self.panel, -1, pos=(8*x, 2*x), size=(5*x, x-y), choices=methods, style=wx.CB_READONLY)
-		#wx.EVT_COMBOBOX(self,self.combo.GetId(),self.Verify)
 		self.combo.Bind(wx.EVT_COMBOBOX, self.Verify)
-		#self.button10 = wx.Button(self.panel, -1, "Verify", pos=(13*x,2*x), size=(2.5*x, x-y))
-		#self.button10.Bind(wx.EVT_BUTTON, self.Verify)
 		self.combo.Enable(False)
+		
+		## Set DEM, water, output and scratch files (text and button)
 		self.lblname1 = wx.StaticText(self.panel, label="DEM File:", pos=(10,3*x))
 		self.txt1 = wx.TextCtrl(self.panel, -1, pos=(8*x, 3*x), size=(5*x, x-y))
 		self.button11 = wx.Button(self.panel, -1, "Browse", pos=(13*x,3*x), size=(round(2.5*x), x-y))
@@ -133,6 +168,7 @@ class Size(wx.Frame):
 		self.txt3 = wx.TextCtrl(self.panel, -1, pos=(8*x, 5*x), size=(5*x, x-y),value='water.asc')
 		self.lblname4 = wx.StaticText(self.panel, label="Scratch File:", pos=(10,6*x))
 		self.txt4 = wx.TextCtrl(self.panel, -1, pos=(8*x, 6*x), size=(5*x, x-y),value='NULL')
+		
 		## Add Components
 		self.lblname50 = wx.StaticText(self.panel, label="Add Components", pos=(10,7*x))
 		self.lblname5 = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,8*x))
@@ -141,18 +177,21 @@ class Size(wx.Frame):
 		self.editname6 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,9*x),value='1',validator=CharValidator("no-alpha"))	                  
 		self.lblname7 = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,10*x))
 		self.editname7 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,10*x),value='1',validator=CharValidator("no-alpha"))
+		
 		## Subtract Components
 		self.lblname5a0 = wx.StaticText(self.panel, label="Subtract Components", pos=(10,11*x))
 		self.lblname5a = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,12*x))
 		self.editname5a = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,12*x),value='1',validator=CharValidator("no-alpha"))	                  
 		self.lblname7a = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,13*x))
 		self.editname7a = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,13*x),value='1',validator=CharValidator("no-alpha"))
+		
 		## Drain Components
 		self.lblname6b0 = wx.StaticText(self.panel, label="Drain Components", pos=(10,14*x))
 		self.lblname6b = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,15*x))
 		self.editname6b = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,15*x),value='1',validator=CharValidator("no-alpha"))	                  
 		self.lblname7b = wx.StaticText(self.panel, label="Drain tolerance (m3):", pos=(10,16*x))
 		self.editname7b = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,16*x),value='1',validator=CharValidator("no-alpha"))
+		
 		## Other Components
 		self.lblname6bz = wx.StaticText(self.panel, label="Computation Settings", pos=(10,17*x))
 		methods1 = [" ", "Serial CPU", "OpenCL"]
@@ -163,13 +202,14 @@ class Size(wx.Frame):
 		methods2 = [" ", "GPU", "CPU"]
 		self.lblname9 = wx.StaticText(self.panel, label="OpenCL CPU/GPU:", pos=(10,19*x))
 		self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x, 19*x), size=(5*x, x-y), 
-			                  choices=methods2, style=wx.CB_READONLY) 
-		#************************	                  
+			                  choices=methods2, style=wx.CB_READONLY)
+			                   
+		## water depth threshold component	                  
 		self.lblname10 = wx.StaticText(self.panel, label="Zero depth threshold value (mm):", pos=(10,20*x))
 		self.editname10 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,20*x),value='0',validator=CharValidator("no-alpha"))
 		self.lblname11 = wx.StaticText(self.panel, label="Iteration limitation (0 if no limitation):", pos=(10,21*x))
 		self.editname11 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,21*x),value='0',validator=CharValidator("no-alpha")) 
-		#************************              
+            
 		## Load variables from a file
 		self.lblname9a0 = wx.StaticText(self.panel, label="Load from file", pos=(10,22*x))
 		self.lblname9a = wx.StaticText(self.panel, label="Text File:", pos=(10,23*x))
@@ -178,6 +218,7 @@ class Size(wx.Frame):
 		self.button19a.Bind(wx.EVT_BUTTON, self.OnOpen5)
 		self.log = wx.TextCtrl(self.panel, -1, pos=(16*x, x), size=(25*x, 22*x), 
 			               style = wx.TE_MULTILINE|wx.TE_READONLY)
+			               
 		font1 = wx.Font(11, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, 'Consolas')
 		self.log.SetFont(font1)
 		self.lblname9.Enable(False)
@@ -204,9 +245,7 @@ class Size(wx.Frame):
 		self.txt2.Enable(False)
 		self.button12.Enable(False)
 		self.txt3.Enable(False)
-		#self.button13.Enable(False)
-		self.txt4.Enable(False)
-		#self.button14.Enable(False)		  
+		self.txt4.Enable(False)		  
 		self.lblname8.Enable(False)
 		self.combo8.Enable(False)
 		self.button18.Enable(False)
@@ -283,9 +322,8 @@ class Size(wx.Frame):
 		self.button12.Enable(True)
 		self.button19a.Enable(True)
 		method = self.combo.GetValue()
-		#method_option = ['add','subtract','drain','Textfile']
-		#for i in range (0, 4)
-		#	if method == method_option[i]
+		
+		## activate or deactivate button when using different modules 
 		if method=='add':
 			self.lblname5.Enable(True)
 			self.editname5.Enable(True)
@@ -648,6 +686,7 @@ class Size(wx.Frame):
 		finally:
 		    	lock.release()
 
+	## Open DEM file for the picture converting
 	def OnOpenDEM(self,event):
 		self.dirname5x = ''
 		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.FD_OPEN)     
@@ -678,6 +717,7 @@ class Size(wx.Frame):
 		self.log.Enable(True)
 		self.RunSimulationOptimized()
 
+	## Run the binary file. Set the parameter according to different module
 	def RunSimulationOptimized(self):
 		solver=os.getcwd()+"/WDPMCL"
 		solverw=os.getcwd()+"\WDPMCL.exe"
@@ -903,7 +943,7 @@ class Size(wx.Frame):
 		else:
 		    self.Destroy()
 		
-
+	## Open working directory
 	def OnOpen0(self,event):
 		self.dirname0 = ''
 		dlg = wx.DirDialog(self, "Choose a working directory", style=1)     
@@ -916,7 +956,8 @@ class Size(wx.Frame):
 			self.button19xa.Enable(True)
 			self.Convert.Enable(True)
 		dlg.Destroy()
-
+		
+	## Open DEM file
 	def OnOpen1(self,event):
 		self.dirname1 = ''
 		dlg = wx.FileDialog(self, "Choose a file", self.dirname1,"", "*.asc", wx.FD_OPEN)   
@@ -927,6 +968,7 @@ class Size(wx.Frame):
 			self.txt1.write(self.dirname1)
 		dlg.Destroy()
 
+	## Open water file
 	def OnOpen2(self,event):
 		self.dirname2 = ''
 		dlg = wx.FileDialog(self, "Choose a file", self.dirname2,"", "*.asc", wx.FD_OPEN)     
@@ -936,27 +978,8 @@ class Size(wx.Frame):
 			    self.txt2.Clear()
 			    self.txt2.write(self.dirname2)
 		dlg.Destroy()	
-		
-	def OnOpen3(self,event):
-		self.dirname3 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname3,"", "*.asc", wx.FD_OPEN)     
-		if dlg.ShowModal()==wx.ID_OK:
-			self.filename3=dlg.GetFilename()
-			self.dirname3=dlg.GetPath()
-			self.txt3.Clear()
-			self.txt3.write(self.dirname3)
-		dlg.Destroy()
-		
-	def OnOpen4(self,event):
-		self.dirname4 = ''
-		dlg = wx.FileDialog(self, "Choose a file", self.dirname4,"", "*.asc", wx.FD_OPEN)     
-		if dlg.ShowModal()==wx.ID_OK:
-			self.filename4=dlg.GetFilename()
-			self.dirname4=dlg.GetPath()
-			self.txt4.Clear()
-			self.txt4.write(self.dirname4)
-		dlg.Destroy()
-		
+	
+	## 'Textfile' function	
 	def OnOpen5(self,event):
 		self.dirname5 = ''
 		dlg = wx.FileDialog(self, "Choose a file", self.dirname5,"", "*.txt", wx.FD_OPEN)     
