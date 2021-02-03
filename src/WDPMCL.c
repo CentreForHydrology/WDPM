@@ -17,13 +17,11 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <malloc.h>
 #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
-#include <sys/malloc.h>
 #else
 #include <CL/cl.h>
 #endif
