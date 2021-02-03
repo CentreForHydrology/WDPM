@@ -71,13 +71,13 @@ Following the addition and draining of water, 200 mm of water was removed using 
 ![Plot of WDPM simulation of water (blue) and dry ground (yellow) for the removal of 200 mm of water following the addition of 300 mm of water and draining. The region outside the basin is shown in black. Smith Creek sub-basin 5.\label{fig:subtract}](300_200_0_0_d.png)
 
 The WDPM is computationally expensive, requiring many thousands or millions of iterations to converge to a solution, depending on the DEM size, the depth of water used, and the tolerance(s) of the solution.
-In the examples above, the addition of 300 mm of water, smoothed to a resolution of 10 mm, required 179,000 iterations, taking 145.23 s on a system with an Intel i7 (4 cores, 8 threads) running Linux Mint 20. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 240,000 iterations and took 180.6 s on the same system. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations, which is the minimum possible as the program tests every 1000 iterations, taking 0.85 s, on the same system. 
+In the examples above, the addition of 300 mm of water, smoothed to a resolution of 10 mm, required 179,000 iterations, taking 145.23 s on a system with an Intel i7 CPU (4 cores, 8 threads) running Linux Mint 20. Draining the water to a tolerance of 0.1 mm/0.1 m^3^ required 240,000 iterations and took 180.6 s on the same system. Removing the water and smoothing to a tolerance of 1 mm required 1,000 iterations, which is the minimum possible as the program tests every 1000 iterations, taking 0.85 s, on the same system. 
 
 Despite the computational cost, the program's great advantage is that it can simulate any storage state within a complex system of prairie depressions.  This capability makes it useful for mapping the floodplains from non-riverine floods in the Canadian Prairies. The program outputs have been verified by remote sensing of recent floods in this region, and WDPM has been used to develop a simpler parametric model that is more easily incorporated in hydrological models [@shookStorageDynamicsSimulations2013]. The program's floodplain mapping capabilities have been used by researchers [@elboshyFrameworkPluvialFlood2019; @thapaGarbageGarbageOut2019; @kissPredictiveMappingWetland2018; @schellenbergHydrologyDeltaMarsh2017 ],
 for operational flood hazard mapping in the Canadian Prairies by government agencies [@armstrongUSINGWETLANDPONDING2013a] and by private consultants [@venemahenrydavidClimateAdaptationUsing2020; @venemahenrydavidFloodRiskMapping2020] .
 
 # Licence
-The WDPM is licensed under GPL 3.
+The WDPM is licensed under the GNU GPL v3.
 
 # Acknowlegements
 

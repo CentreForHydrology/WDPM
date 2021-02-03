@@ -613,7 +613,6 @@ class Size(wx.Frame):
 			while True:
 				readstuff = self.rep1.read()
 				if readstuff != '':
-				    #self.redir.write(readstuff)
 				    print ("Please wait ........................")
 				if self.process0.poll() is not None:
 				    self.flagz = 0
