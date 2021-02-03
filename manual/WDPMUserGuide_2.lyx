@@ -1050,6 +1050,19 @@ This module adds a specified depth of water to the basin.
  added to the existing water, and the total is redistributed.
  This module is intended to (roughly) simulate the addition of excess water
  to depressional storage by runoff from snowmelt or intense precipitation.
+ To simulate the effects of infiltration of precipitation/snowmelt to soil,
+ the addition of water allows the use of a runoff fraction
+\begin_inset Index idx
+status open
+
+\begin_layout Plain Layout
+runoff fraction
+\end_layout
+
+\end_inset
+
+ (0-1) on the water that is applied to directly to land.
+ The runoff fraction is not used on the water applied to existing water.
 \end_layout
 
 \begin_layout Standard
@@ -1077,6 +1090,19 @@ reference "fig:100mm-of-water-1"
 \end_inset
 
 .
+ This example applied 100 mm of water, with a runoff fraction of 1, an elevation
+ tolerance of 1 mm, and a zero depth threshold of 0.005 mm.
+ The meanings of these parameters is explained in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Module-parameters"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1089,7 +1115,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename 100_0_0_0u.png
+	filename 100_0_0_0_u.png
 	width 8cm
 
 \end_inset
@@ -1122,22 +1148,6 @@ name "fig:100mm-of-water-1"
 
 \end_layout
 
-\begin_layout Standard
-To simulate the effects of infiltration of precipitation/snowmelt to soil,
- the addition of water allows the use of a runoff fraction
-\begin_inset Index idx
-status open
-
-\begin_layout Plain Layout
-runoff fraction
-\end_layout
-
-\end_inset
-
- (0-1) on the water that is applied to directly to land.
- The runoff fraction is not used on the water applied to existing water.
-\end_layout
-
 \begin_layout Subsection
 Subtract
 \end_layout
@@ -1146,8 +1156,8 @@ Subtract
 This module subtracts a specified depth of water from each DEM cell to represent
  evaporation.
  No spatial variability is in the evaporation is currently allowed.
- This module generally executes very quickly as very little spatial redistributi
-on of water is usually required.
+ This module may executes quickly if little spatial redistribution of water
+ is required.
  Figure
 \begin_inset space ~
 \end_inset
@@ -1159,8 +1169,12 @@ reference "fig:100mm-of-water-50-removed"
 
 \end_inset
 
- shows the removal of 50 mm of water from the water file created from the
- addition of 100 mm.
+ shows the removal of 100 mm of water from the water file created from the
+ addition of 200 mm, using an elevation tolerance of 1 mm and a zero depth
+ threshold of 0.005 mm.
+ Note that it is possible to subtract a greater depth of water than was
+ added as the Add module applies water to the entire DEM, while the Subtract
+ module only removes water from storage in depressions.
 \end_layout
 
 \begin_layout Standard
@@ -1173,7 +1187,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename 100_50_0_0u.png
+	filename 100_200_0_0_u.png
 	width 8cm
 
 \end_inset
@@ -1230,18 +1244,16 @@ reference "fig:100mm-of-water"
 \end_inset
 
  shows the draining of the water resulting from the addition of 100 mm,
- as shown in Figure
-\begin_inset space \thinspace{}
-\end_inset
+ using an elevation tolerance of 1 mm a volume tolerance of 10 m
+\begin_inset script superscript
 
-
-\begin_inset CommandInset ref
-LatexCommand vref
-reference "fig:100mm-of-water-1"
+\begin_layout Plain Layout
+3
+\end_layout
 
 \end_inset
 
-.
+, and a zero depth threshold of 0.005 mm.
  Note that the stream is now essentially dry.
  If your DEM does not include a stream (as is true of many landscapes on
  the Canadian Prairies, then you may not need to run the Drain module.
@@ -4464,6 +4476,13 @@ report.txt
 
 \begin_layout Section
 Module parameters
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Module-parameters"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
