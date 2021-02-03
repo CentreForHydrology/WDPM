@@ -204,7 +204,7 @@ class Size(wx.Frame):
 		self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x, 19*x), size=(5*x, x-y), 
 			                  choices=methods2, style=wx.CB_READONLY)
 			                   
-		## water depth threshold component	                  
+		## Water depth threshold components
 		self.lblname10 = wx.StaticText(self.panel, label="Zero depth threshold value (mm):", pos=(10,20*x))
 		self.editname10 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,20*x),value='0',validator=CharValidator("no-alpha"))
 		self.lblname11 = wx.StaticText(self.panel, label="Iteration limitation (0 if no limitation):", pos=(10,21*x))
@@ -323,7 +323,7 @@ class Size(wx.Frame):
 		self.button19a.Enable(True)
 		method = self.combo.GetValue()
 		
-		## activate or deactivate button when using different modules 
+		## activate or deactivate buttons when using different modules 
 		if method=='add':
 			self.lblname5.Enable(True)
 			self.editname5.Enable(True)
@@ -686,7 +686,7 @@ class Size(wx.Frame):
 		finally:
 		    	lock.release()
 
-	## Open DEM file for the picture converting
+	## Open DEM file for picture creation
 	def OnOpenDEM(self,event):
 		self.dirname5x = ''
 		dlg = wx.FileDialog(self, "Choose a file", self.dirname5x,"", "*.asc", wx.FD_OPEN)     
@@ -717,7 +717,7 @@ class Size(wx.Frame):
 		self.log.Enable(True)
 		self.RunSimulationOptimized()
 
-	## Run the binary file. Set the parameter according to different module
+	## Run the binary file. Set the parameters according to different modules
 	def RunSimulationOptimized(self):
 		solver=os.getcwd()+"/WDPMCL"
 		solverw=os.getcwd()+"\WDPMCL.exe"
