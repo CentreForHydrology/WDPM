@@ -28,4 +28,16 @@ Several presentations on using WDPM are available at https://research-groups.usa
 
 **paper** - contains files for the paper 'WDPM: the Wetland DEM Ponding Model'
 
-**manual** - contains the user manual .pdf file as well as the document Lyx file and images used
+**manual** - contains the user manual **WDPMUserGuide_2.pdf** as well as the document Lyx file and images used
+
+
+## Program requirements
+
+The WDPM requires the use of other programs in order to work properly.
+- Python 3 and the wxPython library are required to run the GUI, 
+- OpenCl drivers are required to use parallel processing,
+- gdaldem is required to create maps of water distribution.
+
+Compilation of the WDPM and installation of the other required software are described in the manual **WDPMUserGuide_2.pdf**.
+
+
