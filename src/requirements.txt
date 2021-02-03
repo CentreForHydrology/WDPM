@@ -1,1 +1,1 @@
-wxPython==4.1.0
+wxPython>=4.1.0
