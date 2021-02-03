@@ -18,9 +18,9 @@ Several presentations on using WDPM are available at https://research-groups.usa
 - WDPM.py - GUI for running the program. Written in Python 3.
 - CMakeLists.txt - configuration file for building the program using cmake.
 - cmap_black.sh - shell script for converting model output to an image on Linux or MacOS 
-- cmap.bat - shell script for converting model output to an image on Windows  
+- cmap.bat - shell script for converting model output to an image on Windows
+- requirements.txt - file containing libraries required by WDPM.py 
 
-**OpenCL_install** - contains scripts for installing OpenCL drivers
 
 **dem** - contains a sample digital elevation model (DEM) for use with the WDPM:
 
