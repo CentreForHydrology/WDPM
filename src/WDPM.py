@@ -24,8 +24,6 @@ From the algorithm of Shapiro, M., & Westervelt, J. (1992).
 An Algebra for GIS and Image Processing (pp. 1-22).
 """
 
-
-
 import os
 import platform
 import string
@@ -50,7 +48,7 @@ else:
 platx = platform.system()
 
 
-if platx=='Darwin' or platx=='Linux':
+if platx in ('Darwin', 'Linux'):
     if os.path.isfile('cmap_black.sh'):
         pass
     else:
@@ -94,8 +92,8 @@ class Size(wx.Frame):
                                   style=wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.RESIZE_BORDER|
                                   wx.SYSTEM_MENU|wx.CAPTION|wx.CLOSE_BOX|wx.CLIP_CHILDREN)
         self.panel = wx.ScrolledWindow(self, id_)
-        x=35
-        y=5
+        x_p=35
+        y_p=5
 
         ## Generate picture (text and button)
         self.lblname9xa = wx.StaticText(self.panel, label="Output to .PNG", pos=(10,25*x))
@@ -109,11 +107,11 @@ class Size(wx.Frame):
         self.Convert.Bind(wx.EVT_BUTTON, self.bitmap_convert)
         self.txt9xa.Enable(False)
         self.button19xa.Enable(False)
-        self.Convert.Enable(False)
+        self.convert.Enable(False)
 
         ## Run the module (text and button)
-        self.runbutton=wx.Button(self.panel, label="Start", pos=(round(10),round(24*x)),
-                        size=(round(2.5*x), round(x-y)))
+        self.runbutton=wx.Button(self.panel, label="Start", pos=(round(10),round(24*x_p)),
+                        size=(round(2.5*x_p), round(x_p-y_p)))
         self.clearbutton=wx.Button(self.panel, label="Clear",
         		pos=(8*x,24*x), size=(round(2.5*x), x-y))
         self.endbutton=wx.Button(self.panel, label="End", pos=(13*x,24*x), size=(round(2.5*x), x-y))
@@ -146,15 +144,15 @@ class Size(wx.Frame):
 
         ## Choose module (text and button)
         methods = [" ", "add", "subtract", "drain", "TextFile"]
-        self.lblname0 = wx.StaticText(self.panel, label="Methods:", pos=(10,2*x))
-        self.combo = wx.ComboBox(self.panel, -1, pos=(8*x, 2*x), size=(5*x, x-y),
+        self.lblname0 = wx.StaticText(self.panel, label="Methods:", pos=(10,2*x_p))
+        self.combo = wx.ComboBox(self.panel, -1, pos=(8*x_p, 2*x_p), size=(5*x_p, x_p-y_p),
                         choices=methods, style=wx.CB_READONLY)
         self.combo.Bind(wx.EVT_COMBOBOX, self.verify)
         self.combo.Enable(False)
 
         ## Set DEM, water, output and scratch files (text and button)
-        self.lblname1 = wx.StaticText(self.panel, label="DEM File:", pos=(10,3*x))
-        self.txt1 = wx.TextCtrl(self.panel, -1, pos=(8*x, 3*x), size=(5*x, x-y))
+        self.lblname1 = wx.StaticText(self.panel, label="DEM File:", pos=(10,3*x_p))
+        self.txt1 = wx.TextCtrl(self.panel, -1, pos=(8*x_p, 3*x_p), size=(5*x_p, x_p-y_p))
         self.button11 = wx.Button(self.panel, -1, "Browse",
         		pos=(13*x,3*x), size=(round(2.5*x), x-y))
         self.button11.Bind(wx.EVT_BUTTON, self.on_open_1)
@@ -170,111 +168,86 @@ class Size(wx.Frame):
         self.txt4 = wx.TextCtrl(self.panel, -1, pos=(8*x, 6*x), size=(5*x, x-y),value='NULL')
 
         ## Add Components
-        self.lblname50 = wx.StaticText(self.panel, label="Add Components", pos=(10,7*x))
-        self.lblname5 = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,8*x))
-        self.editname5 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,8*x),value='10',
+        self.lblname50 = wx.StaticText(self.panel, label="Add Components", pos=(10,7*x_p))
+        self.lblname5 = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,8*x_p))
+        self.editname5 = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,8*x_p),
+        		value='10', validator=CharValidator("no-alpha"))
+        self.lblname6 = wx.StaticText(self.panel, label="Water runoff fraction:", pos=(10,9*x_p))
+        self.editname6 = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,9*x_p),value='1',
                         validator=CharValidator("no-alpha"))
-        self.lblname6 = wx.StaticText(self.panel, label="Water runoff fraction:", pos=(10,9*x))
-        self.editname6 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,9*x),value='1',
-                        validator=CharValidator("no-alpha"))
-        self.lblname7 = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,10*x))
-        self.editname7 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,10*x),value='1',
-                        validator=CharValidator("no-alpha"))
+        self.lblname7 = wx.StaticText(self.panel, label="Elevation tolerance (mm):",
+        		pos=(10,10*x_p))
+        self.editname7 = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,10*x_p),
+        		value='1', validator=CharValidator("no-alpha"))
 
         ## Subtract Components
-        self.lblname5a0 = wx.StaticText(self.panel, label="Subtract Components", pos=(10,11*x))
-        self.lblname5a = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,12*x))
-        self.editname5a = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,12*x),value='1',
-                        validator=CharValidator("no-alpha"))
-        self.lblname7a = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,13*x))
-        self.editname7a = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,13*x),value='1',
-                        validator=CharValidator("no-alpha"))
+        self.lblname5a0 = wx.StaticText(self.panel, label="Subtract Components", pos=(10,11*x_p))
+        self.lblname5a = wx.StaticText(self.panel, label="Depth of water (mm):", pos=(10,12*x_p))
+        self.editname5a = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,12*x_p),
+        		value='1', validator=CharValidator("no-alpha"))
+        self.lblname7a = wx.StaticText(self.panel, label="Elevation tolerance (mm):",
+        		pos=(10,13*x_p))
+        self.editname7a = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p),
+        		pos=(8*x_p,13*x_p), value='1', validator=CharValidator("no-alpha"))
 
         ## Drain Components
-        self.lblname6b0 = wx.StaticText(self.panel, label="Drain Components", pos=(10,14*x))
-        self.lblname6b = wx.StaticText(self.panel, label="Elevation tolerance (mm):", pos=(10,15*x))
-        self.editname6b = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,15*x),value='1',
-                        validator=CharValidator("no-alpha"))
-        self.lblname7b = wx.StaticText(self.panel, label="Drain tolerance (m3):", pos=(10,16*x))
-        self.editname7b = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,16*x),value='1',
-                        validator=CharValidator("no-alpha"))
+        self.lblname6b0 = wx.StaticText(self.panel, label="Drain Components", pos=(10,14*x_p))
+        self.lblname6b = wx.StaticText(self.panel, label="Elevation tolerance (mm):",
+        		pos=(10,15*x_p))
+        self.editname6b = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,15*x_p),
+        		value='1', validator=CharValidator("no-alpha"))
+        self.lblname7b = wx.StaticText(self.panel, label="Drain tolerance (m3):", pos=(10,16*x_p))
+        self.editname7b = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,16*x_p),
+        		value='1', validator=CharValidator("no-alpha"))
 
         ## Other Components
-        self.lblname6bz = wx.StaticText(self.panel, label="Computation Settings", pos=(10,17*x))
+        self.lblname6bz = wx.StaticText(self.panel, label="Computation Settings", pos=(10,17*x_p))
         methods1 = [" ", "Serial CPU", "OpenCL"]
-        self.lblname8 = wx.StaticText(self.panel, label="Serial/OpenCL:", pos=(10,18*x))
-        self.combo8 = wx.ComboBox(self.panel, -1, pos=(8*x, 18*x), size=(5*x, x-y),
+        self.lblname8 = wx.StaticText(self.panel, label="Serial/OpenCL:", pos=(10,18*x_p))
+        self.combo8 = wx.ComboBox(self.panel, -1, pos=(8*x_p, 18*x_p), size=(5*x_p, x_p-y_p),
                         choices=methods1, style=wx.CB_READONLY)
         self.button18 = wx.Button(self.panel, -1, "Process", pos=(13*x,18*x),
         		 size=(round(2.5*x), x-y))
         self.button18.Bind(wx.EVT_BUTTON, self.process)
         methods2 = [" ", "GPU", "CPU"]
-        self.lblname9 = wx.StaticText(self.panel, label="OpenCL CPU/GPU:", pos=(10,19*x))
-        self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x, 19*x), size=(5*x, x-y),
+        self.lblname9 = wx.StaticText(self.panel, label="OpenCL CPU/GPU:", pos=(10,19*x_p))
+        self.combo9 = wx.ComboBox(self.panel, -1, pos=(8*x_p, 19*x_p), size=(5*x_p, x_p-y_p),
                                           choices=methods2, style=wx.CB_READONLY)
 
         ## water depth threshold component
         self.lblname10 = wx.StaticText(self.panel, label="Zero depth threshold value (mm):",
-                        pos=(10,20*x))
-        self.editname10 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,20*x),value='0',
-                        validator=CharValidator("no-alpha"))
+                        pos=(10,20*x_p))
+        self.editname10 = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,20*x_p),
+        		value='0', validator=CharValidator("no-alpha"))
         self.lblname11 = wx.StaticText(self.panel,
-                         label="Iteration limitation (0 if no limitation):", pos=(10,21*x))
-        self.editname11 = wx.TextCtrl(self.panel, size=(5*x, x-y), pos=(8*x,21*x),value='0',
-                        validator=CharValidator("no-alpha"))
+                         label="Iteration limitation (0 if no limitation):", pos=(10,21*x_p))
+        self.editname11 = wx.TextCtrl(self.panel, size=(5*x_p, x_p-y_p), pos=(8*x_p,21*x_p),
+        		value='0', validator=CharValidator("no-alpha"))
 
         ## Load variables from a file
-        self.lblname9a0 = wx.StaticText(self.panel, label="Load from file", pos=(10,22*x))
-        self.lblname9a = wx.StaticText(self.panel, label="Text File:", pos=(10,23*x))
-        self.txt9a = wx.TextCtrl(self.panel, -1, pos=(8*x, 23*x), size=(5*x, x-y))
-        self.button19a = wx.Button(self.panel, -1, "Browse", pos=(13*x,23*x),
-                        size=(round(2.5*x), x-y))
+        self.lblname9a0 = wx.StaticText(self.panel, label="Load from file", pos=(10,22*x_p))
+        self.lblname9a = wx.StaticText(self.panel, label="Text File:", pos=(10,23*x_p))
+        self.txt9a = wx.TextCtrl(self.panel, -1, pos=(8*x_p, 23*x_p), size=(5*x_p, x_p-y_p))
+        self.button19a = wx.Button(self.panel, -1, "Browse", pos=(13*x_p,23*x_p),
+                        size=(round(2.5*x_p), x_p-y_p))
         self.button19a.Bind(wx.EVT_BUTTON, self.on_open_5)
-        self.log = wx.TextCtrl(self.panel, -1, pos=(16*x, x), size=(25*x, 22*x),
+        self.log = wx.TextCtrl(self.panel, -1, pos=(16*x_p, x_p), size=(25*x_p, 22*x_p),
                                        style = wx.TE_MULTILINE|wx.TE_READONLY)
-
-        font1 = wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
-        		wx.FONTWEIGHT_NORMAL, False, 'Consolas')
-        self.log.SetFont(font1)
-        self.lblname9.Enable(False)
-        self.combo9.Enable(False)
-        self.lblname5.Enable(False)
-        self.editname5.Enable(False)
-        self.lblname6.Enable(False)
-        self.editname6.Enable(False)
-        self.lblname7.Enable(False)
-        self.editname7.Enable(False)
-        self.lblname5a.Enable(False)
-        self.editname5a.Enable(False)
-        self.lblname7a.Enable(False)
-        self.editname7a.Enable(False)
-        self.lblname6b.Enable(False)
-        self.editname6b.Enable(False)
-        self.lblname7b.Enable(False)
-        self.editname7b.Enable(False)
-        self.lblname9a.Enable(False)
-        self.txt9a.Enable(False)
-        self.button19a.Enable(False)
-        self.txt1.Enable(False)
-        self.button11.Enable(False)
-        self.txt2.Enable(False)
-        self.button12.Enable(False)
-        self.txt3.Enable(False)
-        self.txt4.Enable(False)
-        self.lblname8.Enable(False)
-        self.combo8.Enable(False)
-        self.button18.Enable(False)
-        self.lblname9.Enable(False)
-        self.clearbutton.Enable(False)
-        self.redir=RedirectText(self.log)
-        sys.stdout=self.redir
-        sys.stderr=self.redir
-
-        self.panel.SetScrollbars( 150, 90,  10, 11 )
-        self.panel.SetScrollRate( 3, 3 )
-
-    def on_about(self, event):
-        '''about the application'''
+        ##pre-define
+        self.dirname5: str = str()
+        self.dirname2: str = str()
+        self.filename2: str = str()
+        self.filename1: str = str()
+        self.dirname1: str = str()
+        self.dirname0: str = str()
+        self.filename0: str = str()
+        self.threadx: str = str()
+        self.processx: str = str()
+        self.dirname5x: str = str()
+        self.filename5: str = str()
+        self.repx: str = str()
+        self.thread1: str = str()
+        self.rep2: str = str()
         dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model version 2.0\t\n'
                                        '\n'
                                        'Copyright (c) 2010, 2012, 2014, 2020 Kevin Shook,'
@@ -311,10 +284,11 @@ class Size(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
+
     def on_error_1(self):
+
         '''method check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Invalid method selected.\n', 'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
         dlg.Destroy()
@@ -322,7 +296,6 @@ class Size(wx.Frame):
     def on_error_m1(self):
         '''method check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please choose whether to use serial or OpenCL.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -384,7 +357,6 @@ class Size(wx.Frame):
         self.button12.Enable(True)
         self.button19a.Enable(True)
         method = self.combo.GetValue()
-
         ## activate or deactivate button when using different modules
         if method=='add':
             self.Bind(wx.EVT_MENU, self.en_dis_control(1, 1, 1, 1, 1, 1,
@@ -402,21 +374,21 @@ class Size(wx.Frame):
             self.on_error_1()
 
 
+
     def on_error_dem(self):
+
         '''dem check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specify DEM filename/path.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
         dlg.Destroy()
 
+
     def on_error_water(self):
         '''water file check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Water file not selected\n'
-                                       '\n'
                                        'Please use NULL if water file is not required.\n'
                                        , 'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -425,16 +397,15 @@ class Size(wx.Frame):
     def on_error_output(self):
         '''check output'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specify Output filename.\n'
                                        '\n', 'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
         dlg.Destroy()
 
+
     def on_error_check_point(self):
         '''output check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Checkpoint filename not specified.\n'
                                        '\n'
                                        'Please specify NULL if checkpontingPlease specified'
@@ -446,7 +417,6 @@ class Size(wx.Frame):
     def on_error_m2(self):
         '''method check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please choose whether to use CPU or GPU.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -455,7 +425,6 @@ class Size(wx.Frame):
     def on_error_elev(self):
         '''elevation hceck'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specify elevation tolerance.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -464,7 +433,6 @@ class Size(wx.Frame):
     def on_error_drain(self):
         '''drain tolerance check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specify drain tolerance.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -473,7 +441,6 @@ class Size(wx.Frame):
     def on_error_file(self):
         '''path check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specify Input filename/path.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -482,7 +449,6 @@ class Size(wx.Frame):
     def on_error_depth_s(self):
         '''sub water check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specified depth of water to subtract.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -491,7 +457,6 @@ class Size(wx.Frame):
     def on_error_depth_a(self):
         '''add water check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specified depth of water to add.\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -500,7 +465,6 @@ class Size(wx.Frame):
     def on_error_runoff(self):
         '''runoff fraction check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'Please specified runoff fraction\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -509,7 +473,6 @@ class Size(wx.Frame):
     def main_error(self):
         '''parameter check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       '\n'
                                        'One or more of the parameters are missing\n',
                                         'Error', wx.OK | wx.ICON_ERROR)
         dlg.ShowModal()
@@ -518,7 +481,6 @@ class Size(wx.Frame):
     def on_simulation_finished(self):
         '''simulation finish?'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
-                                       '\n'
                                        'Simulation is not running\n', 'Information',
                                         wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
@@ -527,7 +489,6 @@ class Size(wx.Frame):
     def on_simulation_cancel(self):
         '''cancel simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
-                                       '\n'
                                        'Simulation is still running. Cancel running simulation \n',
                                        'Question', wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
         res = dlg.ShowModal()
@@ -540,7 +501,6 @@ class Size(wx.Frame):
     def on_simulation_close(self):
         '''close simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
-                                       '\n'
                                        'Simulation is still running. Close program \n',
                                        'Question', wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
         res = dlg.ShowModal()
@@ -552,7 +512,6 @@ class Size(wx.Frame):
     def on_simulation_clear(self):
         '''clear simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
-                                       '\n'
                                        'Simulation is still running. Clear screen \n',
                                        'Question', wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION)
         res = dlg.ShowModal()
@@ -572,6 +531,7 @@ class Size(wx.Frame):
 
     def on_abort_button(self, event):
         '''run and end button'''
+
         alive = self.process.poll()
         if alive is None:
             self.on_simulation_cancel()
@@ -598,7 +558,7 @@ class Size(wx.Frame):
             try:
                 self.rep2 = open(reportfilepath2, "r")
             except Exception:
-                raise AssertionError("Unable to open report.txt")
+                raise "Unable to open report.txt" from AssertionError
             readstuff = ''
             while True:
                 readstuff = self.rep2.read()
@@ -615,8 +575,7 @@ class Size(wx.Frame):
                     if os.path.isfile(os.path.join(self.txt0a.GetValue(),"input2.in")):
                         os.remove(os.path.join(self.txt0a.GetValue(),"input2.in"))
                     break
-                else:
-                    self.flagz = 1
+                self.flagz = 1
             self.rep2.close()
         finally:
             lock.release()
@@ -642,7 +601,7 @@ class Size(wx.Frame):
             try:
                 self.repx = open(reportfilepathx, "r")
             except Exception:
-                raise AssertionError("Unable to open cmap.txt")
+                raise "Unable to open cmap.txt" from AssertionError
             readstuff = ''
             while True:
                 readstuff = self.repx.read()
@@ -663,14 +622,13 @@ class Size(wx.Frame):
             self.dirname5x=dlg.GetPath()
             self.txt9xa.Clear()
             self.txt9xa.write(self.dirname5x)
-            self.Convert.Enable(True)
+            self.convert.Enable(True)
             dlg.Destroy()
 
     def bitmap_convert(self,event):
         '''picture converter'''
         reportfilepath=open(os.path.join(self.txt0a.GetValue(),"cmap.txt"), "w")
-        platx = platform.system()
-        if platx=='Darwin' or platx=='Linux':
+        if platx in ('Darwin', 'Linux'):
             cmd = ['./cmap_black.sh', self.txt9xa.GetValue()]
             self.processx = subprocess.Popen(cmd, stdout=reportfilepath,
                                 stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
@@ -693,7 +651,7 @@ class Size(wx.Frame):
     def run_simulation_optimized(self):
         '''execute the command'''
         solver=os.getcwd()+"/WDPMCL"
-        solverw=os.getcwd()+"\WDPMCL.exe"
+        solverw=os.getcwd()+r"\WDPMCL.exe"
         method = self.combo.GetValue()
         plat = platform.system()
         checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
@@ -718,12 +676,10 @@ class Size(wx.Frame):
                 method1="0"
             elif method1=="OpenCL":
                 method1="1"
-
             if method2=="GPU":
                 method2="0"
             elif method2=="CPU":
                 method2="1"
-
             if demfilename=='':
                 self.on_error_dem()
                 plat='error'
@@ -752,7 +708,6 @@ class Size(wx.Frame):
             if runoffrac=='':
                 self.on_error_runoff()
                 plat='error'
-
             if os.path.isfile("self.txt1.GetValue()"):
                 pass
             if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -761,7 +716,7 @@ class Size(wx.Frame):
                 print ("DEM file not present. Use the Browse button to locate file.")
                 plat="error"
 
-            if plat=='Darwin' or plat=='Linux':
+            if plat in ('Darwin', 'Linux'):
                 cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
                                         checkpointfilename, waterdeptha,
                                          runoffrac, elevationtol, method1,
@@ -791,12 +746,10 @@ class Size(wx.Frame):
                 method1="0"
             elif method1=="OpenCL":
                 method1="1"
-
             if method2=="GPU":
                 method2="0"
             elif method2=="CPU":
                 method2="1"
-
             if os.path.isfile("self.txt1.GetValue()"):
                 pass
             if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -804,7 +757,6 @@ class Size(wx.Frame):
             else:
                 print ("DEM file not present. Use the Browse button to locate file.")
                 plat="error"
-
             if demfilename=='':
                 self.on_error_dem()
                 plat='error'
@@ -830,7 +782,7 @@ class Size(wx.Frame):
             if waterdepths=='':
                 self.on_error_depth_s()
                 plat='error'
-            if plat=='Darwin' or plat=='Linux':
+            if plat in ('Darwin', 'Linux'):
                 cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
                                         checkpointfilename, waterdepths,
                                          elevationtol, method1, method2,threshold, limitation]
@@ -858,7 +810,6 @@ class Size(wx.Frame):
                 method1="0"
             elif method1=="OpenCL":
                 method1="1"
-
             if os.path.isfile("self.txt1.GetValue()"):
                 pass
             if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -866,12 +817,10 @@ class Size(wx.Frame):
             else:
                 print ("DEM file not present. Use the Browse button to locate file.")
                 plat="error"
-
             if method2=="GPU":
                 method2="0"
             elif method2=="CPU":
                 method2="1"
-
             if demfilename=='':
                 self.on_error_dem()
                 plat='error'
@@ -896,7 +845,7 @@ class Size(wx.Frame):
             if draintol=='':
                 self.on_error_drain()
                 plat='error'
-            if plat=='Darwin' or plat=='Linux':
+            if plat in ('Darwin', 'Linux'):
                 cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
                                         checkpointfilename, elevationtol, draintol, method1,
                                          method2,threshold, limitation]
@@ -911,7 +860,7 @@ class Size(wx.Frame):
             if filename=='':
                 self.on_error_file()
             else:
-                if plat=='Darwin' or plat=='Linux':
+                if plat in ('Darwin', 'Linux'):
                     cmd = [solver, filename]
                     self.module2(cmd)
                 else:
@@ -936,7 +885,7 @@ class Size(wx.Frame):
             self.combo.Enable(True)
             self.txt9xa.Enable(True)
             self.button19xa.Enable(True)
-            self.Convert.Enable(True)
+            self.convert.Enable(True)
         dlg.Destroy()
 
     def on_open_1(self,event):
