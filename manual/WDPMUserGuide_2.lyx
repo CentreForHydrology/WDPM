@@ -174,12 +174,14 @@ Kevin Shook, Robert Armstrong, Oluwaseun Sharomi,
 \begin_inset Newline newline
 \end_inset
 
-Raymond J. Spiteri, John Pomeroy, Tonghe Liu
+Raymond J.
+ Spiteri, John Pomeroy, Tonghe Liu
 \end_layout
 
 \begin_layout Standard
 Copyright © 2014, 2020 Kevin Shook, Robert Armstrong, Oluwaseun Sharomi,
- Raymond J. Spiteri, John Pomeroy, Tonghe Liu.
+ Raymond J.
+ Spiteri, John Pomeroy, Tonghe Liu.
  Permission is granted to copy, distribute and/or modify this document under
  the terms of the GNU Free Documentation License, Version 1.3 or any later
  version published by the Free Software Foundation; with no Invariant Sections,
@@ -463,9 +465,8 @@ reference "sec:DEM-data"
 
 .
  It is important to note that the WDPM only operates at elevations
-
 \shape italic
-above
+ above
 \shape default
  the elevations of the water present when the DEM was constructed.
 \end_layout
@@ -1012,8 +1013,8 @@ literal "false"
 \end_inset
 
 .
- This is not intended to be a substitute for a GIS program, but it does provide
- the ability to create an image of the water surface as a .png file.
+ This is not intended to be a substitute for a GIS program, but it does
+ provide the ability to create an image of the water surface as a .png file.
  The program requires a file called
 \family typewriter
 colormap_black.txt
@@ -1228,8 +1229,8 @@ Drain
 This module drains the water on the DEM through the lowest point, assuming
  that this point is in the drainage system.
  This module can be the slowest to execute (depending on the resolution
- and the convergence parameters) because it moves large volumes of water long
- distances.
+ and the convergence parameters) because it moves large volumes of water
+ long distances.
  The purpose of the Drain module is to eliminate the 'backing up' of water
  over the DEM.
  Figure
@@ -1526,8 +1527,7 @@ if water surface elevation of selected cell > that of the neighbour cell
 
 \begin_layout Plain Layout
 
-    move one-eighth of the difference in water elevation to neighbour
- cell
+    move one-eighth of the difference in water elevation to neighbour cell
 \end_layout
 
 \begin_layout Plain Layout
@@ -1574,14 +1574,14 @@ name "alg:Pseudocode-for-Shapiro"
 \end_layout
 
 \begin_layout Standard
-At each iteration the algorithm is imperfect because the depth of water transferred
- may be result in an inaccurate representation of the final water surface.
+At each iteration the algorithm is imperfect because the depth of water
+ transferred may be result in an inaccurate representation of the final
+ water surface.
  However, over many thousands of iterations, the movement of water does
  result in a realistic water surface, where the local water elevation is
  constrained by the landscape.
  The termination of the algorithm occurs when the change in the water surface
  between successive iterations is smaller than the specified tolerance.
-
 \end_layout
 
 \begin_layout Section
@@ -1590,8 +1590,8 @@ Parallelization
 
 \begin_layout Standard
 The WDPM can be run as a conventional serial program, where one instruction
- at a time is executed, or it can be run in parallel, where multiple instructions are executed
- simultaneously by multiple processors.
+ at a time is executed, or it can be run in parallel, where multiple instruction
+s are executed simultaneously by multiple processors.
  The parallel processing uses the OpenCL
 \begin_inset Index idx
 status open
@@ -1607,11 +1607,11 @@ OpenCL
 
 \begin_layout Standard
 The original WDPM Fortran code employed an algorithm that subdivided the
- water matrix into mutually exclusive sub-matrices, with each sub-matrix being
- assigned to a separate process.
+ water matrix into mutually exclusive sub-matrices, with each sub-matrix
+ being assigned to a separate process.
  The sub-matrices were separated by two columns to avoid concurrent writes.
- Although this algorithm is every effective with OpenMP, it created inefficiencies
- for OpenCL.
+ Although this algorithm is every effective with OpenMP, it created inefficienci
+es for OpenCL.
 \end_layout
 
 \begin_layout Standard
@@ -1631,9 +1631,9 @@ reference "fig:Schematic-diagram-of"
  The colours in the figure represent how the data were split among available
  processors.
  In this case, all nodes with the same colour are processed by the same
- processor in serial (one after the other), but they are also processed in parallel (simultaneously)
- with nodes of other colours in the different regions but in the same
- position of the other sub-matrices.
+ processor in serial (one after the other), but they are also processed
+ in parallel (simultaneously) with nodes of other colours in the different
+ regions but in the same position of the other sub-matrices.
 \end_layout
 
 \begin_layout Standard
@@ -1645,11 +1645,11 @@ reference "alg:Original-WDPM-Fortran"
 \end_inset
 
 .
- The matrix that holds the water depths is called 'bigwater' because it is
- one array cell larger on each edge than the water matrix to avoid having
+ The matrix that holds the water depths is called 'bigwater' because it
+ is one array cell larger on each edge than the water matrix to avoid having
  to check the boundaries.
- Similarly, the matrix that holds the DEM is called 'bigdem' because it is also
- one array cell larger on each edge than the original DEM.
+ Similarly, the matrix that holds the DEM is called 'bigdem' because it
+ is also one array cell larger on each edge than the original DEM.
  The code first processes the sub-matrices (referred to as 'slices').
  When all slices have been finished, the code then processes the regions
  in-between the 'slices', which are referred to as 'boundaries'.
@@ -1902,14 +1902,14 @@ form, parallel programming of modern processors found in personal computers,
  servers, and handheld/embedded devices.
  OpenCL greatly improves speed and responsiveness for a wide spectrum of
  applications in many categories.
- The problem caused by directly implementing the Fortran OpenMP algorithm in OpenCL is that the
- data transfers required led to significant inefficiencies.
- Accordingly, the implementation of the Shapiro and Westervelt algorithm was changed
- by noting that the goal is to process all the nodes without creating race conditions, i.e., concurrent
- writing to the same point in the matrix.
+ The problem caused by directly implementing the Fortran OpenMP algorithm
+ in OpenCL is that the data transfers required led to significant inefficiencies.
+ Accordingly, the implementation of the Shapiro and Westervelt algorithm
+ was changed by noting that the goal is to process all the nodes without
+ creating race conditions, i.e., concurrent writing to the same point in the
+ matrix.
  The entire matrix was divided into 9 slices such that race conditions are
  not present.
-
 \end_layout
 
 \begin_layout Standard
@@ -1930,7 +1930,6 @@ reference "fig:Subdivision-of-the"
  The host code sits on the CPU and send instructions to the devices that
  do the parallel processing.
  The C code of the Shapiro and Westervelt algorithm host is shown in Algorithm
-
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "alg:OpenCL-host-C"
@@ -1940,8 +1939,7 @@ reference "alg:OpenCL-host-C"
 .
  The kernel code is executed in parallel by each of the available devices
  (CPU or GPU).
- The C code of the Shapiro and Westervelt algorithm kernel is shown in
- Algorithm
+ The C code of the Shapiro and Westervelt algorithm kernel is shown in Algorithm
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "alg:OpenCL-kernel-C"
@@ -2281,8 +2279,8 @@ noprefix "false"
  to the program as an additional parameter, as described below.
  Depths of water smaller than the threshold depth are treated as being zero,
  and are therefore not redistributed.
- Note that the use of a threshold depth greater than zero also affects
- the mean depth of water remaining on the DEM, as calculated by the program,
+ Note that the use of a threshold depth greater than zero also affects the
+ mean depth of water remaining on the DEM, as calculated by the program,
  as well as the calculated volume of water drained from the DEM.
  The effects of the zero depth threshold on the execution time and the water
  distribution.
@@ -2302,7 +2300,8 @@ name "sec:DEM-data"
 \begin_layout Standard
 A brief summary of results is provided here for a recent comparison of WDPM
  runoff maps generated from different digital elevation models (DEMs).
- The analysis was conducted for two Prairie locations, one located in Saskatchewan and the other in Manitoba.
+ The analysis was conducted for two Prairie locations, one located in Saskatchew
+an and the other in Manitoba.
  The DEM data sources included products derived from, Light Detection And
  Ranging (LiDAR), aerial photos, the National Topographic DataBase (NTDB),
  satellite optical stereo-images, and space-borne radar.
@@ -2414,8 +2413,7 @@ reference "tab:Technical-specifications-of"
  elevation data and land surface representation anomalies.
  Resource issues can be a general limitation simply based on the cost to
  acquire DEM data and the technical skills required to process massive and
- complex datasets, e.g.,
- LiDAR point clouds and DEMs.
+ complex datasets, e.g., LiDAR point clouds and DEMs.
  However, systematic data errors and land surface representation issues
  are more critical concerns for generating realistic runoff maps with WDPM.
 \end_layout
@@ -2445,10 +2443,11 @@ reference "fig:Winnipeg-Runoff-distributions"
  Swift Current DEMs and 116 mm to the Manitoba DEMs.
  Strictly for reference purposes, the different depths applied are equivalent
  to the maximum 24-hour accumulated rainfall totals for the 1:100 year return
- periods at these locations and also serves to highlight differences
- in the local climates.
+ periods at these locations and also serves to highlight differences in
+ the local climates.
  Runoff maps are also included for the same water depths applied to the
- 5 m LiDAR DEMs for relative comparisons against the “expected” runoff distributions.
+ 5 m LiDAR DEMs for relative comparisons against the “expected” runoff distribut
+ions.
 \end_layout
 
 \begin_layout Standard
@@ -2456,14 +2455,13 @@ Contrasts among the runoff maps observed in both cases suggest differences
  in DEM technical specifications and terrain representation issues are important
  concerns for flood hazard mapping.
  The resulting maps highlight potential issues such as terrace-like incoherent
- runoff patterns generated on CDED surfaces for both landscapes; these issues are
- attributed to the use of integer storage formats.
+ runoff patterns generated on CDED surfaces for both landscapes; these issues
+ are attributed to the use of integer storage formats.
  Poorly captured terrain features in past versions of Ortho-DEM based products
  are also a key concern.
  This type of problem is partly due to the subjectivity of capturing relevant
  surface features and systematic issues related to photogrammetric techniques
- used for developing DEMs, i.e.,
- hardware, software, and data formats.
+ used for developing DEMs, i.e., hardware, software, and data formats.
 \end_layout
 
 \begin_layout Standard
@@ -2482,8 +2480,8 @@ reference "fig:Winnipeg-Runoff-distributions"
  shows an example based on the SRTM runoff map at the Manitoba location.
  This critical issue can be attributed to the difficulties of capturing
  elevation information using space-borne radar or optical techniques over
- areas of low relief or dense vegetation canopies and where limited
- ground control points exist.
+ areas of low relief or dense vegetation canopies and where limited ground
+ control points exist.
  This is also a severe problem for ASTER DEMs versions 1 and 2, both of
  which have been observed to contain large pits in the order of 30 m – 50
  m deep and “mole-run” artifacts that appear as positive curvilinear surface
@@ -2492,7 +2490,6 @@ reference "fig:Winnipeg-Runoff-distributions"
  a particular region.
  In such cases, DEMs for these areas have no practical value for overland
  runoff simulations.
-
 \end_layout
 
 \begin_layout Standard
@@ -2732,8 +2729,8 @@ real
 \uwave off
 \noun off
 \color none
-Cost, data volume and correcting drainage connectivity (e.g.,
- for culvert locations)
+Cost, data volume and correcting drainage connectivity (e.g., for culvert
+ locations)
 \end_layout
 
 \end_inset
@@ -3043,8 +3040,7 @@ Real or Integer
 \uwave off
 \noun off
 \color none
-Winter survey, backscatter (e.g.,
- low relief, dense vegetation) and coarseness
+Winter survey, backscatter (e.g., low relief, dense vegetation) and coarseness
 \end_layout
 
 \end_inset
@@ -3270,7 +3266,6 @@ name "chap:Installing-the-WDPM"
 
 \begin_layout Standard
 The source code for the WDPM is available from the GitHub repository at
-
 \begin_inset Flex URL
 status open
 
@@ -3295,7 +3290,6 @@ https://research-groups.usask.ca/hydrology/modelling/wdpm.php
 \end_inset
 
 .
-
 \end_layout
 
 \begin_layout Section
@@ -3303,13 +3297,13 @@ Package dependencies
 \end_layout
 
 \begin_layout Standard
-Although the WDPM does not require other packages to be installed, it
- works much better with them.
- Because the packages that make up the dependencies
- for the WDPM change frequently and to avoid over-writing existing
- versions with older versions, these dependencies are not supplied with the
- WDPM.
- The user is responsible for installing any dependencies, preferably before installing the WDPM.
+Although the WDPM does not require other packages to be installed, it works
+ much better with them.
+ Because the packages that make up the dependencies for the WDPM change
+ frequently and to avoid over-writing existing versions with older versions,
+ these dependencies are not supplied with the WDPM.
+ The user is responsible for installing any dependencies, preferably before
+ installing the WDPM.
 \end_layout
 
 \begin_layout Standard
@@ -3334,8 +3328,8 @@ OpenCL drivers
 \begin_layout Standard
 As described above, the WDPM uses OpenCL to provide parallel processing,
  which requires the appropriate drivers to be installed.
- However, the WDPM can also run in serial mode when
- appropriate drivers are unavailable.
+ However, the WDPM can also run in serial mode when appropriate drivers
+ are unavailable.
  The selection of the processing mode is shown on
 \begin_inset CommandInset ref
 LatexCommand vpageref
@@ -3344,8 +3338,8 @@ reference "enu:Click-on-Process"
 \end_inset
 
 .
- The drivers installed depend on the operating system (Linux, MacOS,
- Windows) as well as the CPU (Intel/AMD) and GPU (NVIDIA/AMD).
+ The drivers installed depend on the operating system (Linux, MacOS, Windows)
+ as well as the CPU (Intel/AMD) and GPU (NVIDIA/AMD).
  We note that OpenCL has been deprecated on MacOS, so there is no guarantee
  that it will continue to function in the future.
 \end_layout
@@ -3604,8 +3598,8 @@ beignet
 \begin_inset Quotes erd
 \end_inset
 
-) do not work with WDPM, so in this case it is necessary to download the drivers
- directly from Intel.
+) do not work with WDPM, so in this case it is necessary to download the
+ drivers directly from Intel.
  If you have already installed the beignet drivers, it is necessary to do
  a complete removal before installing the drivers from Intel.
 \end_layout
@@ -3616,7 +3610,6 @@ Python 3
 
 \begin_layout Standard
 The WDPM can be run directly from the command line, but the GUI requires
-
 \series bold
 Python
 \begin_inset space \thinspace{}
@@ -3753,7 +3746,6 @@ pip3 install -U wxPython
 \end_inset
 
  depending on your system.
-
 \end_layout
 
 \begin_layout Standard
@@ -3934,7 +3926,6 @@ Installation of the OpenCL libraries
 \begin_layout Standard
 Compiling the source code requires installation of the OpenCL libraries,
  as described above.
-
 \end_layout
 
 \begin_layout Subsection
@@ -3963,8 +3954,8 @@ http://gcc.gnu.org/
 \series bold
 MinGW
 \series default
-, which is a minimalist installation of the GNU tools for Windows that
- includes all of the required tools.
+, which is a minimalist installation of the GNU tools for Windows that includes
+ all of the required tools.
  To install
 \series bold
 MinGW
@@ -4213,8 +4204,8 @@ Use of the GUI requires the file
 \family typewriter
 WDPM-GUI.py
 \family default
- to be installed in the same directory as the compiled executable file
- and for Python
+ to be installed in the same directory as the compiled executable file and
+ for Python
 \begin_inset space \space{}
 \end_inset
 
@@ -4256,10 +4247,10 @@ How to run the WDPM
 \begin_layout Standard
 The WDPM can be run either from the graphical user interface (GUI) or from
  the command line.
- Many users may prefer the GUI, but the command-line version is useful
- to run the WDPM in scripts.
- We note that if you are running the WDPM under Linux or MacOS, all four executable
- files
+ Many users may prefer the GUI, but the command-line version is useful to
+ run the WDPM in scripts.
+ We note that if you are running the WDPM under Linux or MacOS, all four
+ executable files
 \family typewriter
 WDPMCL
 \family default
@@ -4328,12 +4319,11 @@ WDPM-GUI.py
 WDPM.bat
 \family default
 .
-
 \end_layout
 
 \begin_layout Standard
-The GUI looks slightly different depending on which operating system
- it is run.
+The GUI looks slightly different depending on which operating system it
+ is run.
  The image in Figure
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -4430,8 +4420,7 @@ If a scratch file is defined, the model results will be written to it every
  cluster, or if there is a crash.
  It also allows you to save the results if you manually terminate the program.
  However, writing to a scratch file slows the program.
- The default file name is NULL, preventing a scratch file from being
- used.
+ The default file name is NULL, preventing a scratch file from being used.
 \end_layout
 
 \begin_layout Enumerate
@@ -4480,8 +4469,8 @@ When the program has completed execution, you can create a simple image
 When the program runs, it outputs to the right-hand side of the screen.
  The run information includes statistics about the DEM and the water file
  (if used).
- Each 1000 iterations, the model also outputs the change in the water,
- allows you to see how quickly it is converging.
+ Each 1000 iterations, the model also outputs the change in the water, allows
+ you to see how quickly it is converging.
  All of these outputs are stored in the file
 \family typewriter
 report.txt
@@ -4505,7 +4494,6 @@ name "sec:Module-parameters"
 \begin_layout Standard
 In addition to the basic parameters described above, each module has its
  own set of run parameters.
-
 \end_layout
 
 \begin_layout Subsection
@@ -4994,11 +4982,9 @@ Zero depth threshold (mm) (real)
 \begin_layout Plain Layout
 
 Maximum number of iterations (integer) - Optional, Use 0 to omit
-
 \end_layout
 
 \begin_layout Plain Layout
-
 
 \end_layout
 
@@ -5055,7 +5041,6 @@ Zero depth threshold (mm) (real)
 \begin_layout Plain Layout
 
 Maximum number of iterations (integer) - Optional, Use 0 to omit
-
 \end_layout
 
 \begin_layout Plain Layout
@@ -5128,13 +5113,12 @@ Maximum number of iterations (integer) - Optional, Use 0 to omit
 \end_layout
 
 \begin_layout Standard
-When the program is executed correctly, then the output is displayed on the
- console and also written to the file
+When the program is executed correctly, then the output is displayed on
+ the console and also written to the file
 \family typewriter
 report.txt
 \family default
 .
-
 \end_layout
 
 \begin_layout Standard
@@ -5233,8 +5217,8 @@ reference "tab:Execution-time-of"
  In all cases, the zero depth threshold was set to 0.005 mm.
  No limit was set on the number of iterations.
  The  poor OpenCL performance of the NVIDIA Quadro K420 GPU is believed
- to be due to WDPM using double-precision values, which have poor performance on
- this card.
+ to be due to WDPM using double-precision values, which have poor performance
+ on this card.
 \end_layout
 
 \begin_layout Standard
@@ -6017,8 +6001,8 @@ noprefix "false"
  to add and drain water while having small effects on the final volumes
  of water on the DEM.
  Using a depth threshold of 1 mm further reduced the execution time and
- the number of iterations but at the cost of reducing the final volume
- of water on the DEM.
+ the number of iterations but at the cost of reducing the final volume of
+ water on the DEM.
  It is recommended that a zero depth threshold value of 0.005 mm be used
  in most cases, particularly for studies where the contributing fraction
  of a basin is estimated by the volume of water remaining after drainage.
@@ -6441,11 +6425,11 @@ Establish the initial water distribution.
 
 \begin_layout Enumerate
 Estimate the total snow accumulation over the winter.
- Because of sublimation and relocation due to blowing snow, this estimate will invariably
- be different from the total snowfall.
+ Because of sublimation and relocation due to blowing snow, this estimate
+ will invariably be different from the total snowfall.
  Obviously, the total snowfall is best estimated by a snow survey.
- In the absence of a survey, the best method for estimating the snow
- accumulation is to run the Cold Regions Hydrological Modelling (CRHM)
+ In the absence of a survey, the best method for estimating the snow accumulatio
+n is to run the Cold Regions Hydrological Modelling (CRHM)
 \begin_inset Index idx
 status open
 
@@ -6456,8 +6440,8 @@ Cold Regions Hydrological modelling platform (CRHM)
 \end_inset
 
  platform, which is available from the Centre for Hydrology.
- You should be advised that CRHM is not like other hydrological models
- and takes some time to learn.
+ You should be advised that CRHM is not like other hydrological models and
+ takes some time to learn.
 \end_layout
 
 \begin_layout Enumerate
@@ -6501,7 +6485,6 @@ runoff fraction
 runoff fraction equal to (1 -- the infiltration fraction).
  The output of the WDPM, (when drained, if necessary) will be an estimate
  of the spring water distribution.
-
 \end_layout
 
 \begin_layout Subsection
@@ -6541,8 +6524,8 @@ name "subsec:Visualizing-the-output"
 
 \begin_layout Standard
 The WDPM is intended to be used with a Geographical Information System (GIS)
- program because operational use often requires the program output to be overlaid
- on top of the DEM or other infrastructure.
+ program because operational use often requires the program output to be
+ overlaid on top of the DEM or other infrastructure.
  GIS programs are also useful for creating the DEM file.
  There are several Free Open Source Software (FOSS) GIS programs
 \begin_inset Index idx
@@ -6603,9 +6586,9 @@ http://www.uoguelph.ca/~hydrogeo/Whitebox/
 \end_layout
 
 \begin_layout Standard
-The WDPM can also produce a simple water map from the output file
- using the Geospatial Data Abstraction Library (GDAL), which is a free set
- of command-line GIS tools
+The WDPM can also produce a simple water map from the output file using
+ the Geospatial Data Abstraction Library (GDAL), which is a free set of
+ command-line GIS tools
 \begin_inset CommandInset citation
 LatexCommand citep
 key "gdal2020"
@@ -6697,8 +6680,7 @@ status open
 \begin_layout Standard
 This file will set depths between 0.001 m and 3 m to be blue, zero depths
  to be yellow, and missing values to be black.
- The specified depths and colors can be changed by simply editing the
- file.
+ The specified depths and colors can be changed by simply editing the file.
 \end_layout
 
 \begin_layout Chapter
@@ -6750,9 +6732,8 @@ Agriculture and Agri-Food Canada (AAFC)
 The key goal of LIRA is to assist decision-makers in identifying locations
  across their landscape that may be vulnerable to extreme overland flood
  events and potential cost-effective mitigation and adaptation strategies.
- LIRA is designed to integrate local knowledge, science (e.g.,
- hydrology and climate), GIS technology, and economics into a cost-benefit
- analysis framework.
+ LIRA is designed to integrate local knowledge, science (e.g., hydrology and
+ climate), GIS technology, and economics into a cost-benefit analysis framework.
  Numerous inputs are required for the economic analysis, just one of which
  is a flood hazard map.
  A critical question asked by the LIRA process is whether any economic assets
@@ -6777,7 +6758,6 @@ The basic goal of flood hazard mapping is to identify the spatial extents
  Disaster Reduction Program from the 1980s have fallen into disuse.
  Effective use of these mapping products would require updates for the recent
  climate conditions.
-
 \end_layout
 
 \begin_layout Standard
@@ -6794,12 +6774,12 @@ More advanced modelling techniques exist today that can be used to generate
  In the short term, however, application of WDPM has helped to circumvent
  key difficulties that restrict standard approaches from flood hazard mapping
  within most Prairie basins.
-
 \end_layout
 
 \begin_layout Standard
-In recent LIRA pilot studies, the application of the WDPM has allowed for diagnostic
- assessments of runoff accumulation zones and hydrographic connectivity.
+In recent LIRA pilot studies, the application of the WDPM has allowed for
+ diagnostic assessments of runoff accumulation zones and hydrographic connectivi
+ty.
  This has included backwater ponding hazards upstream of road
 \begin_inset Index idx
 status open
@@ -6810,16 +6790,14 @@ roads in DEMs
 
 \end_inset
 
- intersections and other potential impoundments that bisect water flow
- paths.
- A benefit of this ad hoc approach for LIRA stakeholders has been that
- diagnostic flood hazard maps for entire landscapes have been provided to decision-makers
+ intersections and other potential impoundments that bisect water flow paths.
+ A benefit of this ad hoc approach for LIRA stakeholders has been that diagnosti
+c flood hazard maps for entire landscapes have been provided to decision-makers
  for the first time.
  A general distinction between flood hazard zones identified using standard
  hydraulic methods and those from WDPM is currently defined by the probabilistic
  analysis of individual flood events and estimates of the resulting water
  volumes.
-
 \end_layout
 
 \begin_layout Section
@@ -6845,8 +6823,8 @@ Community stakeholder involvement is a crucial resource for LIRA projects.
 The flooding events were captured by ground and aerial photos taken by federal
  (AAFC) and provincial agencies (special thanks to Frank Fox; now retired
  from the Water Security Agency).
- Flood hazard maps generated previously with WDPM and made available to the
- communities were compared to the flood event photos.
+ Flood hazard maps generated previously with WDPM and made available to
+ the communities were compared to the flood event photos.
  The runoff maps shown here were generated by applying a water depth of
  100 mm to the 5 m LiDAR DEMs and are displayed with a GIS overlay of the
  cadastral fabric for the townships.
@@ -6868,7 +6846,6 @@ reference "fig:Borden-area-and"
  comparisons of flood extents for large ponded areas and along primary flow
  paths as seen in the images.
  These areas are linked by numbered location in the maps and photos.
-
 \end_layout
 
 \begin_layout Standard
@@ -7152,7 +7129,6 @@ The relative accuracy of spatially distributed runoff information for other
  runoff simulations with estimates generated through a physically based
  modelling framework that considers Prairie cold region hydrological processes
  directly.
-
 \end_layout
 
 \begin_layout Chapter
@@ -8705,7 +8681,6 @@ If your document contains nontrivial examples of program code, we recommend
  releasing these examples in parallel under your choice of free software
  license, such as the GNU General Public License, to permit their use in
  free software.
-
 \end_layout
 
 \begin_layout Bibliography
