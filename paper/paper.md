@@ -16,7 +16,7 @@ authors:
     affiliation: 2
   - name: John W. Pomeroy
     affiliation: 1
-	orcid: 0000-0002-4782-7457
+    orcid: 0000-0002-4782-7457
   - name: Tonghe Liu
     orcid: 0000-0002-2714-3103
     affiliation: 2
