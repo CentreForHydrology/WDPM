@@ -35,10 +35,10 @@ The hydrography of the prairies of western North America, including Canada, is u
 
 # Program description
 
-The WDPM was developed to solve the problems described above. The model distributes simulated water over a digital elevation model (DEM), which is an array of land surface elevations. The program has three modules:
-- **add**, which adds specified depth of water to the DEM. Addition of water can be caused by rainfall, but in the Canadian Prairies, it is dominantly due to the melt of snow trapped in depressions and from runoff from adjacent areas [@hayashiWaterSoluteTransfer1998].
-- **subtract**, which subtracts a specified depth of water from the DEM. Subtraction of water may be caused by infiltration to the soils, but in the Canadian Prairies, it is dominantly due to evaporation [@hayashiWaterSoluteTransfer1998].
-- **drain**, which drains water from the lowest point in the DEM.
+The WDPM was developed to solve the problems described above. The model distributes simulated water over a digital elevation model (DEM), which is an array of land surface elevations. The program has three modules:  
+- **add**, which adds specified depth of water to the DEM. Addition of water can be caused by rainfall, but in the Canadian Prairies, it is dominantly due to the melt of snow trapped in depressions and from runoff from adjacent areas [@hayashiWaterSoluteTransfer1998].  
+- **subtract**, which subtracts a specified depth of water from the DEM. Subtraction of water may be caused by infiltration to the soils, but in the Canadian Prairies, it is dominantly due to evaporation [@hayashiWaterSoluteTransfer1998].  
+- **drain**, which drains water from the lowest point in the DEM.  
 
 WDPM does not attempt to compute the magnitudes of the additive or subtractive fluxes, which must be established by measurement or through the use of a physically based model of prairie hydrology such as the Cold Regions Hydrological Modelling platform (CRHM) [@pomeroyColdRegionsHydrological2007].
 
