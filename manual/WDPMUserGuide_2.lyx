@@ -3635,7 +3635,7 @@ Python
 
 3
 \series default
- from
+ from 
 \begin_inset Flex URL
 status open
 
@@ -3655,7 +3655,7 @@ https://www.python.org/downloads/windows/
 
 3
 \series default
- from
+ from 
 \begin_inset Flex URL
 status open
 
@@ -3797,7 +3797,7 @@ As described above, the WDPM GUI can use the program
 \series bold
  GDAL
 \series default
- from
+ from 
 \begin_inset Flex URL
 status open
 
