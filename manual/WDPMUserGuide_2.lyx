@@ -3611,7 +3611,7 @@ Python 3
 \begin_layout Standard
 The WDPM can be run directly from the command line, but the GUI requires
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -3666,7 +3666,7 @@ https://www.python.org/downloads/mac-osx/
 
 \end_inset
 
- or from
+ or from 
 \begin_inset Flex URL
 status open
 
