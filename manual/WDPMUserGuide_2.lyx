@@ -4202,7 +4202,7 @@ Other files
 \begin_layout Standard
 Use of the GUI requires the file
 \family typewriter
- WDPM-GUI.py
+ WDPM.py
 \family default
  to be installed in the same directory as the compiled executable file and
  for Python
@@ -4272,7 +4272,7 @@ GUI
 \begin_layout Standard
 The GUI for the WDPM is written in
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -4288,7 +4288,7 @@ status open
 
 \begin_layout Plain Layout
 
-python WDPM-GUI.py
+python WDPM.py
 \end_layout
 
 \end_inset
@@ -4303,14 +4303,14 @@ status open
 
 \begin_layout Plain Layout
 
-python3 WDPM-GUI.py
+python3 WDPM.py
 \end_layout
 
 \end_inset
 
 depending on your computer, in the directory containing
 \family typewriter
- WDPM-GUI.py
+ WDPM.py
 \family default
 .
  If you have installed the Windows binary version of WDPM, then you can
