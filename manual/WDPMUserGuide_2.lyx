@@ -3266,6 +3266,7 @@ name "chap:Installing-the-WDPM"
 
 \begin_layout Standard
 The source code for the WDPM is available from the GitHub repository at
+ 
 \begin_inset Flex URL
 status open
 
@@ -3278,7 +3279,7 @@ https://github.com/CentreForHydrology/WDPM
 
 .
  Additional documentation and the compiled version of the WDPM for Windows
- may be downloaded from the website of the Centre for Hydrology at
+ may be downloaded from the website of the Centre for Hydrology at 
 \begin_inset Flex URL
 status open
 
