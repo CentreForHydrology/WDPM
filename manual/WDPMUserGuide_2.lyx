@@ -963,7 +963,7 @@ The Scratch file is similar to the output file, except that it is output
 \begin_layout Standard
 The file
 \family typewriter
-temp.asc
+ temp.asc
 \family default
  is created automatically and is used to improve performance.
  The file is only created after the first 1000 iterations.
@@ -974,7 +974,7 @@ temp.asc
 In addition to the .asc files, all model messages that are written to the
  screen are also logged to the file
 \family typewriter
-report.txt
+ report.txt
 \family default
 .
  The model is also capable of reading the run parameters from a text file
@@ -992,7 +992,7 @@ reference "subsec:Text-files"
 The WDPM can create a simple image of the water output, using the open-source
  program
 \series bold
-gdaldem
+ gdaldem
 \series default
 
 \begin_inset Index idx
@@ -1017,7 +1017,7 @@ literal "false"
  provide the ability to create an image of the water surface as a .png file.
  The program requires a file called
 \family typewriter
-colormap_black.txt
+ colormap_black.txt
 \family default
  which must be in the same directory as the WDPM executable file.
  The structure of the colour map file is explained in Section
@@ -3620,7 +3620,7 @@ Python
  to be installed.
  On a Linux system, you can install
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -3629,7 +3629,7 @@ Python
  using your package manager.
  On Windows, you can install
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -3649,7 +3649,7 @@ https://www.python.org/downloads/windows/
 .
  On MacOS, you can install
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -3683,14 +3683,14 @@ https://brew.sh/
 \begin_layout Standard
 The GUI also requires the library
 \family typewriter
-wxPython
+ wxPython
 \family default
  to be installed.
  You can do this from the
 \series bold
-pip
+ pip
 \series default
- package manager, which can be obtained for Windows or MacOS at
+ package manager, which can be obtained for Windows or MacOS at 
 \begin_inset Flex URL
 status open
 
@@ -3705,7 +3705,7 @@ https://pypi.org/project/pip/
  Linux users can install pip from the package manager, typically by installing
  the package
 \family typewriter
-python3-pip
+ python3-pip
 \family default
 .
 \end_layout
@@ -3713,7 +3713,7 @@ python3-pip
 \begin_layout Standard
 Pip can then install
 \family typewriter
-wxPython
+ wxPython
 \family default
  the using the command
 \end_layout
@@ -3751,22 +3751,22 @@ pip3 install -U wxPython
 \begin_layout Standard
 Unfortunately, there is an issue with
 \family typewriter
-wxPython
+ wxPython
 \family default
  on Ubuntu 20.04 (and distributions based on it) because it uses
 \family typewriter
-libpng-dev
+ libpng-dev
 \family default
  version 1.6, whereas
 \family typewriter
-wxPython
+ wxPython
 \family default
  requires version 1.2.
  You can find instructions on how to install the older versions of
 \family typewriter
-libpng-dev
+ libpng-dev
 \family default
- at
+ at 
 \begin_inset CommandInset href
 LatexCommand href
 name "www.pixelstech.net/article/1599647177-Problem-and-Solution-for-Installing-wxPython-on-Ubuntu-20-04"
@@ -3785,17 +3785,17 @@ GDAL
 \begin_layout Standard
 As described above, the WDPM GUI can use the program
 \series bold
-gdaldem
+ gdaldem
 \series default
  to create simple maps of water from the WDPM outputs.
  If you are using Linux, you can install the
 \series bold
-GDAL
+ GDAL
 \series default
  suite from your package manager.
  If you are using Windows or MacOS, you can install
 \series bold
-GDAL
+ GDAL
 \series default
  from
 \begin_inset Flex URL
@@ -3811,26 +3811,26 @@ https://gdal.org/download.html
 .
  Execution of
 \series bold
-gdaldem
+ gdaldem
 \series default
  is done by a shell script,
 \family typewriter
-cmap.bat
+ cmap.bat
 \family default
  (Windows) or
 \family typewriter
-cmap_black.sh
+ cmap_black.sh
 \family default
  (Linux/MacOS), which must be in the same directory as the WDPM executable
  and GUI.
  The script file can be modified if necessary to specify the path to
 \series bold
-gdaldem
+ gdaldem
 \series default
  or any other desired parameters.
  The file
 \family typewriter
-colormap_black.txt
+ colormap_black.txt
 \family default
 , which sets the colours used, must also be in the same directory.
 \end_layout
@@ -3849,11 +3849,11 @@ The WDPM is available as a pre-compiled (binary) version for Windows.
 \begin_layout Enumerate
 Install the
 \series bold
-OpenCL
+ OpenCL
 \series default
  drivers
 \series bold
-Python
+ Python
 \begin_inset space \thinspace{}
 \end_inset
 
@@ -3869,12 +3869,12 @@ Python
 \begin_layout Enumerate
 Copy the file
 \family typewriter
-WDPM2_WIN.zip
+ WDPM2_WIN.zip
 \family default
  to your hard drive and double-click to extract it here.
  The files will be extracted to a directory called
 \family typewriter
-WDPM
+ WDPM
 \family default
 .
 \end_layout
@@ -3882,7 +3882,7 @@ WDPM
 \begin_layout Enumerate
 To run the program, double-click on the file
 \family typewriter
-WDPM.bat
+ WDPM.bat
 \family default
 .
 \end_layout
@@ -3914,7 +3914,7 @@ https://github.com/CentreForHydrology/WDPM
 .
  The source code is in the folder
 \family typewriter
-/src
+ /src
 \family default
 .
 \end_layout
@@ -3935,10 +3935,10 @@ Building WDPM
 \begin_layout Standard
 The WDPM program code can be built using
 \series bold
-gcc
+ gcc
 \series default
 , which is a standard part of all Linux distributions, and can be downloaded
- for Windows or OSX at
+ for Windows or OSX at 
 \begin_inset Flex URL
 status open
 
@@ -3952,13 +3952,13 @@ http://gcc.gnu.org/
 .
  If you are building on Windows, you should install
 \series bold
-MinGW
+ MinGW
 \series default
 , which is a minimalist installation of the GNU tools for Windows that includes
  all of the required tools.
  To install
 \series bold
-MinGW
+ MinGW
 \series default
 , follow the following steps:
 \end_layout
@@ -3966,9 +3966,9 @@ MinGW
 \begin_layout Enumerate
 You can get
 \series bold
-MinGW
+ MinGW
 \series default
-from
+ from 
 \begin_inset Flex URL
 status open
 
@@ -3985,7 +3985,7 @@ http://www.mingw.org/
 \begin_layout Enumerate
 Download and run the installation program
 \series bold
-mingw-get-Setup.exe
+ mingw-get-Setup.exe
 \series default
 .
 \end_layout
@@ -3993,20 +3993,20 @@ mingw-get-Setup.exe
 \begin_layout Enumerate
 The
 \series bold
-gcc
+ gcc
 \series default
  and
 \series bold
-g++
+ g++
 \series default
  compilers will be installed by default.
  You will also have to select the
 \series bold
-make
+ make
 \series default
  package as well by adding all of the
 \family typewriter
-ming32-make
+ ming32-make
 \family default
  files.
 \end_layout
@@ -4014,7 +4014,7 @@ ming32-make
 \begin_layout Enumerate
 After installation of the packages, you must add the path to
 \series bold
-MinGW
+ MinGW
 \series default
  to the environment path.
 \end_layout
@@ -4045,29 +4045,29 @@ Building with cmake
 \begin_layout Standard
 The most reliable way to build the WDPM is using the program
 \series bold
-cmake
+ cmake
 \series default
 , which is included with Linux (install with your package manager) and
 \series bold
-MinGW
+ MinGW
 \series default
 .
  The source code consists of one file,
 \family typewriter
-WDPMCL.c
+ WDPMCL.c
 \family default
 .
  The file
 \family typewriter
-CMakeLists.txt
+ CMakeLists.txt
 \family default
-needs to be in the same directory as
+ needs to be in the same directory as
 \family typewriter
-WDPMCL.c
+ WDPMCL.c
 \family default
-and contains the instructions to produce the file
+ and contains the instructions to produce the file
 \family typewriter
-Makefile
+ Makefile
 \family default
 , which is used to build the WDPM.
 \end_layout
@@ -4075,15 +4075,15 @@ Makefile
 \begin_layout Standard
 Building the program takes 2 steps: 1) creating the
 \family typewriter
-Makefile
+ Makefile
 \family default
  with
 \series bold
-cmake
+ cmake
 \series default
-and 2) running
+ and 2) running
 \series bold
-make
+ make
 \series default
  to build the program.
 \end_layout
@@ -4092,12 +4092,12 @@ make
 1.
  Creating the
 \family typewriter
-Makefile
+ Makefile
 \family default
 .
  Assuming that
 \family typewriter
-CMakeLists.txt
+ CMakeLists.txt
 \family default
  is properly configured, the command on Linux or MacOS is simply
 \end_layout
@@ -4141,11 +4141,11 @@ cmake -G "Unix Makefiles"
  Building the program.
  Assuming that
 \series bold
-cmake
+ cmake
 \series default
  executed correctly, the
 \series bold
-make
+ make
 \series default
  command is simply
 \end_layout
@@ -4168,17 +4168,17 @@ make
 \begin_layout Standard
 Once
 \series bold
-make
+ make
 \series default
  has finished, the executable program
 \family typewriter
-WDPMCL
+ WDPMCL
 \family default
  (Linux/MacOS) or
 \family typewriter
-WDPMCL.EXE
+ WDPMCL.EXE
 \family default
-(Windows) will have been created.
+ (Windows) will have been created.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4188,9 +4188,9 @@ Kernel file
 \begin_layout Standard
 The file
 \family typewriter
-runoff.cl
+ runoff.cl
 \family default
-must be present inside the same directory as the compiled WDPM executable.
+ must be present inside the same directory as the compiled WDPM executable.
  It contains the code that redistributes the water.
  It is this code that is run in parallel by all cores on the CPU or GPU.
 \end_layout
@@ -4202,7 +4202,7 @@ Other files
 \begin_layout Standard
 Use of the GUI requires the file
 \family typewriter
-WDPM-GUI.py
+ WDPM-GUI.py
 \family default
  to be installed in the same directory as the compiled executable file and
  for Python
@@ -4212,30 +4212,30 @@ WDPM-GUI.py
 3 to be installed.
  Use of
 \series bold
-gdaldem
+ gdaldem
 \series default
  to create water maps requires the files
 \family typewriter
-cmap.bat
+ cmap.bat
 \family default
  (Windows) or
 \family typewriter
-cmap_black.sh
+ cmap_black.sh
 \family default
  (Linux/MacOS) in the same directory as the WDPM executable and GUI.
  The file
 \family typewriter
-colormap_black.txt
+ colormap_black.txt
 \family default
 , which sets the colours used, must also be in the same directory.
  The file
 \family typewriter
-test.txt
+ test.txt
 \family default
-is a sample parameter text file.
+ is a sample parameter text file.
  The file
 \family typewriter
-basin5.asc
+ basin5.asc
 \family default
  is a sample DEM.
 \end_layout
@@ -4252,15 +4252,15 @@ The WDPM can be run either from the graphical user interface (GUI) or from
  We note that if you are running the WDPM under Linux or MacOS, all four
  executable files
 \family typewriter
-WDPMCL
+ WDPMCL
 \family default
 ,
 \family typewriter
-runoff.cl,cmap_black.sh
+ runoff.cl, cmap_black.sh
 \family default
 , and
 \family typewriter
-WDPM.py
+ WDPM.py
 \family default
  must have their permissions set to allow execution.
 \end_layout
@@ -4310,13 +4310,13 @@ python3 WDPM-GUI.py
 
 depending on your computer, in the directory containing
 \family typewriter
-WDPM-GUI.py
+ WDPM-GUI.py
 \family default
 .
  If you have installed the Windows binary version of WDPM, then you can
  execute the program by double-clicking on the file
 \family typewriter
-WDPM.bat
+ WDPM.bat
 \family default
 .
 \end_layout
@@ -4334,7 +4334,7 @@ reference "fig:The-WDPM-GUI"
  shows the GUI under Windows.
  The
 \series bold
-File
+ File
 \series default
  menu only displays the information about the program or the option to quit.
 \end_layout
@@ -4473,7 +4473,7 @@ When the program runs, it outputs to the right-hand side of the screen.
  you to see how quickly it is converging.
  All of these outputs are stored in the file
 \family typewriter
-report.txt
+ report.txt
 \family default
  in the current directory.
  You can abort the run at any time by clicking on the End button.
@@ -4576,7 +4576,7 @@ name "subsec:Text-files"
 The parameters can also be stored in simple text files.
  A sample file,
 \family typewriter
-test.txt
+ test.txt
 \family default
 , used for the Add module is shown below.
  The comments must NOT be included.
@@ -4924,7 +4924,7 @@ command-line arguments
 command-line arguments are the same for all operating systems.
  The required arguments are output to the file
 \family typewriter
-report.txt
+ report.txt
 \family default
  if the program is run without the correct arguments as shown here:
 \end_layout
@@ -5116,7 +5116,7 @@ Maximum number of iterations (integer) - Optional, Use 0 to omit
 When the program is executed correctly, then the output is displayed on
  the console and also written to the file
 \family typewriter
-report.txt
+ report.txt
 \family default
 .
 \end_layout
@@ -6455,7 +6455,7 @@ literal "true"
 
 \end_inset
 
-, which can be downloaded from the Centre for Hydrology website at
+, which can be downloaded from the Centre for Hydrology website at 
 \begin_inset Flex URL
 status open
 
@@ -6482,7 +6482,7 @@ runoff fraction
 
 \end_inset
 
-runoff fraction equal to (1 -- the infiltration fraction).
+runoff fraction equal to (1 - the infiltration fraction).
  The output of the WDPM, (when drained, if necessary) will be an estimate
  of the spring water distribution.
 \end_layout
@@ -6497,10 +6497,10 @@ The fraction of the basin contributing flow can be estimated by adding a
  The contributing fraction is then calculated from the change in volume
  and can be obtained from the file
 \family typewriter
-report.txt
+ report.txt
 \family default
 .
- The process is described in
+ The process is described in 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "shook2011,shook2013"
@@ -6539,7 +6539,7 @@ Free Open Source Software (F.O.S.S.) GIS programs
 
  available, such as
 \series bold
-QGIS
+ QGIS
 \series default
  (
 \begin_inset Flex URL
@@ -6554,7 +6554,7 @@ www.qgis.org
 
 ),
 \series bold
-SAGA
+ SAGA
 \series default
  (
 \begin_inset Flex URL
@@ -6569,7 +6569,7 @@ http://www.saga-gis.org/en/index.html
 
 ), and
 \series bold
-WhiteBox
+ WhiteBox
 \series default
  (
 \begin_inset Flex URL
@@ -6641,7 +6641,7 @@ gdaldem
  to each depth of water in the output file.
  The WDPM color map file is
 \family typewriter
-colormap_black.txt
+ colormap_black.txt
 \family default
 , which must be stored in the same directory as the WDPM executable.
  The default values in the file are:
