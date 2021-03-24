@@ -81,7 +81,7 @@ The WDPM is licensed under the GNU GPL v3.
 
 # Acknowlegements
 
-Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme and Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme and by Agriculture and Agri-food Canada. Much of the OpenCL code and the first version of the Python GUI were written by Oluwaseun Sharomi. Unfortunately, despite many attempts, we have been unable to contact Dr. Sharomi, so cannot give him co-authorship of this paper. Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme and Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme.
+Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme, Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme and by Agriculture and Agri-food Canada. Much of the OpenCL code and the first version of the Python GUI were written by Oluwaseun Sharomi. Unfortunately, despite many attempts, we have been unable to contact Dr. Sharomi, so cannot give him co-authorship of this paper.
 
 We also wish to thank the reviewers whose suggestions have improved this paper and the program code.
 
