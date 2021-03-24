@@ -31,7 +31,7 @@ bibliography: paper.bib
 
 # Summary
 
-The hydrography of the prairies of western North America, including Canada, is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detented and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in prairie basins dominated by depressional storage. When the depressions are filled, the detended water may overflow to another depression, through a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated prairie basin that contributes flow to the outlet changes dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models.
+The hydrography of the Canadian Prairies and adjacent northern US Great Plains is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detented and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in prairie basins dominated by depressional storage. When the depressions are filled, the detended water may overflow to another depression, through a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated prairie basin that contributes flow to the outlet changes dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models.
 
 # Program description
 
@@ -49,7 +49,7 @@ All WDPM modules use the algorithm of @shapiroMAPCALCAlgebraGIS1992 to redistrib
 ![Schematic diagram of water flow from a DEM cell using WDPM.\label{fig:waterflow}](WaterFlowDiagram.png)
 
 
-The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), it was decided to refactor the code. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code because this framework permits the use of CPUs and GPUs. Using OpenCL, the matrix was subdivided as shown in \autoref{fig:opencl}, where each colour represents a separate thread. Because the matrix locations of each thread are separated by 3 rows and columns, the points are independent, and race conditions are avoided. The refactoring of the WDPM was successful in greatly reducing execution time.
+The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), the code was refactored. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code because this framework permits the use of CPUs and GPUs. Using OpenCL, the matrix was subdivided as shown in \autoref{fig:opencl}, where each colour represents a separate thread. Because the matrix locations of each thread are separated by 3 rows and columns, the points are independent, and race conditions are avoided. The refactoring of the WDPM was successful in greatly reducing execution time.
 
 ![Schematic diagram of WDPM matrix subdivision for OpenCL. Each colour represents a separate thread.\label{fig:opencl}](opencl4.png)
 
@@ -81,6 +81,8 @@ The WDPM is licensed under the GNU GPL v3.
 
 # Acknowlegements
 
-Funding for the refactoring of WDPM was provided by Agriculture and Agri-food Canada. Much of the OpenCL code and the first version of the Python GUI were written by Oluwaseun Sharomi.
+Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme and Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme and by Agriculture and Agri-food Canada. Much of the OpenCL code and the first version of the Python GUI were written by Oluwaseun Sharomi. Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme and Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme.
+
+We also wish to thank the reviewers whose suggestions have improved this paper and the program code.
 
 # References
