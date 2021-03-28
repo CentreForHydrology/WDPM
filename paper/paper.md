@@ -20,6 +20,9 @@ authors:
   - name: Tonghe Liu
     orcid: 0000-0002-2714-3103
     affiliation: 2
+  - name: Oluwaseun Sharomi
+    orcid: 0000-0003-1368-5670
+    affiliation: 2
 affiliations:
  - name: Centre for Hydrology, University of Saskatchewan
    index: 1
@@ -81,7 +84,7 @@ The WDPM is licensed under the GNU GPL v3.
 
 # Acknowlegements
 
-Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme, Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme and by Agriculture and Agri-food Canada. Much of the OpenCL code and the first version of the Python GUI were written by Oluwaseun Sharomi. Unfortunately, despite many attempts, we have been unable to contact Dr. Sharomi, so cannot give him co-authorship of this paper.
+Funding was provided by the Canada First Research Excellence Fund's Global Water Futures programme, Natural Sciences and Engineering Research Council of Canada's Discovery Grants programme and by Agriculture and Agri-food Canada.  
 
 We also wish to thank the reviewers whose suggestions have improved this paper and the program code.
 
