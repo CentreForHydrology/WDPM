@@ -284,7 +284,7 @@ In version 2.0, the GUI code was converted from Python 2 to Python 3 by Tongue
  Liu, and Ray Spiteri of the Department of Computer Science at the University
  of Saskatchewan.
  Many bugs were fixed, and the program execution speed was improved by adding
- a user-selectable water zero threshold depth, as described in section
+ a user-selectable water zero threshold depth, as described in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Zero-threshold-depth"
@@ -457,6 +457,10 @@ The WDPM requires a DEM to execute, and all DEMs are imperfect representations
  of reality.
  Some of the problems with using common DEMs with the WDPM in the Prairies
  are discussed in Section
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand vref
 reference "sec:DEM-data"
@@ -513,7 +517,7 @@ program input and output files
  and outputs are ArcGIS ASCII (.asc) files.
  It is assumed that the user has access to a geographical information system
  (GIS) program.
- For more information, see Section
+ For more information, see Section 
 \begin_inset CommandInset ref
 LatexCommand vref
 reference "subsec:Visualizing-the-output"
@@ -521,7 +525,7 @@ reference "subsec:Visualizing-the-output"
 \end_inset
 
 .
- The files used as inputs or outputs are listed in Table
+ The files used as inputs or outputs are listed in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Files-used-as"
@@ -1093,7 +1097,11 @@ reference "fig:100mm-of-water-1"
 .
  This example applied 100 mm of water, with a runoff fraction of 1, an elevation
  tolerance of 1 mm, and a zero depth threshold of 0.005 mm.
- The meanings of these parameters is explained in section
+ The meanings of these parameters is explained in Section
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Module-parameters"
@@ -2399,7 +2407,7 @@ GDEM DEM
 \end_layout
 
 \begin_layout Standard
-Table
+Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Technical-specifications-of"
@@ -3309,7 +3317,11 @@ Although the WDPM does not require other packages to be installed, it works
 
 \begin_layout Standard
 The memory required by the program will depend on the size of the DEM processed.
- As is described in section
+ As is described in Section
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Model-execution-time"
@@ -3332,6 +3344,10 @@ As described above, the WDPM uses OpenCL to provide parallel processing,
  However, the WDPM can also run in serial mode when appropriate drivers
  are unavailable.
  The selection of the processing mode is shown on
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand vpageref
 reference "enu:Click-on-Process"
@@ -3346,7 +3362,7 @@ reference "enu:Click-on-Process"
 \end_layout
 
 \begin_layout Standard
-Some of the drivers sources are listed in Table
+Some of the drivers sources are listed in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:CPU-and-GPU"
@@ -4326,6 +4342,10 @@ depending on your computer, in the directory containing
 The GUI looks slightly different depending on which operating system it
  is run.
  The image in Figure
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:The-WDPM-GUI"
@@ -4400,8 +4420,8 @@ Click on Browse to set the working directory.
 Select the method: Add, Subtract, Drain, or TextFile.
  Once you have selected the method, the appropriate module components will
  be activated.
- If you select TextFile, steps 3 -- 9 may be ignored after the text file
- has been selected using the Browse button near the bottom of the screen.
+ If you select TextFile, steps 3 through 9 may be ignored after the text
+ file has been selected using the Browse button near the bottom of the screen.
 \end_layout
 
 \begin_layout Enumerate
@@ -4508,7 +4528,7 @@ Depth of water (mm).
 \end_layout
 
 \begin_layout Enumerate
-Water runoff fraction (0--1).
+Water runoff fraction (0-1).
  Setting the runoff fraction allows some of the water applied to dry ground
  to infiltrate the soil while not affecting any of the water applied to
  existing water (if you are using a water file).
@@ -4922,7 +4942,7 @@ command-line arguments
 
 \end_inset
 
-command-line arguments are the same for all operating systems.
+ command-line arguments are the same for all operating systems.
  The required arguments are output to the file
 \family typewriter
  report.txt
@@ -5187,7 +5207,7 @@ reference "fig:100mm-of-water-1"
 
 \end_inset
 
---
+ through 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:100mm-of-water"
@@ -5197,6 +5217,10 @@ reference "fig:100mm-of-water"
 .
  The execution times for all of the modules for all computers are listed
  in Table
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Execution-time-of"
@@ -5988,7 +6012,7 @@ The effects of the zero depth threshold were tested by running the program
 \end_inset
 
 GHz x 8 cores).
- As can be seen from the execution times listed in Table
+ As can be seen from the execution times listed in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Zero-depth-execution-time"
@@ -6589,7 +6613,7 @@ http://www.uoguelph.ca/~hydrogeo/Whitebox/
 \begin_layout Standard
 The WDPM can also produce a simple water map from the output file using
  the Geospatial Data Abstraction Library (GDAL), which is a free set of
- command-line GIS tools
+ command-line GIS tools 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "gdal2020"
@@ -6600,7 +6624,7 @@ literal "false"
 .
  The GDAL program
 \series bold
-gdaldem
+ gdaldem
 \begin_inset Index idx
 status open
 
@@ -6612,21 +6636,25 @@ gdaldem
 
 
 \series default
- was used to create the water maps seen in Figures
+ was used to create the water maps seen in Figures 
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:100mm-of-water-1"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:100mm-of-water-50-removed"
 
 \end_inset
 
-, and
+, and 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:100mm-of-water"
@@ -6636,7 +6664,7 @@ reference "fig:100mm-of-water"
 .
  The use of
 \series bold
-gdaldem
+ gdaldem
 \series default
  requires a color map, which is a text file containing the colors assigned
  to each depth of water in the output file.
@@ -6830,13 +6858,17 @@ The flooding events were captured by ground and aerial photos taken by federal
  100 mm to the 5 m LiDAR DEMs and are displayed with a GIS overlay of the
  cadastral fabric for the townships.
  Figures
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Radisson-Lake-WDPM"
 
 \end_inset
 
- through
+ through 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Borden-area-and"
@@ -6851,6 +6883,10 @@ reference "fig:Borden-area-and"
 
 \begin_layout Standard
 Figure
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Radisson-Lake-WDPM"
@@ -6860,6 +6896,10 @@ reference "fig:Radisson-Lake-WDPM"
  shows results for the Radisson Lake area where water flows along a circuitous
  course from location 1 to location 4.
  Figure
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Town-of-Radisson"
@@ -6872,6 +6912,10 @@ reference "fig:Town-of-Radisson"
  water flowed into the town from the west.
  The water flowed directly through town along a natural drainage path captured
  by the LiDAR data (Figure
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Centre-of-town"
@@ -6881,6 +6925,10 @@ reference "fig:Centre-of-town"
 ) and was confined by inflatable barriers that potentially stopped more
  extensive flooding as depicted by the hazard map.
  In Figure
+\begin_inset space ~
+\end_inset
+
+
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Centre-of-town"
