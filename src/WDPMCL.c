@@ -98,7 +98,7 @@ cl_device_id create_device(int opencl) {
    } 
 
    /* Access a device */
-   if (opencl == 0){
+   if (opencl == 1){
       err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
       if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
 	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
@@ -109,7 +109,7 @@ cl_device_id create_device(int opencl) {
       }
    }
    
-   if (opencl == 1){
+   if (opencl == 0){
       err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
       if((err == CL_DEVICE_NOT_FOUND) || (err == CL_INVALID_PLATFORM)) {
 	  err = clGetDeviceIDs(platforms[1], CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
@@ -1840,11 +1840,11 @@ void print_args (char demfile[80], char waterfile[80], char outputfile[80],
       printf("%s\n", "               ");
       printf("%41s\n", "Using Parallel OpenCL for Computation");
       if (gpu==0){
-	    printf("%40s\n","Using OpenCL GPU for Computation"); 
+	    printf("%40s\n","Using OpenCL CPU for Computation"); 
 	  }
 	  if (gpu==1)
 	  {
-	    printf("%40s\n","Using OpenCL CPU for Computation"); 
+	    printf("%40s\n","Using OpenCL GPU for Computation"); 
 	  }
     
     }
@@ -2061,6 +2061,5 @@ void runoffd(int centerrow, int centercol, int drainrow, int draincol, double mi
 	  }
       }
 }
-
 
 
