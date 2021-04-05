@@ -739,9 +739,9 @@ class Size(wx.Frame):
             elif method1=="OpenCL":
                 method1="1"
             if method2=="GPU":
-                method2="0"
-            elif method2=="CPU":
                 method2="1"
+            elif method2=="CPU":
+                method2="0"
             if demfilename=='':
                 self.on_error_dem()
                 plat='error'
