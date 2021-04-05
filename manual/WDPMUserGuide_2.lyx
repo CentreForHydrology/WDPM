@@ -1082,8 +1082,15 @@ If a stream exists in the DEM, then the Add module will route water to the
  stream channel.
  However, because of the way that the algorithm works, the edges of the
  DEM acts as dams, preventing any the water from leaving the DEM.
- This causes the modeled stream to 'back up' over the landscape as shown
- in Figure
+ This causes the modeled stream to 
+\begin_inset Quotes eld
+\end_inset
+
+back up
+\begin_inset Quotes erd
+\end_inset
+
+ over the landscape as shown in Figure
 \begin_inset space ~
 \end_inset
 
@@ -1239,8 +1246,15 @@ This module drains the water on the DEM through the lowest point, assuming
  This module can be the slowest to execute (depending on the resolution
  and the convergence parameters) because it moves large volumes of water
  long distances.
- The purpose of the Drain module is to eliminate the 'backing up' of water
- over the DEM.
+ The purpose of the Drain module is to eliminate the 
+\begin_inset Quotes eld
+\end_inset
+
+backing up
+\begin_inset Quotes erd
+\end_inset
+
+ of water over the DEM.
  Figure
 \begin_inset space \thinspace{}
 \end_inset
@@ -1316,7 +1330,7 @@ The modules may be executed in varying order.
  For example, it may be desired to add water, to simulate spring runoff,
  followed by draining, and then to remove water to simulate evaporation.
  This could be followed by the addition of water to simulate summer rainfall.
- As was demonstrated by
+ As was demonstrated by 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "shook2013"
@@ -1343,7 +1357,7 @@ literal "true"
 \end_inset
 
 .
- The algorithm and its implementation in the WDPM are described in
+ The algorithm and its implementation in the WDPM are described in 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "shook2011"
@@ -1361,7 +1375,7 @@ literal "true"
 
 .
  Unlike the D8 direction of drainage algorithm used by programs such as
- TOPAZ
+ TOPAZ 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "garbrecht1007"
@@ -1369,7 +1383,7 @@ literal "true"
 
 \end_inset
 
-, the Shipiro and Westervelt (SW) algorithm allows drainage in more than
+, the Shapiro and Westervelt (SW) algorithm allows drainage in more than
  one direction, as shown in Figure
 \begin_inset space \thinspace{}
 \end_inset
@@ -1653,14 +1667,53 @@ reference "alg:Original-WDPM-Fortran"
 \end_inset
 
 .
- The matrix that holds the water depths is called 'bigwater' because it
- is one array cell larger on each edge than the water matrix to avoid having
- to check the boundaries.
- Similarly, the matrix that holds the DEM is called 'bigdem' because it
- is also one array cell larger on each edge than the original DEM.
- The code first processes the sub-matrices (referred to as 'slices').
+ The matrix that holds the water depths is called 
+\begin_inset Quotes eld
+\end_inset
+
+bigwater
+\begin_inset Quotes erd
+\end_inset
+
+ because it is one array cell larger on each edge than the water matrix
+ to avoid having to check the boundaries.
+ Similarly, the matrix that holds the DEM is called 
+\begin_inset Quotes eld
+\end_inset
+
+bigdem
+\begin_inset Quotes erd
+\end_inset
+
+ because it is also one array cell larger on each edge than the original
+ DEM.
+ The code first processes the sub-matrices (referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+slices
+\begin_inset Quotes erd
+\end_inset
+
+).
  When all slices have been finished, the code then processes the regions
- in-between the 'slices', which are referred to as 'boundaries'.
+ in-between the 
+\begin_inset Quotes eld
+\end_inset
+
+slices
+\begin_inset Quotes erd
+\end_inset
+
+, which are referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+boundaries
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2279,8 +2332,8 @@ noprefix "false"
 
 \end_inset
 
-, and in the original C version, the water redistribution is only executed
- if the depth of water in the centre cell is greater than 0.0.
+, and in the original C version, the water redistribution is executed if
+ the depth of water in the centre cell is greater than zero.
  However, this comparison results in many instances of very small depths
  of water being redistributed.
  To reduce the run time of the program, a threshold depth has been added
@@ -2438,7 +2491,7 @@ reference "fig:SC-Runoff-distributions"
 
 \end_inset
 
- and
+ and 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Winnipeg-Runoff-distributions"
