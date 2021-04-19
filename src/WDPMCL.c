@@ -281,19 +281,16 @@ int main(int argc, char *argv[])
     cl_program program;
     cl_kernel kernel;
     cl_command_queue queue;
-    cl_int ii, jj, err, ll;
+    cl_int err, ll;
     cl_event event; 
-    /* buffers */
-    cl_mem input_buffer, sum_buffer;
-    cl_int num_groups;
 
-    cl_mem d_bigwater, d_bigdem, d_startcols, d_endcols, d_boundarystartcols;
-    cl_mem d_boundaryendcols, d_totaldrain;
+    cl_mem d_bigwater, d_bigdem;
+    cl_mem d_totaldrain;
     double *bbigdem,*bbigwater,*btotaldrain;    
-    size_t bytes, byte1, byte2, byte3;
+    size_t bytes;
     
-    char DEMFileName[80], OutputFileName[80], outformat[80];
-    char InParameterFileName[80], WaterFileName[80], sliceformat[80];
+    char DEMFileName[80], OutputFileName[80];
+    char WaterFileName[80];
     char ScratchFileName[80], drain_tolerancestring[10];
     char elevation_tolerancestring[10], addstring[10], iteration_limitstring[10];
     char subtractstring[10], rofstring[10], CpuString[10], GpuString[10], threshold[20];
@@ -301,12 +298,11 @@ int main(int argc, char *argv[])
     double max_diff, elevation_tolerance, drain_tolerance;
     double cellsize, cellarea, addwater, subtractwater, rof;
     double thres; //threshhold
-    double diffdrain, olddrain, mindrain, drainn;
-    bool done, isKillSwitch, gracefulExit;
-    int i, j, k, arg_count,basincount, watercount, row, col, iteration_limit;
-    int slice, boundary, cpu, gpu;
-    
-    int *widths, *startcols, *endcols, *boundarystartcols, *boundaryendcols;
+    double diffdrain, olddrain, mindrain;
+    bool done;
+    int i, j, k, basincount, watercount, row, col, iteration_limit;
+    int cpu, gpu;
+
     double watertotal, waterfrac, meanwater, maxdepth, draindepth, drainvol;
     double initial_vol, final_vol, basin_area;
     struct timeval starttime, currenttime;
@@ -419,13 +415,7 @@ int main(int argc, char *argv[])
 	gpu = (int)atof(GpuString);
 	thres = (double)atof(threshold);
 	iteration_limit = (int)atof(iteration_limitstring);
-	if (iteration_limit == 0) {
-            isKillSwitch = false;
-        }
-        else 
-        {
-            isKillSwitch = true;
-        }
+	
 	//printf("the threshold value we choose is %1.10f \n", thres);
 	// write parameters to stdout
 	print_args(DEMFileName, WaterFileName, OutputFileName, ScratchFileName,
@@ -479,13 +469,7 @@ int main(int argc, char *argv[])
 	subtractwater=atof(subtractstring);
 	elevation_tolerance=atof(elevation_tolerancestring);
 	iteration_limit = (int)atof(iteration_limitstring); 
-        if (iteration_limit == 0) {
-            isKillSwitch = false;
-        }
-        else 
-        {
-            isKillSwitch = true;
-        }
+        
 	cpu = (int)atof(CpuString);
 	gpu = (int)atof(GpuString);
 	thres = (double)atof(threshold);		
@@ -541,13 +525,7 @@ int main(int argc, char *argv[])
 	elevation_tolerance=atof(elevation_tolerancestring);
 	drain_tolerance=atof(drain_tolerancestring);
 	iteration_limit = (int)atof(iteration_limitstring); 
-        if (iteration_limit == 0) {
-            isKillSwitch = false;
-        }
-        else 
-        {
-            isKillSwitch = true;
-        }	
+        
 	cpu = (int)atof(CpuString);
 	gpu = (int)atof(GpuString);
 	thres = (double)atof(threshold);
@@ -562,12 +540,7 @@ int main(int argc, char *argv[])
 
     // now open files to input arrays
     // get data from DEM header
-    if (!DEMFileName){
-        printf("%s\n", "Error DEM file missing");
-        exit(42);
-    }
-    else
-    {
+
 	// reads from ArcGIS file
 	FILE *fgheader;
 	fgheader=fopen(DEMFileName,"r");
@@ -584,7 +557,6 @@ int main(int argc, char *argv[])
 	i++;
 	}      
 	fclose(fgheader);
-    }
     
     
     // get numbers of rows & cols from header
@@ -1246,7 +1218,7 @@ int main(int argc, char *argv[])
 		    err = clSetKernelArg(kernel, 7, sizeof(int), (void *)&oj);	 
 		    exitOnFail(err, "set kernel argument oj");		     
 
-		    size_t global[2], local[2];
+		    size_t global[2];
 		    int tmp1 = (int)((numrows+2)/(offset-1));
 		    int tmp2 = (int)(tmp1/32);
 		    int tmp1a = (int)((numcols+2)/(offset-1));
@@ -1992,7 +1964,7 @@ void runoffs(int centerrow, int centercol, double missingvalue) {
      // examines at a 3x3 section of the water array around the passed location
     // and only drains water away from center location
     int rowloc, colloc;
-    double ht_diff, center_water_elev, cell_water_elev, flow;
+    double ht_diff, flow;
 
       for (rowloc=centerrow-1; rowloc<=centerrow+1; rowloc++){
 	  for (colloc=centercol-1; colloc<=centercol+1; colloc++){
@@ -2061,5 +2033,4 @@ void runoffd(int centerrow, int centercol, int drainrow, int draincol, double mi
 	  }
       }
 }
-
 
