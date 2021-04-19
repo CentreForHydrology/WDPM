@@ -9,7 +9,14 @@ Please cite all uses of the program.
 
 Several presentations on using WDPM are available at https://research-groups.usask.ca/hydrology/modelling/wdpm.php.
 
-## Folders and files
+## Folders and files  
+
+**/** - contains files describing the program  
+
+- README.md - this file  
+- LICENSE - GPL 3.0 licence file  
+- requirements.txt - file containing libraries required by WDPM.py  
+- codemeta.json - description of the project metadata  
 
 **src** - contains program source code files:
 
@@ -19,8 +26,6 @@ Several presentations on using WDPM are available at https://research-groups.usa
 - CMakeLists.txt - configuration file for building the program using cmake
 - cmap_black.sh - shell script for converting model output to an image on Linux or MacOS
 - cmap.bat - shell script for converting model output to an image on Windows
-- requirements.txt - file containing libraries required by WDPM.py
-
 
 **dem** - contains a sample digital elevation model (DEM) for use with the WDPM:
 
@@ -33,9 +38,10 @@ Several presentations on using WDPM are available at https://research-groups.usa
 
 ## Program requirements
 
-The WDPM requires the use of other programs in order to work properly.
+The WDPM requires the use of other programs in order to work properly.  
+
 - Python 3 and the wxPython library are required to run the GUI, 
 - OpenCL drivers are required to use parallel processing,
-- gdaldem is required to create maps of water distribution.
+- gdaldem is required to create maps of water distribution.  
 
-Compilation of the WDPM and installation of the other required software are described in the manual **WDPMUserGuide_2.pdf**.
+Compilation of the WDPM and installation of the other required software are described in the manual ![WDPMUserGuide_2.pdf](https://github.com/CentreForHydrology/WDPM/blob/master/manual/WDPMUserGuide_2.pdf). The manual also describes how to run the program and gives case studies showing how the program has been used to solve some real-world problems.
