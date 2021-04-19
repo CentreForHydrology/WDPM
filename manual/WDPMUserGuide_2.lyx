@@ -1971,6 +1971,8 @@ form, parallel programming of modern processors found in personal computers,
  matrix.
  The entire matrix was divided into 9 slices such that race conditions are
  not present.
+ The cells in each slice are separated by 3 rows and 3 columns, so that
+ their water transfers from adjacent cells are independent.
 \end_layout
 
 \begin_layout Standard
