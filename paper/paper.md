@@ -58,9 +58,11 @@ All WDPM modules use the algorithm of @shapiroMAPCALCAlgebraGIS1992 to redistrib
 ![Schematic diagram of water flow from a DEM cell using WDPM.\label{fig:waterflow}](WaterFlowDiagram.png)
 
 
-The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), the code was refactored. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code because this framework permits the use of CPUs and GPUs. Using OpenCL, the matrix was subdivided as shown in \autoref{fig:opencl}, where each colour represents a separate thread. Because the matrix locations of each thread are separated by 3 rows and columns, the points are independent, and race conditions are avoided. The refactoring of the WDPM was successful in greatly reducing execution time.
+The original version of WDPM was written by in Fortran [@shookMemoryEffectsDepressional2011] and parallelized using OpenMP. Because the program was so slow to run (taking hours or days to converge to a solution), the code was refactored. The program was converted to C, and an optional python GUI was added. Because the program is typically run by end-users on desktop computers, it was decided to use OpenCL to parallelise the code because this framework permits the use of CPUs and GPUs. Using OpenCL, the matrix was subdivided into 9 sets of cells, as shown in \autoref{fig:opencl}, where each colour represents a separate subdivision each of which is acted upon by a separate set of threads. The matrix locations of each subdivision are separated by 3 rows and columns. Because transfers of water are only done from cells immediately adjacent to each cell of interest (i.e. at a distance of 1 cell), the points in each set are independent from each other, in that their water transfers do not affect those of the other cells in the set for a given iteration. Therefore the order of execution of the cells in each set does not matter, and race conditions are avoided. Note that water does transfer across the entire DEM, as is required by the algorithm, as each of the 9 sets of cells is solved.
 
-![Schematic diagram of WDPM matrix subdivision for OpenCL. Each colour represents a separate thread.\label{fig:opencl}](opencl4.png)
+The refactoring of the WDPM was successful in greatly reducing execution time.
+
+![Schematic diagram of WDPM matrix subdivision for OpenCL. Each colour represents a separate set of threads.\label{fig:opencl}](opencl4.png)
 
 
 # Examples

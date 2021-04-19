@@ -1986,7 +1986,8 @@ reference "fig:Subdivision-of-the"
 \end_inset
 
  illustrates the slices used by the OpenCL version of the WDPM, in which
- every node with the same colour is processed individually by a unique thread.
+ every node with the same colour is processed individually by a unique set
+ of threads.
  The OpenCl code consists of two pieces, the host and the kernel.
  The host code sits on the CPU and send instructions to the devices that
  do the parallel processing.
