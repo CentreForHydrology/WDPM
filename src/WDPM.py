@@ -373,33 +373,33 @@ class Size(wx.Frame):
     		editname7b, lblname9a, txt9a, button19a, txt1, button11, txt2, button12, txt3,
     		txt4, lblname8, combo8, button18, lblname9):
         '''disable or enable the button'''
-        self.lblname5.Enable(True) if lblname5==1 else self.lblname5.Enable(False)
-        self.editname5.Enable(True) if editname5==1 else self.editname5.Enable(False)
-        self.lblname6.Enable(True) if lblname6==1 else self.lblname6.Enable(False)
-        self.editname6.Enable(True) if editname6==1 else self.editname6.Enable(False)
-        self.lblname7.Enable(True) if lblname7==1 else self.lblname7.Enable(False)
-        self.editname7.Enable(True) if editname7==1 else self.editname7.Enable(False)
-        self.lblname5a.Enable(True) if lblname5a==1 else self.lblname5a.Enable(False)
-        self.editname5a.Enable(True) if editname5a==1 else self.editname5a.Enable(False)
-        self.lblname7a.Enable(True) if lblname7a==1 else self.lblname7a.Enable(False)
-        self.editname7a.Enable(True) if editname7a==1 else self.editname7a.Enable(False)
-        self.lblname6b.Enable(True) if lblname6b==1 else self.lblname6b.Enable(False)
-        self.editname6b.Enable(True) if editname6b==1 else self.editname6b.Enable(False)
-        self.lblname7b.Enable(True) if lblname7b==1 else self.lblname7b.Enable(False)
-        self.editname7b.Enable(True) if editname7b==1 else self.editname7b.Enable(False)
-        self.lblname9a.Enable(True) if lblname9a==1 else self.lblname9a.Enable(False)
-        self.txt9a.Enable(True) if txt9a==1 else self.txt9a.Enable(False)
-        self.button19a.Enable(True) if button19a==1 else self.button19a.Enable(False)
-        self.txt1.Enable(True) if txt1==1 else self.txt1.Enable(False)
-        self.button11.Enable(True) if button11==1 else self.button11.Enable(False)
-        self.txt2.Enable(True) if txt2==1 else self.txt2.Enable(False)
-        self.button12.Enable(True) if button12==1 else self.button12.Enable(False)
-        self.txt3.Enable(True) if txt3==1 else self.txt3.Enable(False)
-        self.txt4.Enable(True) if txt4==1 else self.txt4.Enable(False)
-        self.lblname8.Enable(True) if lblname8==1 else self.lblname8.Enable(False)
-        self.combo8.Enable(True) if combo8==1 else self.combo8.Enable(False)
-        self.button18.Enable(True) if button18==1 else self.button18.Enable(False)
-        self.lblname9.Enable(True) if lblname9==1 else self.lblname9.Enable(False)
+        self.lblname5.Enable(lblname5==1)
+        self.editname5.Enable(editname5==1)
+        self.lblname6.Enable(lblname6==1)
+        self.editname6.Enable(editname6==1)
+        self.lblname7.Enable(lblname7==1)
+        self.editname7.Enable(editname7==1)
+        self.lblname5a.Enable(lblname5a==1)
+        self.editname5a.Enable(editname5a==1)
+        self.lblname7a.Enable(lblname7a==1)
+        self.editname7a.Enable(editname7a==1)
+        self.lblname6b.Enable(lblname6b==1)
+        self.editname6b.Enable(editname6b==1)
+        self.lblname7b.Enable(lblname7b==1)
+        self.editname7b.Enable(editname7b==1)
+        self.lblname9a.Enable(lblname9a==1)
+        self.txt9a.Enable(txt9a==1)
+        self.button19a.Enable(button19a==1) 
+        self.txt1.Enable(txt1==1)
+        self.button11.Enable(button11==1)
+        self.txt2.Enable(txt2==1)
+        self.button12.Enable(button12==1)
+        self.txt3.Enable(txt3==1)
+        self.txt4.Enable(txt4==1)
+        self.lblname8.Enable(lblname8==1)
+        self.combo8.Enable(combo8==1)
+        self.button18.Enable(button18==1)
+        self.lblname9.Enable(lblname9==1)
 
     def verify(self, event):
         '''verify'''
@@ -708,6 +708,8 @@ class Size(wx.Frame):
         self.log.Clear()
         self.log.Enable(True)
         self.run_simulation_optimized()
+        
+
 
     ## Run the binary file. Set the parameter according to different module
     def run_simulation_optimized(self):
@@ -720,203 +722,11 @@ class Size(wx.Frame):
         if os.path.isfile(checkpointfilenamex):
             os.remove(checkpointfilenamex)
         if method=='add':
-            demfilename = str(self.txt1.GetValue())
-            waterfilename = str(self.txt2.GetValue())
-            wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-            if self.txt4.GetValue()=='NULL':
-                checkpointfilename = str(self.txt4.GetValue())
-            else:
-                checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-            method1 = self.combo8.GetValue()
-            method2 = self.combo9.GetValue()
-            waterdeptha = str(self.editname5.GetValue())
-            runoffrac = str(self.editname6.GetValue())
-            elevationtol = str(self.editname7.GetValue())
-            threshold = str(self.editname10.GetValue())
-            limitation = str(self.editname11.GetValue())
-            if method1=="Serial CPU":
-                method1="0"
-            elif method1=="OpenCL":
-                method1="1"
-            if method2=="GPU":
-                method2="1"
-            elif method2=="CPU":
-                method2="0"
-            if demfilename=='':
-                self.on_error_dem()
-                plat='error'
-            if waterfilename=='':
-                self.on_error_water()
-                plat='error'
-            if wateroutputfilename=='':
-                self.on_error_output()
-                plat='error'
-            if checkpointfilename=='':
-                self.on_error_check_point()
-                plat='error'
-            if method1=='':
-                self.on_error_m1()
-                plat='error'
-            if method1=='1':
-                if method2=='':
-                    self.on_error_m2()
-                    plat='error'
-            if elevationtol=='':
-                self.on_error_elev()
-                plat='error'
-            if waterdeptha=='':
-                self.on_error_depth_a()
-                plat='error'
-            if runoffrac=='':
-                self.on_error_runoff()
-                plat='error'
-            if os.path.isfile("self.txt1.GetValue()"):
-                pass
-            if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
-                pass
-            else:
-                print ("DEM file not present. Use the Browse button to locate file.")
-                plat="error"
-
-            if plat in ('Darwin', 'Linux'):
-                cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-                self.module2(cmd)
-            else:
-                cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-                self.module2(cmd)
+            self.run_simulation_optimized_add()
         elif method=='subtract':
-            demfilename = str(self.txt1.GetValue())
-            waterfilename = str(self.txt2.GetValue())
-            wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-            if self.txt4.GetValue()=='NULL':
-                checkpointfilename = str(self.txt4.GetValue())
-            else:
-                checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-            method1 = self.combo8.GetValue()
-            method2 = self.combo9.GetValue()
-            waterdepths = str(self.editname5a.GetValue())
-            elevationtol = str(self.editname7a.GetValue())
-            threshold = str(self.editname10.GetValue())
-            limitation = str(self.editname11.GetValue())
-            if method1=="Serial CPU":
-                method1="0"
-            elif method1=="OpenCL":
-                method1="1"
-            if method2=="GPU":
-                method2="1"
-            elif method2=="CPU":
-                method2="0"
-            if os.path.isfile("self.txt1.GetValue()"):
-                pass
-            if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
-                pass
-            else:
-                print ("DEM file not present. Use the Browse button to locate file.")
-                plat="error"
-            if demfilename=='':
-                self.on_error_dem()
-                plat='error'
-            if waterfilename=='':
-                self.on_error_water()
-                plat='error'
-            if wateroutputfilename=='':
-                self.on_error_output()
-                plat='error'
-            if checkpointfilename=='':
-                self.on_error_check_point()
-                plat='error'
-            if method1=='':
-                self.on_error_m1()
-                plat='error'
-            if method1=='1':
-                if method2=='':
-                    self.on_error_m2()
-                    plat='error'
-            if elevationtol=='':
-                self.on_error_elev()
-                plat='error'
-            if waterdepths=='':
-                self.on_error_depth_s()
-                plat='error'
-            if plat in ('Darwin', 'Linux'):
-                cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-                self.module2(cmd)
-            else:
-                cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-                self.module2(cmd)
+            self.run_simulation_optimized_subtract()
         elif method=='drain':
-            demfilename = str(self.txt1.GetValue())
-            waterfilename = str(self.txt2.GetValue())
-            wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-            if self.txt4.GetValue()=='NULL':
-                checkpointfilename = str(self.txt4.GetValue())
-            else:
-                checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-            method1 = self.combo8.GetValue()
-            method2 = self.combo9.GetValue()
-            draintol = str(self.editname6b.GetValue())
-            elevationtol = str(self.editname7b.GetValue())
-            threshold = str(self.editname10.GetValue())
-            limitation = str(self.editname11.GetValue())
-            if method1=="Serial CPU":
-                method1="0"
-            elif method1=="OpenCL":
-                method1="1"
-            if os.path.isfile("self.txt1.GetValue()"):
-                pass
-            if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
-                pass
-            else:
-                print ("DEM file not present. Use the Browse button to locate file.")
-                plat="error"
-            if method2=="GPU":
-                method2="1"
-            elif method2=="CPU":
-                method2="0"
-            if demfilename=='':
-                self.on_error_dem()
-                plat='error'
-            if waterfilename=='':
-                self.on_error_water()
-                plat='error'
-            if wateroutputfilename=='':
-                self.on_error_output()
-                plat='error'
-            if checkpointfilename=='':
-                self.on_error_check_point()
-            if method1=='':
-                self.on_error_m1()
-                plat='error'
-            if method1=='1':
-                if method2=='':
-                    self.on_error_m2()
-                    plat='error'
-            if elevationtol=='':
-                self.on_error_elev()
-                plat='error'
-            if draintol=='':
-                self.on_error_drain()
-                plat='error'
-            if plat in ('Darwin', 'Linux'):
-                cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                         method2,threshold, limitation]
-                self.module2(cmd)
-            else:
-                cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                        method2,threshold, limitation]
-                self.module2(cmd)
+            self.run_simulation_optimized_drain()
         elif method=='TextFile':
             filename = str(self.txt9a.GetValue())
             if filename=='':
@@ -929,6 +739,223 @@ class Size(wx.Frame):
                     cmd = [solverw, filename]
                     self.module2(cmd)
 
+    def run_simulation_optimized_add(self):
+        solver=os.getcwd()+"/WDPMCL"
+        solverw=os.getcwd()+r"\WDPMCL.exe"
+        method = self.combo.GetValue()
+        plat = platform.system()
+        checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
+        demfilename = str(self.txt1.GetValue())
+        waterfilename = str(self.txt2.GetValue())
+        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
+        if self.txt4.GetValue()=='NULL':
+            checkpointfilename = str(self.txt4.GetValue())
+        else:
+            checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
+        method1 = self.combo8.GetValue()
+        method2 = self.combo9.GetValue()
+        waterdeptha = str(self.editname5.GetValue())
+        runoffrac = str(self.editname6.GetValue())
+        elevationtol = str(self.editname7.GetValue())
+        threshold = str(self.editname10.GetValue())
+        limitation = str(self.editname11.GetValue())
+        if method1=="Serial CPU":
+            method1="0"
+        elif method1=="OpenCL":
+            method1="1"
+        if method2=="GPU":
+            method2="1"
+        elif method2=="CPU":
+            method2="0"
+        if demfilename=='':
+            self.on_error_dem()
+            plat='error'
+        if waterfilename=='':
+            self.on_error_water()
+            plat='error'
+        if wateroutputfilename=='':
+            self.on_error_output()
+            plat='error'
+        if checkpointfilename=='':
+            self.on_error_check_point()
+            plat='error'
+        if method1=='':
+            self.on_error_m1()
+            plat='error'
+        if method1=='1':
+            if method2=='':
+                self.on_error_m2()
+                plat='error'
+        if elevationtol=='':
+            self.on_error_elev()
+            plat='error'
+        if waterdeptha=='':
+            self.on_error_depth_a()
+            plat='error'
+        if runoffrac=='':
+            self.on_error_runoff()
+            plat='error'
+        if os.path.isfile("self.txt1.GetValue()"):
+            pass
+        if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
+            pass
+        else:
+            print ("DEM file not present. Use the Browse button to locate file.")
+            plat="error"
+
+        if plat in ('Darwin', 'Linux'):
+            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, waterdeptha,
+                                         runoffrac, elevationtol, method1,
+                                          method2, threshold, limitation]
+            self.module2(cmd)
+        else:
+            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, waterdeptha,
+                                         runoffrac, elevationtol, method1,
+                                          method2, threshold, limitation]
+            self.module2(cmd)
+
+    def run_simulation_optimized_subtract(self):
+        solver=os.getcwd()+"/WDPMCL"
+        solverw=os.getcwd()+r"\WDPMCL.exe"
+        method = self.combo.GetValue()
+        plat = platform.system()
+        checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
+        demfilename = str(self.txt1.GetValue())
+        waterfilename = str(self.txt2.GetValue())
+        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
+
+        if self.txt4.GetValue()=='NULL':
+            checkpointfilename = str(self.txt4.GetValue())
+        else:
+            checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
+        method1 = self.combo8.GetValue()
+        method2 = self.combo9.GetValue()
+        waterdepths = str(self.editname5a.GetValue())
+        elevationtol = str(self.editname7a.GetValue())
+        threshold = str(self.editname10.GetValue())
+        limitation = str(self.editname11.GetValue())
+        if method1=="Serial CPU":
+            method1="0"
+        elif method1=="OpenCL":
+            method1="1"
+        if method2=="GPU":
+            method2="1"
+        elif method2=="CPU":
+            method2="0"
+        if os.path.isfile("self.txt1.GetValue()"):
+            pass
+        if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
+            pass
+        else:
+            print ("DEM file not present. Use the Browse button to locate file.")
+            plat="error"
+        if demfilename=='':
+            self.on_error_dem()
+            plat='error'
+        if waterfilename=='':
+            self.on_error_water()
+            plat='error'
+        if wateroutputfilename=='':
+            self.on_error_output()
+            plat='error'
+        if checkpointfilename=='':
+            self.on_error_check_point()
+            plat='error'
+        if method1=='':
+            self.on_error_m1()
+            plat='error'
+        if method1=='1':
+            if method2=='':
+                self.on_error_m2()
+                plat='error'
+        if elevationtol=='':
+            self.on_error_elev()
+            plat='error'
+        if waterdepths=='':
+            self.on_error_depth_s()
+            plat='error'
+        if plat in ('Darwin', 'Linux'):
+            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, waterdepths,
+                                         elevationtol, method1, method2,threshold, limitation]
+            self.module2(cmd)
+        else:
+            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, waterdepths,
+                                         elevationtol, method1, method2,threshold, limitation]
+            self.module2(cmd)
+
+    def run_simulation_optimized_drain(self):
+        solver=os.getcwd()+"/WDPMCL"
+        solverw=os.getcwd()+r"\WDPMCL.exe"
+        method = self.combo.GetValue()
+        plat = platform.system()
+        checkpointfilenamex = os.path.join(self.txt0a.GetValue(),"temp.asc")
+        demfilename = str(self.txt1.GetValue())
+        waterfilename = str(self.txt2.GetValue())
+        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
+        if self.txt4.GetValue()=='NULL':
+            checkpointfilename = str(self.txt4.GetValue())
+        else:
+            checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
+        method1 = self.combo8.GetValue()
+        method2 = self.combo9.GetValue()
+        draintol = str(self.editname6b.GetValue())
+        elevationtol = str(self.editname7b.GetValue())
+        threshold = str(self.editname10.GetValue())
+        limitation = str(self.editname11.GetValue())
+        if method1=="Serial CPU":
+            method1="0"
+        elif method1=="OpenCL":
+            method1="1"
+        if os.path.isfile("self.txt1.GetValue()"):
+            pass
+        if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
+            pass
+        else:
+            print ("DEM file not present. Use the Browse button to locate file.")
+            plat="error"
+        if method2=="GPU":
+            method2="1"
+        elif method2=="CPU":
+            method2="0"
+        if demfilename=='':
+            self.on_error_dem()
+            plat='error'
+        if waterfilename=='':
+            self.on_error_water()
+            plat='error'
+        if wateroutputfilename=='':
+            self.on_error_output()
+            plat='error'
+        if checkpointfilename=='':
+            self.on_error_check_point()
+        if method1=='':
+            self.on_error_m1()
+            plat='error'
+        if method1=='1':
+            if method2=='':
+                self.on_error_m2()
+                plat='error'
+        if elevationtol=='':
+            self.on_error_elev()
+            plat='error'
+        if draintol=='':
+            self.on_error_drain()
+            plat='error'
+        if plat in ('Darwin', 'Linux'):
+            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, elevationtol, draintol, method1,
+                                         method2,threshold, limitation]
+            self.module2(cmd)
+        else:
+            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
+                                        checkpointfilename, elevationtol, draintol, method1,
+                                        method2,threshold, limitation]
+            self.module2(cmd)
+    
     def end_simulation(self, event):
         '''end simulation'''
         del event
