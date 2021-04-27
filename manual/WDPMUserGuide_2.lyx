@@ -5008,6 +5008,7 @@ command-line arguments
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\small\ttfamily}"
 inline false
 status open
 
@@ -5023,7 +5024,12 @@ DEM file name (string)
 
 \begin_layout Plain Layout
 
-Water file name (string) - Optional, Use NULL to omit Output file name (string)
+Water file name (string) - Optional, Use NULL to omit 
+\end_layout
+
+\begin_layout Plain Layout
+
+Output file name (string)
 \end_layout
 
 \begin_layout Plain Layout
@@ -5033,7 +5039,12 @@ Scratch file name (string) - Optional, use NULL to omit
 
 \begin_layout Plain Layout
 
-Depth of water to add (mm) (real) Water runoff fraction (real)
+Depth of water to add (mm) (real) 
+\end_layout
+
+\begin_layout Plain Layout
+
+Water runoff fraction (real)
 \end_layout
 
 \begin_layout Plain Layout
@@ -5126,57 +5137,52 @@ Maximum number of iterations (integer) - Optional, Use 0 to omit
 
 \begin_layout Plain Layout
 
-Program arguments in order of specification
+Drain module specified 
 \end_layout
 
 \begin_layout Plain Layout
 
-Subtract module specified
+DEM file name (string)  
 \end_layout
 
 \begin_layout Plain Layout
 
-DEM file name (string)
+Water file name (string) - Optional, Use NULL to omit 
 \end_layout
 
 \begin_layout Plain Layout
 
-Water file name (string) - Optional, Use NULL to omit
+Output file name (string) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Output file name (string)
+Scratch file name (string) - Optional, use NULL to omit 
 \end_layout
 
 \begin_layout Plain Layout
 
-Scratch file name (string) - Optional, use NULL to omit
+Elevation tolerance (mm) (real) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Depth of water to remove (mm) (real)
+Drain tolerance (m3) (real) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Elevation tolerance (mm) (real)
+Specify 0 for serial CPU and 1 for opencl  
 \end_layout
 
 \begin_layout Plain Layout
 
-Specify 0 for serial CPU and 1 for opencl
+Specify 0 for OpenCL CPU and 1 for opencl GPU  
 \end_layout
 
 \begin_layout Plain Layout
 
-Specify 0 for OpenCL CPU and 1 for opencl GPU
-\end_layout
-
-\begin_layout Plain Layout
-
-Zero depth threshold (mm) (real)
+Zero depth threshold (mm) (real) 
 \end_layout
 
 \begin_layout Plain Layout
