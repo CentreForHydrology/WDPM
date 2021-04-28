@@ -12,7 +12,7 @@ ELSEIF(APPLE)
 	SET(SRC WDPMCL.c)
 ELSE()
 	message(STATUS "curent platform : windows")
-	add_executable(WDPMCL WDPMCL-threshold6.c)
+	add_executable(WDPMCL WDPMCL.c)
 ENDIF()
 
 add_executable(WDPMCL ${SRC})
