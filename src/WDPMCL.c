@@ -1700,7 +1700,14 @@ void print_arg_list(){
     }    
     //printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string) ");
-    printf("%s\n", "Water file name (string) - Optional, Use NULL to omit");
+    if (strcmp(activity,"add")==0)
+    {
+        printf("%s\n", "Water file name (string) - Optional, Use NULL to omit");
+    }
+    else
+    {
+        printf("%s\n", "Water file name (string)");
+    }
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use NULL to omit");
     if (strcmp(activity,"add")==0){
@@ -1743,7 +1750,7 @@ void print_narg_list(){
     printf("%s\n", "Module name: subtract");
     printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string) - Optional, use --NULL-- to omit");
+    printf("%s\n", "Water file name (string)");
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");      
     printf("%s\n", "Depth of water to remove (mm) (real)"); 
@@ -1757,7 +1764,7 @@ void print_narg_list(){
     printf("%s\n", "Module name: drain");
     printf("%s\n", "Path and Name of Report file");
     printf("%s\n", "DEM file name (string)");
-    printf("%s\n", "Water file name (string) - Optional, use --NULL-- to omit");
+    printf("%s\n", "Water file name (string) ");
     printf("%s\n", "Output file name (string)");
     printf("%s\n", "Scratch file name (string) - Optional, use --NULL-- to omit");      
     printf("%s\n", "Elevation tolerance (mm) (real)");
@@ -1780,19 +1787,19 @@ void print_args (char demfile[80], char waterfile[80], char outputfile[80],
     printf("%30s %s\n", "Output file:", outputfile);
     printf("%30s %s\n", "Scratch file:", scratchfile);  
     if (strcmp(activity,"add")==0){
-      printf("%30s %0.1f %s\n", "Water added:", addwater, "mm");
-      printf("%30s %0.1f\n", "Runoff fraction:", rof); 
-      printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");
+      printf("%30s %0.4f %s\n", "Water added:", addwater, "mm");
+      printf("%30s %0.4f\n", "Runoff fraction:", rof); 
+      printf("%30s %0.4f %s\n", "Elevation tolerance:", eltol, "mm");
       printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm");
     }
     if (strcmp(activity,"subtract")==0){
-      printf("%30s %0.1f %s\n", "Water subtracted:", subtractwater, "mm");
-      printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");  
+      printf("%30s %0.4f %s\n", "Water subtracted:", subtractwater, "mm");
+      printf("%30s %0.4f %s\n", "Elevation tolerance:", eltol, "mm");  
       printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm"); 
     }    
     if (strcmp(activity,"drain")==0){
-      printf("%30s %0.1f %s\n", "Elevation tolerance:", eltol, "mm");
-      printf("%30s %0.1f %s\n", "Drain tolerance:", draintol, "m3");  
+      printf("%30s %0.4f %s\n", "Elevation tolerance:", eltol, "mm");
+      printf("%30s %0.4f %s\n", "Drain tolerance:", draintol, "m3");  
       printf("%30s %0.4f %s\n", "Zero depth threshold:", thres, "mm");         
     }
     if(iteration_limit == 0)
@@ -1848,11 +1855,11 @@ void print_iteration_summary_headings(){
 void print_basin_summary(double basin_area, double initial_vol, int drainrow, int draincol, double minel){
 	printf("%s\n", "               ");
 	printf("%30s\n", "Basin summary");
-	printf("%20s %10.1f %s\n", "Basin area:", basin_area, "m2");   
-	printf("%20s %10.1f %s\n", "Initial volume:", initial_vol, "m3");   
+	printf("%20s %10.4f %s\n", "Basin area:", basin_area, "m2");   
+	printf("%20s %10.4f %s\n", "Initial volume:", initial_vol, "m3");   
 	printf("%20s %d\n", "Drain column:", draincol);   
 	printf("%20s %d\n", "Drain row:", drainrow);   
-	printf("%20s %10.3f %s\n", "Min DEM elevation:", minel, "m");   	
+	printf("%20s %10.4f %s\n", "Min DEM elevation:", minel, "m");   	
 } 
 
 
@@ -1862,25 +1869,25 @@ void print_results(double initial_vol, double final_vol, double drainvol, double
     if (strcmp(activity, "drain") == 0) {
 	printf("%s\n", "                     ");
 	printf("%30s\n", "WDPM run summary");
-	printf("%20s %10.1f %s\n", "Initial volume",initial_vol,"m3");
-	printf("%20s %10.1f %s\n", "Final volume",final_vol,"m3");
-	printf("%20s %10.1f %s\n", "Volume change",initial_vol-final_vol,"m3");
-	printf("%20s %10.1f %s\n", "Volume drained",drainvol,"m3");
-	printf("%20s %10.3f %s\n", "Final water coverage", waterfrac,"");
-	printf("%20s %10.1f %s\n", "Mean water depth", meanwater*1000.,"mm");
-	printf("%20s %10.1f %s\n", "Depth drained", draindepth,"mm ");
-	printf("%20s %10.1f %s\n", "Max water depth", maxdepth,"mm ");       
+	printf("%20s %10.2f %s\n", "Initial volume",initial_vol,"m3");
+	printf("%20s %10.2f %s\n", "Final volume",final_vol,"m3");
+	printf("%20s %10.2f %s\n", "Volume change",initial_vol-final_vol,"m3");
+	printf("%20s %10.2f %s\n", "Volume drained",drainvol,"m3");
+	printf("%20s %10.4f %s\n", "Final water coverage", waterfrac,"");
+	printf("%20s %10.2f %s\n", "Mean water depth", meanwater*1000.,"mm");
+	printf("%20s %10.2f %s\n", "Depth drained", draindepth,"mm ");
+	printf("%20s %10.2f %s\n", "Max water depth", maxdepth,"mm ");       
     }
     else
     {
 	printf("%s\n", "                     ");
 	printf("%30s\n", "WDPM run summary");
-	printf("%20s %10.1f %s\n", "Initial volume",initial_vol,"m3");
-	printf("%20s %10.1f %s\n", "Final volume",final_vol,"m3");
-	printf("%20s %10.1f %s\n", "Volume change",final_vol - initial_vol,"m3");
-	printf("%20s %10.3f %s\n", "Final water coverage", waterfrac,"");
-	printf("%20s %10.1f %s\n", "Mean water depth", meanwater*1000.,"mm");
-	printf("%20s %10.1f %s\n", "Max water depth", maxdepth,"mm ");  
+	printf("%20s %10.2f %s\n", "Initial volume",initial_vol,"m3");
+	printf("%20s %10.2f %s\n", "Final volume",final_vol,"m3");
+	printf("%20s %10.2f %s\n", "Volume change",final_vol - initial_vol,"m3");
+	printf("%20s %10.4f %s\n", "Final water coverage", waterfrac,"");
+	printf("%20s %10.2f %s\n", "Mean water depth", meanwater*1000.,"mm");
+	printf("%20s %10.2f %s\n", "Max water depth", maxdepth,"mm ");  
     }
     
 }
