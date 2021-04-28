@@ -5083,52 +5083,52 @@ Subtract module specified
 
 \begin_layout Plain Layout
 
-DEM file name (string)
+DEM file name (string)  
 \end_layout
 
 \begin_layout Plain Layout
 
-Water file name (string) - Optional, Use NULL to omit
+Water file name (string) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Output file name (string)
+Output file name (string) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Scratch file name (string) - Optional, use NULL to omit
+Scratch file name (string) - Optional, use NULL to omit 
 \end_layout
 
 \begin_layout Plain Layout
 
-Depth of water to remove (mm) (real)
+Depth of water to remove (mm) (real) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Elevation tolerance (mm) (real)
+Elevation tolerance (mm) (real) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Specify 0 for serial CPU and 1 for opencl
+Specify 0 for serial CPU and 1 for opencl  
 \end_layout
 
 \begin_layout Plain Layout
 
-Specify 0 for OpenCL CPU and 1 for opencl GPU
+Specify 0 for OpenCL CPU and 1 for opencl GPU  
 \end_layout
 
 \begin_layout Plain Layout
 
-Zero depth threshold (mm) (real)
+Zero depth threshold (mm) (real) 
 \end_layout
 
 \begin_layout Plain Layout
 
-Maximum number of iterations (integer) - Optional, Use 0 to omit
+Maximum number of iterations (integer) - Optional, Use 0 to omit 
 \end_layout
 
 \begin_layout Plain Layout
@@ -5147,7 +5147,7 @@ DEM file name (string)
 
 \begin_layout Plain Layout
 
-Water file name (string) - Optional, Use NULL to omit 
+Water file name (string)
 \end_layout
 
 \begin_layout Plain Layout
