@@ -4506,8 +4506,8 @@ Now set the parameters for the module that you have selected, as described
 \end_layout
 
 \begin_layout Enumerate
-Click on Process to set the calculation method and select either Serial
- or OpenCL processing
+Under Computation Settings, click on Process to set the calculation method
+ and select either Serial or OpenCL processing
 \begin_inset CommandInset label
 LatexCommand label
 name "enu:Click-on-Process"
