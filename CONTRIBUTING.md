@@ -1,6 +1,6 @@
 ## How to contribute
 Anyone interested is encouraged to contribute to the repository by **forking and submitting a pull request**. 
-We require that anyone contributing to this project adhere to the [code of conduct](https://github.com/CentreForHydrology/WDPM/CODE_OF_CONDUCT.md). Please read it before commenting or contributing code.  
+We require that anyone contributing to this project adhere to the [code of conduct](https://github.com/CentreForHydrology/WDPM/blob/master/CODE_OF_CONDUCT.md). Please read it before commenting or contributing code.  
 
 If you are new to GitHub, you might start with a [basic tutorial](https://help.github.com/articles/set-up-git) and  check out a more detailed guide to [pull requests](https://help.github.com/articles/using-pull-requests/).
 
