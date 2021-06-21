@@ -65,9 +65,9 @@ class RedirectText:
     def __init__(self,aWxTextCtrl):
         self.out=aWxTextCtrl
 
-    def write(self,string):
+    def write(self,strings):
         '''write'''
-        wx.CallAfter(self.out.WriteText, string)
+        wx.CallAfter(self.out.WriteText, strings)
 
 class CharValidator(wx.PyValidator):
     '''check if the char is validate'''
@@ -127,9 +127,9 @@ class Size(wx.Frame):
         self.flagz = 0
         menubar = wx.MenuBar()
         filez = wx.Menu()
-        quit = wx.MenuItem(filez, 1, '&Quit\tCtrl+Q')
+        quits = wx.MenuItem(filez, 1, '&Quit\tCtrl+Q')
         about = wx.MenuItem(filez, 3, '&About\tCtrl+A')
-        filez.Append(quit)
+        filez.Append(quits)
         filez.Append(about)
         self.Bind(wx.EVT_MENU, self.on_quit, id=1)
         self.Bind(wx.EVT_MENU, self.on_about, id=3)
@@ -238,20 +238,20 @@ class Size(wx.Frame):
         self.log = wx.TextCtrl(self.panel, -1, pos=(16*x_p, x_p), size=(25*x_p, 22*x_p),
                                        style = wx.TE_MULTILINE|wx.TE_READONLY)
         ##pre-define
-        self.dirname5: str = str()
-        self.dirname2: str = str()
-        self.filename2: str = str()
-        self.filename1: str = str()
-        self.dirname1: str = str()
-        self.dirname0: str = str()
-        self.filename0: str = str()
-        self.threadx: str = str()
-        self.processx: str = str()
-        self.dirname5x: str = str()
-        self.filename5: str = str()
-        self.repx: str = str()
-        self.thread1: str = str()
-        self.rep2: str = str()
+        self.dirname5: str = ""
+        self.dirname2: str = ""
+        self.filename2: str = ""
+        self.filename1: str = ""
+        self.dirname1: str = ""
+        self.dirname0: str = ""
+        self.filename0: str = ""
+        self.threadx: str = ""
+        self.processx: str = ""
+        self.dirname5x: str = ""
+        self.filename5: str = ""
+        self.repx: str = ""
+        self.thread1: str = ""
+        self.rep2: str = ""
 
         font1 = wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
         		wx.FONTWEIGHT_NORMAL, False, 'Consolas')
@@ -737,34 +737,29 @@ class Size(wx.Frame):
                     cmd = [solverw, filename]
                     self.module2(cmd)
 
+    def _error_callback_on_empty(self, sent, callback):
+        if sent=="":
+            callback()
+            return True
+        return False
+
     def check_file(self):
         '''check the parameter'''
-        method1 = self.combo8.GetValue()
-        method2 = self.combo9.GetValue()
         demfilename = str(self.txt1.GetValue())
         waterfilename = str(self.txt2.GetValue())
         wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
         checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
-        elevationtol = str(self.editname7.GetValue())
         if self.txt4.GetValue()=='NULL':
             checkpointfilename = str(self.txt4.GetValue())
         else:
             checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-        if demfilename=='':
-            self.on_error_dem()
-        if waterfilename=='':
-            self.on_error_water()
-        if wateroutputfilename=='':
-            self.on_error_output()
-        if checkpointfilename=='':
-            self.on_error_check_point()
-        if method1=='':
-            self.on_error_m1()
-        if method1=='1':
-            if method2=='':
-                self.on_error_m2()
-        if elevationtol=='':
-            self.on_error_elev()
+        errored = False
+        errored |= self._error_callback_on_empty(demfilename, self.on_error_dem)
+        errored |= self._error_callback_on_empty(waterfilename, self.on_error_water)
+        errored |= self._error_callback_on_empty(wateroutputfilename, self.on_error_output)
+        errored |= self._error_callback_on_empty(checkpointfilename, self.on_error_check_point)
+        files = [demfilename, waterfilename, wateroutputfilename, checkpointfilename]
+        return files
 
     def run_simulation_optimized_add(self):
         '''add module'''
@@ -774,15 +769,12 @@ class Size(wx.Frame):
         plat = platform.system()
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         elevationtol = str(self.editname7.GetValue())
         waterdeptha = str(self.editname5.GetValue())
         runoffrac = str(self.editname6.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -791,13 +783,9 @@ class Size(wx.Frame):
             method2="1"
         elif method2=="CPU":
             method2="0"
-        self.check_file()
-        if waterdeptha=='':
-            self.on_error_depth_a()
-            plat='error'
-        if runoffrac=='':
-            self.on_error_runoff()
-            plat='error'
+        errored = False
+        errored |= self._error_callback_on_empty(waterdeptha, self.on_error_depth_a)
+        errored |= self._error_callback_on_empty(runoffrac, self.on_error_runoff)
         if os.path.isfile("self.txt1.GetValue()"):
             pass
         if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -807,17 +795,13 @@ class Size(wx.Frame):
             plat="error"
 
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
 
     def run_simulation_optimized_subtract(self):
         '''subtract module'''
@@ -825,16 +809,13 @@ class Size(wx.Frame):
         solverw=os.getcwd()+r"\WDPMCL.exe"
         method = self.combo.GetValue()
         plat = platform.system()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
         waterdepths = str(self.editname5a.GetValue())
         elevationtol = str(self.editname7a.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -843,7 +824,6 @@ class Size(wx.Frame):
             method2="1"
         elif method2=="CPU":
             method2="0"
-        self.check_file()
         if os.path.isfile("self.txt1.GetValue()"):
             pass
         if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -855,15 +835,14 @@ class Size(wx.Frame):
             self.on_error_depth_s()
             plat='error'
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [waterdepths, elevationtol, method1, method2,threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
+
 
     def run_simulation_optimized_drain(self):
         '''drain module'''
@@ -871,16 +850,13 @@ class Size(wx.Frame):
         solverw=os.getcwd()+r"\WDPMCL.exe"
         method = self.combo.GetValue()
         plat = platform.system()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
         draintol = str(self.editname6b.GetValue())
         elevationtol = str(self.editname7b.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -892,7 +868,6 @@ class Size(wx.Frame):
         else:
             print ("DEM file not present. Use the Browse button to locate file.")
             plat="error"
-        self.check_file()
         if method2=="GPU":
             method2="1"
         elif method2=="CPU":
@@ -901,15 +876,13 @@ class Size(wx.Frame):
             self.on_error_drain()
             plat='error'
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                         method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                        method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [elevationtol, draintol, method1, method2,threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
 
     def end_simulation(self, event):
         '''end simulation'''
