@@ -65,9 +65,9 @@ class RedirectText:
     def __init__(self,aWxTextCtrl):
         self.out=aWxTextCtrl
 
-    def write(self,string):
+    def write(self,strings):
         '''write'''
-        wx.CallAfter(self.out.WriteText, string)
+        wx.CallAfter(self.out.WriteText, strings)
 
 class CharValidator(wx.PyValidator):
     '''check if the char is validate'''
@@ -101,7 +101,7 @@ class Size(wx.Frame):
                         size=(round(2.5*x_p), round(x_p-y_p)))
         self.button19xa = wx.Button(self.panel, -1, "Browse", pos=(round(10.5*x_p),round(25*x_p)),
                         size=(round(2.5*x_p), round(x_p-y_p)))
-        self.button19xa.Bind(wx.EVT_BUTTON, self.on_open_dem)
+        self.button19xa.Bind(wx.EVT_BUTTON, self._on_open_dem)
         self.convert=wx.Button(self.panel, label="convert", pos=(round(13*x_p),round(25*x_p)),
                         size=(round(2.5*x_p), round(x_p-y_p)))
         self.convert.Bind(wx.EVT_BUTTON, self.bitmap_convert)
@@ -117,8 +117,8 @@ class Size(wx.Frame):
         self.endbutton=wx.Button(self.panel, label="End", pos=(13*x_p,24*x_p),
         		size=(round(2.5*x_p), x_p-y_p))
         self.Bind(wx.EVT_BUTTON, self.run_sim, self.runbutton)
-        self.Bind(wx.EVT_BUTTON, self.on_clear_screen, self.clearbutton)
-        self.Bind(wx.EVT_BUTTON, self.on_abort_button, self.endbutton)
+        self.Bind(wx.EVT_BUTTON, self._on_clear_screen, self.clearbutton)
+        self.Bind(wx.EVT_BUTTON, self._on_abort_button, self.endbutton)
         self.runbutton.Enable(False)
         self.endbutton.Enable(False)
         self.Bind(wx.EVT_CLOSE,self.end_simulation)
@@ -127,12 +127,12 @@ class Size(wx.Frame):
         self.flagz = 0
         menubar = wx.MenuBar()
         filez = wx.Menu()
-        quit = wx.MenuItem(filez, 1, '&Quit\tCtrl+Q')
+        quits = wx.MenuItem(filez, 1, '&Quit\tCtrl+Q')
         about = wx.MenuItem(filez, 3, '&About\tCtrl+A')
-        filez.Append(quit)
+        filez.Append(quits)
         filez.Append(about)
-        self.Bind(wx.EVT_MENU, self.on_quit, id=1)
-        self.Bind(wx.EVT_MENU, self.on_about, id=3)
+        self.Bind(wx.EVT_MENU, self._onquit, id=1)
+        self.Bind(wx.EVT_MENU, self._onabout, id=3)
         menubar.Append(filez, '&File')
         self.SetMenuBar(menubar)
         self.Show(True)
@@ -149,7 +149,7 @@ class Size(wx.Frame):
         self.lblname0 = wx.StaticText(self.panel, label="Methods:", pos=(10,2*x_p))
         self.combo = wx.ComboBox(self.panel, -1, pos=(8*x_p, 2*x_p), size=(5*x_p, x_p-y_p),
                         choices=methods, style=wx.CB_READONLY)
-        self.combo.Bind(wx.EVT_COMBOBOX, self.verify)
+        self.combo.Bind(wx.EVT_COMBOBOX, self._verify)
         self.combo.Enable(False)
 
         ## Set DEM, water, output and scratch files (text and button)
@@ -238,20 +238,20 @@ class Size(wx.Frame):
         self.log = wx.TextCtrl(self.panel, -1, pos=(16*x_p, x_p), size=(25*x_p, 22*x_p),
                                        style = wx.TE_MULTILINE|wx.TE_READONLY)
         ##pre-define
-        self.dirname5: str = str()
-        self.dirname2: str = str()
-        self.filename2: str = str()
-        self.filename1: str = str()
-        self.dirname1: str = str()
-        self.dirname0: str = str()
-        self.filename0: str = str()
-        self.threadx: str = str()
-        self.processx: str = str()
-        self.dirname5x: str = str()
-        self.filename5: str = str()
-        self.repx: str = str()
-        self.thread1: str = str()
-        self.rep2: str = str()
+        self.dirname5: str = ""
+        self.dirname2: str = ""
+        self.filename2: str = ""
+        self.filename1: str = ""
+        self.dirname1: str = ""
+        self.dirname0: str = ""
+        self.filename0: str = ""
+        self.threadx: str = ""
+        self.processx: str = ""
+        self.dirname5x: str = ""
+        self.filename5: str = ""
+        self.repx: str = ""
+        self.thread1: str = ""
+        self.rep2: str = ""
 
         font1 = wx.Font(11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
         		wx.FONTWEIGHT_NORMAL, False, 'Consolas')
@@ -293,7 +293,7 @@ class Size(wx.Frame):
         self.panel.SetScrollbars( 150, 90,  10, 11 )
         self.panel.SetScrollRate( 3, 3 )
 
-    def on_about(self, event):
+    def _onabout(self, event):
         '''about the application'''
         del event
         dlg = wx.MessageDialog(self, 'Wetland DEM Ponding Model version 2.0\t\n'
@@ -333,7 +333,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_1(cls):
+    def _onerror1(cls):
         '''method check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Invalid method selected.\n', 'Error', wx.OK | wx.ICON_ERROR)
@@ -341,7 +341,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_m1(cls):
+    def _onerror_m1(cls):
         '''method check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please choose whether to use serial or OpenCL.\n',
@@ -349,7 +349,7 @@ class Size(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
-    def on_quit(self, event):
+    def _onquit(self, event):
         '''quit'''
         del event
         self.Close(True)
@@ -366,66 +366,61 @@ class Size(wx.Frame):
             self.lblname9.Enable(True)
             self.combo9.Enable(True)
         else:
-            self.on_error_m1()
+            self._onerror_m1()
 
-    def en_dis_control(self, lblname5, editname5, lblname6, editname6, lblname7, editname7,
-    		lblname5a, editname5a, lblname7a, editname7a, lblname6b, editname6b, lblname7b,
-    		editname7b, lblname9a, txt9a, button19a, txt1, button11, txt2, button12, txt3,
-    		txt4, lblname8, combo8, button18, lblname9):
-        '''disable or enable the button'''
-        self.lblname5.Enable(lblname5==1)
-        self.editname5.Enable(editname5==1)
-        self.lblname6.Enable(lblname6==1)
-        self.editname6.Enable(editname6==1)
-        self.lblname7.Enable(lblname7==1)
-        self.editname7.Enable(editname7==1)
-        self.lblname5a.Enable(lblname5a==1)
-        self.editname5a.Enable(editname5a==1)
-        self.lblname7a.Enable(lblname7a==1)
-        self.editname7a.Enable(editname7a==1)
-        self.lblname6b.Enable(lblname6b==1)
-        self.editname6b.Enable(editname6b==1)
-        self.lblname7b.Enable(lblname7b==1)
-        self.editname7b.Enable(editname7b==1)
-        self.lblname9a.Enable(lblname9a==1)
-        self.txt9a.Enable(txt9a==1)
-        self.button19a.Enable(button19a==1)
-        self.txt1.Enable(txt1==1)
-        self.button11.Enable(button11==1)
-        self.txt2.Enable(txt2==1)
-        self.button12.Enable(button12==1)
-        self.txt3.Enable(txt3==1)
-        self.txt4.Enable(txt4==1)
-        self.lblname8.Enable(lblname8==1)
-        self.combo8.Enable(combo8==1)
-        self.button18.Enable(button18==1)
-        self.lblname9.Enable(lblname9==1)
+    def _en_dis_control(self, enable_disable):
+        for i, j in enable_disable.items():
+            getattr(self, i).Enable(j)
 
-    def verify(self, event):
-        '''verify'''
+    def _verify(self, event):
+        '''_verify'''
         del event
         self.button11.Enable(True)
         self.button12.Enable(True)
         self.button19a.Enable(True)
         method = self.combo.GetValue()
+        add_panel = {"lblname5": True, "editname5": True, "lblname6": True,
+            "editname6": True, "lblname7": True, "editname7": True, "lblname5a": False,
+            "editname5a": False, "lblname7a": False, "editname7a": False, "lblname6b": False,
+            "editname6b": False, "lblname7b": False, "editname7b": False, "lblname9a": False,
+            "txt9a": False, "button19a": False, "txt1": True, "button11": True,
+            "txt2": True, "button12": True, "txt3": True, "txt4": True,
+            "lblname8": True, "combo8": True, "button18": True, "lblname9": True}
+        sub_panel = {"lblname5": False, "editname5": False, "lblname6": False,
+            "editname6": False, "lblname7": False, "editname7": False, "lblname5a": True,
+            "editname5a": True, "lblname7a": True, "editname7a": True, "lblname6b": False,
+            "editname6b": False, "lblname7b": False, "editname7b": False, "lblname9a": False,
+            "txt9a": False, "button19a": False, "txt1": True, "button11": True,
+            "txt2": True, "button12": True, "txt3": True, "txt4": True,
+            "lblname8": True, "combo8": True, "button18": True, "lblname9": True}
+        drain_panel = {"lblname5": False, "editname5": False, "lblname6": False,
+            "editname6": False, "lblname7": False, "editname7": False, "lblname5a": False,
+            "editname5a": False, "lblname7a": False, "editname7a": False, "lblname6b": True,
+            "editname6b": True, "lblname7b": True, "editname7b": True, "lblname9a": False,
+            "txt9a": False, "button19a": False, "txt1": True, "button11": True,
+            "txt2": True, "button12": True, "txt3": True, "txt4": True,
+            "lblname8": True, "combo8": True, "button18": True, "lblname9": True}
+        text_panel = {"lblname5": False, "editname5": False, "lblname6": False,
+            "editname6": False, "lblname7": False, "editname7": False, "lblname5a": False,
+            "editname5a": False, "lblname7a": False, "editname7a": False, "lblname6b": False,
+            "editname6b": False, "lblname7b": False, "editname7b": False, "lblname9a": True,
+            "txt9a": True, "button19a": True, "txt1": True, "button11": True,
+            "txt2": True, "button12": True, "txt3": True, "txt4": True,
+            "lblname8": True, "combo8": True, "button18": True, "lblname9": True}
         ## activate or deactivate button when using different modules
         if method=='add':
-            self.Bind(wx.EVT_MENU, self.en_dis_control(1, 1, 1, 1, 1, 1,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+            self.Bind(wx.EVT_MENU, self._en_dis_control(add_panel))
         elif method=='subtract':
-            self.Bind(wx.EVT_MENU, self.en_dis_control(0, 0, 0, 0, 0, 0,
-            1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+            self.Bind(wx.EVT_MENU, self._en_dis_control(sub_panel))
         elif method=='drain':
-            self.Bind(wx.EVT_MENU, self.en_dis_control(0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+            self.Bind(wx.EVT_MENU, self._en_dis_control(drain_panel))
         elif method=='TextFile':
-            self.Bind(wx.EVT_MENU, self.en_dis_control(0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+            self.Bind(wx.EVT_MENU, self._en_dis_control(text_panel))
         else:
-            self.on_error_1()
+            self._onerror1()
 
     @classmethod
-    def on_error_dem(cls):
+    def _on_error_dem(cls):
         '''dem check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specify DEM filename/path.\n',
@@ -434,7 +429,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_water(cls):
+    def _on_error_water(cls):
         '''water file check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Water file not selected\n'
@@ -444,7 +439,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_output(cls):
+    def _on_error_output(cls):
         '''check output'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specify Output filename.\n'
@@ -453,7 +448,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_check_point(cls):
+    def _on_error_check_point(cls):
         '''output check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Checkpoint filename not specified.\n'
@@ -464,25 +459,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_m2(cls):
-        '''method check'''
-        dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       'Please choose whether to use CPU or GPU.\n',
-                                        'Error', wx.OK | wx.ICON_ERROR)
-        dlg.ShowModal()
-        dlg.Destroy()
-
-    @classmethod
-    def on_error_elev(cls):
-        '''elevation hceck'''
-        dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       'Please specify elevation tolerance.\n',
-                                        'Error', wx.OK | wx.ICON_ERROR)
-        dlg.ShowModal()
-        dlg.Destroy()
-
-    @classmethod
-    def on_error_drain(cls):
+    def _on_error_drain(cls):
         '''drain tolerance check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specify drain tolerance.\n',
@@ -491,7 +468,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_file(cls):
+    def _on_error_file(cls):
         '''path check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specify Input filename/path.\n',
@@ -500,7 +477,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_depth_s(cls):
+    def _on_error_depth_s(cls):
         '''sub water check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specified depth of water to subtract.\n',
@@ -509,7 +486,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_depth_a(cls):
+    def _on_error_depth_a(cls):
         '''add water check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specified depth of water to add.\n',
@@ -518,7 +495,7 @@ class Size(wx.Frame):
         dlg.Destroy()
 
     @classmethod
-    def on_error_runoff(cls):
+    def _on_error_runoff(cls):
         '''runoff fraction check'''
         dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
                                        'Please specified runoff fraction\n',
@@ -526,17 +503,9 @@ class Size(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
-    @classmethod
-    def main_error(cls):
-        '''parameter check'''
-        dlg = wx.MessageDialog(None, 'WDPM - Error\t\n'
-                                       'One or more of the parameters are missing\n',
-                                        'Error', wx.OK | wx.ICON_ERROR)
-        dlg.ShowModal()
-        dlg.Destroy()
 
     @classmethod
-    def on_simulation_finished(cls):
+    def _on_simulation_finished(cls):
         '''simulation finish?'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
                                        'Simulation is not running\n', 'Information',
@@ -544,7 +513,7 @@ class Size(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
-    def on_simulation_cancel(self):
+    def _on_simulation_cancel(self):
         '''cancel simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
                                        'Simulation is still running. Cancel running simulation \n',
@@ -556,7 +525,7 @@ class Size(wx.Frame):
             print ("==== Simulation Terminated ====")
         dlg.Destroy()
 
-    def on_simulation_close(self):
+    def _on_simulation_close(self):
         '''close simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
                                        'Simulation is still running. Close program \n',
@@ -567,7 +536,7 @@ class Size(wx.Frame):
             self.Destroy()
         dlg.Destroy()
 
-    def on_simulation_clear(self):
+    def _on_simulation_clear(self):
         '''clear simulation'''
         dlg = wx.MessageDialog(None, 'WDPM\t\n'
                                        'Simulation is still running. Clear screen \n',
@@ -578,29 +547,29 @@ class Size(wx.Frame):
             self.clearbutton.Enable(False)
         dlg.Destroy()
 
-    def on_clear_screen(self, event):
+    def _on_clear_screen(self, event):
         '''clear screen'''
         del event
         alive = self.process.poll()
         if alive is None:
-            self.on_simulation_clear()
+            self._on_simulation_clear()
         else:
             self.log.Clear()
             self.clearbutton.Enable(False)
 
-    def on_abort_button(self, event):
+    def _on_abort_button(self, event):
         '''run and end button'''
         del event
         alive = self.process.poll()
         if alive is None:
-            self.on_simulation_cancel()
+            self._on_simulation_cancel()
             self.runbutton.Enable(True)
             self.flagz = 0
         else:
-            self.on_simulation_finished()
+            self._on_simulation_finished()
             self.endbutton.Enable(False)
 
-    def report_remove(self):
+    def _report_remove(self):
         '''report.txt'''
         reportfilepath=os.path.join(self.txt0a.GetValue(),"report.txt")
         if os.path.isfile(reportfilepath):
@@ -644,7 +613,7 @@ class Size(wx.Frame):
         self.clearbutton.Enable(True)
         self.endbutton.Enable(True)
         self.runbutton.Enable(False)
-        self.report_remove()
+        self._report_remove()
         reportfilepath=open(os.path.join(self.txt0a.GetValue(),"report.txt"), "w")
         self.process = subprocess.Popen(cmd, stdout=reportfilepath,
                         stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
@@ -672,7 +641,7 @@ class Size(wx.Frame):
         finally:
             lock.release()
 
-    def on_open_dem(self,event):
+    def _on_open_dem(self,event):
         '''open dem file for picture converter'''
         del event
         self.dirname5x = ''
@@ -728,7 +697,7 @@ class Size(wx.Frame):
         elif method=='TextFile':
             filename = str(self.txt9a.GetValue())
             if filename=='':
-                self.on_error_file()
+                self._on_error_file()
             else:
                 if plat in ('Darwin', 'Linux'):
                     cmd = [solver, filename]
@@ -737,34 +706,29 @@ class Size(wx.Frame):
                     cmd = [solverw, filename]
                     self.module2(cmd)
 
+    def _error_callback_on_empty(self, sent, callback):
+        if sent=="":
+            callback()
+            return True
+        return False
+
     def check_file(self):
         '''check the parameter'''
-        method1 = self.combo8.GetValue()
-        method2 = self.combo9.GetValue()
         demfilename = str(self.txt1.GetValue())
         waterfilename = str(self.txt2.GetValue())
         wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
         checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
-        elevationtol = str(self.editname7.GetValue())
         if self.txt4.GetValue()=='NULL':
             checkpointfilename = str(self.txt4.GetValue())
         else:
             checkpointfilename = os.path.join(self.txt0a.GetValue(),str(self.txt4.GetValue()))
-        if demfilename=='':
-            self.on_error_dem()
-        if waterfilename=='':
-            self.on_error_water()
-        if wateroutputfilename=='':
-            self.on_error_output()
-        if checkpointfilename=='':
-            self.on_error_check_point()
-        if method1=='':
-            self.on_error_m1()
-        if method1=='1':
-            if method2=='':
-                self.on_error_m2()
-        if elevationtol=='':
-            self.on_error_elev()
+        errored = False
+        errored |= self._error_callback_on_empty(demfilename, self._on_error_dem)
+        errored |= self._error_callback_on_empty(waterfilename, self._on_error_water)
+        errored |= self._error_callback_on_empty(wateroutputfilename, self._on_error_output)
+        errored |= self._error_callback_on_empty(checkpointfilename, self._on_error_check_point)
+        files = [demfilename, waterfilename, wateroutputfilename, checkpointfilename]
+        return files
 
     def run_simulation_optimized_add(self):
         '''add module'''
@@ -774,15 +738,12 @@ class Size(wx.Frame):
         plat = platform.system()
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         elevationtol = str(self.editname7.GetValue())
         waterdeptha = str(self.editname5.GetValue())
         runoffrac = str(self.editname6.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -791,13 +752,9 @@ class Size(wx.Frame):
             method2="1"
         elif method2=="CPU":
             method2="0"
-        self.check_file()
-        if waterdeptha=='':
-            self.on_error_depth_a()
-            plat='error'
-        if runoffrac=='':
-            self.on_error_runoff()
-            plat='error'
+        errored = False
+        errored |= self._error_callback_on_empty(waterdeptha, self._on_error_depth_a)
+        errored |= self._error_callback_on_empty(runoffrac, self._on_error_runoff)
         if os.path.isfile("self.txt1.GetValue()"):
             pass
         if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -807,17 +764,13 @@ class Size(wx.Frame):
             plat="error"
 
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdeptha,
-                                         runoffrac, elevationtol, method1,
-                                          method2, threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [waterdeptha, runoffrac, elevationtol, method1, method2, threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
 
     def run_simulation_optimized_subtract(self):
         '''subtract module'''
@@ -825,16 +778,13 @@ class Size(wx.Frame):
         solverw=os.getcwd()+r"\WDPMCL.exe"
         method = self.combo.GetValue()
         plat = platform.system()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
         waterdepths = str(self.editname5a.GetValue())
         elevationtol = str(self.editname7a.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -843,7 +793,6 @@ class Size(wx.Frame):
             method2="1"
         elif method2=="CPU":
             method2="0"
-        self.check_file()
         if os.path.isfile("self.txt1.GetValue()"):
             pass
         if os.path.isfile(os.path.join(self.txt0a.GetValue(),str(self.txt1.GetValue()))):
@@ -852,18 +801,17 @@ class Size(wx.Frame):
             print ("DEM file not present. Use the Browse button to locate file.")
             plat="error"
         if waterdepths=='':
-            self.on_error_depth_s()
+            self._on_error_depth_s()
             plat='error'
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, waterdepths,
-                                         elevationtol, method1, method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [waterdepths, elevationtol, method1, method2,threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
+
 
     def run_simulation_optimized_drain(self):
         '''drain module'''
@@ -871,16 +819,13 @@ class Size(wx.Frame):
         solverw=os.getcwd()+r"\WDPMCL.exe"
         method = self.combo.GetValue()
         plat = platform.system()
-        demfilename = str(self.txt1.GetValue())
-        waterfilename = str(self.txt2.GetValue())
-        wateroutputfilename = os.path.join(self.txt0a.GetValue(),str(self.txt3.GetValue()))
-        checkpointfilename = os.path.join(self.txt0a.GetValue(),"temp.asc")
         method1 = self.combo8.GetValue()
         method2 = self.combo9.GetValue()
         draintol = str(self.editname6b.GetValue())
         elevationtol = str(self.editname7b.GetValue())
         threshold = str(self.editname10.GetValue())
         limitation = str(self.editname11.GetValue())
+        filelist = self.check_file()
         if method1=="Serial CPU":
             method1="0"
         elif method1=="OpenCL":
@@ -892,30 +837,27 @@ class Size(wx.Frame):
         else:
             print ("DEM file not present. Use the Browse button to locate file.")
             plat="error"
-        self.check_file()
         if method2=="GPU":
             method2="1"
         elif method2=="CPU":
             method2="0"
         if draintol=='':
-            self.on_error_drain()
+            self._on_error_drain()
             plat='error'
         if plat in ('Darwin', 'Linux'):
-            cmd = [solver, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                         method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solver, method]
         else:
-            cmd = [solverw, method, demfilename, waterfilename, wateroutputfilename,
-                                        checkpointfilename, elevationtol, draintol, method1,
-                                        method2,threshold, limitation]
-            self.module2(cmd)
+            cmd = [solverw, method]
+        cmd = cmd + filelist
+        filelist = [elevationtol, draintol, method1, method2,threshold, limitation]
+        cmd = cmd + filelist
+        self.module2(cmd)
 
     def end_simulation(self, event):
         '''end simulation'''
         del event
         if self.flagz == 1:
-            self.on_simulation_close()
+            self._on_simulation_close()
         else:
             self.Destroy()
 
