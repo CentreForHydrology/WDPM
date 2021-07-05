@@ -4313,6 +4313,143 @@ Use of the GUI requires the file
  is a sample DEM.
 \end_layout
 
+\begin_layout Subsection
+Program validation
+\end_layout
+
+\begin_layout Standard
+The folder 
+\family typewriter
+/validation
+\family default
+ contains scripts to test the output of WDPM.
+ These scripts run the command-line version of the of the program (described
+ below) using the provided DEM and compare the output water state file with
+ pre-computed values.
+ The validation tests are not intended to be a substitute for in-depth testing,
+ but they will provide confirmation that the program is running correctly.
+\end_layout
+
+\begin_layout Standard
+The scripts are written in 
+\series bold
+Bash
+\series default
+ and 
+\series bold
+awk
+\series default
+.
+ They have been tested on Linux, and should work with other POSIX-compliant
+ operating systems, but may require some modifications to run under Windows.
+ Note that the scripts assume that the files are set up in the same directories
+ as supplied, i.e.
+ that the the executable files are in 
+\family typewriter
+/src 
+\family default
+and the supplied sample dem is in 
+\family typewriter
+/dem
+\family default
+.
+ The paths can easily be changed if required.
+\end_layout
+
+\begin_layout Standard
+The main script is 
+\family typewriter
+validate_WDPM.sh
+\family default
+, and can be run from the command line, like any other 
+\series bold
+Bash
+\series default
+ script.
+ This script runs WDPM using the add, subtract and drain modules.
+ Following each of the WDPM runs, the appropriate awk script (
+\family typewriter
+add_test.awk
+\family default
+, 
+\family typewriter
+drain_test.awk
+\family default
+ or 
+\family typewriter
+subtract_test.awk
+\family default
+) is run to test the program output.
+ The 
+\series bold
+awk
+\series default
+ scripts write their outputs, which indicate if the tests are passed or
+ failed, to the file 
+\family typewriter
+WDPM_validation.txt
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+The WDPM modules and the testing scripts are described below.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Add 
+\end_layout
+
+\begin_layout Standard
+The Add module adds 10 mm of water to the initially-empty DEM.
+ This is the only module where conservation of mass can be assessed without
+ using a specified value.
+ The volume of water that 
+\shape italic
+should
+\shape default
+ be present after the model run is equal to the depth of water multiplied
+ by the number of cells which are not masked (i.e.
+ which have elevations > 0).
+ In addition, the total depth of water in a very small depression (2 rows
+ x 3 columns) is also computed, and is compared against a previously established
+ value.
+\end_layout
+
+\begin_layout Subsubsection*
+Drain
+\end_layout
+
+\begin_layout Standard
+The Drain module allows surplus water added in the previous run to exit
+ from the lowest point in the DEM.
+ The total volume remaining after the run is compared with a specified value.
+ The depth of water in the previously specified water depression is also
+ tested.
+ Note that this value should 
+\shape italic
+not
+\shape default
+ have been altered by the drain module, as this depression is not part of
+ the stream network.
+ The third test checks that the depth of water at the outlet is zero.
+\end_layout
+
+\begin_layout Subsubsection*
+Subtract
+\end_layout
+
+\begin_layout Standard
+The Subtract module removes 10 mm of water from the drained water.
+ The remaining volume of water is compared against a specified value.
+ The depth of water remaining in the depression is also checked against
+ a specified value.
+ Because the depression consists of 6 elements, all of which still contain
+ water, the depth of water remaining after this step should be 0.06 m smaller
+ than after the Add and Drain modules are run.
+\end_layout
+
 \begin_layout Chapter
 How to run the WDPM
 \end_layout
