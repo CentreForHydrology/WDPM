@@ -35,6 +35,14 @@ Several presentations on using WDPM are available at https://research-groups.usa
 
 **manual** - contains the user manual **WDPMUserGuide_2.pdf** as well as the document Lyx file and images used
 
+**validation** - contains scripts to validate that WDPM is running correctly
+
+- validate_WDPM.sh - Bash script which runs the other scripts
+- add_test.awk - awk script to test the WDPM Add module
+- drain_test.awk - awk script to test the WDPM Drain module
+- subtract_test.awk - awk script to test the WDPM Subtract module
+- WDPM_validation.md - Markdown document explaining the validation scripts
+
 
 ## Program requirements
 
