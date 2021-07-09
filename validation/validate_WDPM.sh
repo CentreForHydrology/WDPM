@@ -13,19 +13,29 @@
 # Most of the parameters are marked 'do not change'. Altering these parameters will cause the program
 # output to be changed to values that are not expected.
 
+###############################################
+# These parameters may be changed if required #
+############################################### 
+
 # Set up file names and locations - can be changed if required
 WDPMloc="../src/"
 demloc="../dem/"
 awk_script_loc="./"
 logfile="WDPM_validation.txt"
 
+# These variables set the run parameters. The defaults are to run in parallel using the CPU, but these may be changed.
+run_type=1                          # parallel
+parallel_type=0                     # CPU
+
 # Volume testing tolerance - can be changed 
 vol_tolerance=0.0001                # 0.01% of applied volume
 
+###############################################
+#   Do not change the following parameters    #
+############################################### 
+
 # The following variables set the WDPM runs - do NOT change them
 outputloc=$(pwd)
-run_type=1                          # parallel
-parallel_type=0                     # CPU
 runoff_frac=1.0                     # 100% runof
 zero_thresh=0.005                   # mm
 iter_limit=0                        # no limit
