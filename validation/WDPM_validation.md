@@ -19,7 +19,8 @@ appropriate awk script (`add_test.awk`, `drain_test.awk`, or
 
 The WDPM modules and the testing scripts are described below. 
 
-###Add
+###Add  
+
 The Add module adds 10 mm of water to the initially empty DEM. This
 is the only module where conservation of mass can be assessed without
 using a specified value. The volume of water that _should_ be present after
@@ -31,7 +32,8 @@ rows x 3 columns) is also computed and compared against a previously
 established value.
 
 
-###Drain
+###Drain  
+
 The Drain module allows water added in the previous run to exit from
 the lowest point in the DEM. The total volume remaining after the run
 is compared with a specified value. The depth of water in the
@@ -40,7 +42,8 @@ value should _not_ have been altered by the drain module because this
 depression is not part of the stream network. The third test checks
 that the depth of water at the outlet is zero.
 
-###Subtract
+###Subtract  
+
 The Subtract module removes 10 mm of water from the drained water. The
 remaining volume of water is compared against a specified value. The
 depth of water remaining in the depression is also checked against a
