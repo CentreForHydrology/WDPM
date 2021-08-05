@@ -34,11 +34,11 @@ bibliography: paper.bib
 
 # Summary
 
-The hydrography of the Canadian Prairies and adjacent northern US Great Plains is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detented and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in prairie basins dominated by depressional storage. When the depressions are filled, the detended water may overflow to another depression, through a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated prairie basin that contributes flow to the outlet changes dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models.
+The hydrography of the Canadian Prairies and adjacent northern US Great Plains is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detented and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. 
 
 # Statement of Need
 
-The WDPM was developed to solve the problems described above. The program is required to provide a method of mapping the spatial distribution of water on a prairie lanscape, as water is added to, or removed from, depressional storage, while allowing for the presence, or absence, of an outlet.  
+Conventional hydrological models are unable to simulate the spatial distribution of ponded water in prairie basins dominated by depressional storage. When the depressions are filled, the detented water may overflow to another depression, through a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated prairie basin that contributes flow to the outlet changes dynamically with the state of water storage within the basin. The WDPM simulates the spatial distribution of ponded water, as it is added, removed or drained, and can be used to calculate the changing connected/contributing fraction of a prairie basin.
 
 # Program Description
 
