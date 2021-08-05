@@ -36,9 +36,13 @@ bibliography: paper.bib
 
 The hydrography of the Canadian Prairies and adjacent northern US Great Plains is unusual in that the landscape is flat and recently formed due to the effects of pleistocene glaciation and a semi-arid climate since holocene deglaciation. Therefore, there has not been sufficient energy, time, or runoff water to carve typical dendritic surface water drainage networks in many locations. In these regions, runoff is often detented and sometimes stored by the millions of depressions (known locally as "potholes" or "sloughs") that cover the landscape. Conventional hydrological models are unable to simulate the spatial distribution of ponded water in prairie basins dominated by depressional storage. When the depressions are filled, the detended water may overflow to another depression, through a process known as "fill and spill" [@spenceHydrologySubarcticCanadian2003]. Therefore, the fraction of a depression-dominated prairie basin that contributes flow to the outlet changes dynamically with the state of water storage within the basin. This situation is difficult to simulate with conventional hydrological models.
 
-# Program description
+# Statement of Need
 
-The WDPM was developed to solve the problems described above. The model distributes simulated water over a digital elevation model (DEM), which is an array of land surface elevations. The program has three modules:  
+The WDPM was developed to solve the problems described above. The program is required to provide a method of mapping the spatial distribution of water on a prairie lanscape, as water is added to, or removed from, depressional storage, while allowing for the presence, or absence, of an outlet.  
+
+# Program Description
+
+The WDPM distributes simulated water over a digital elevation model (DEM), which is an array of land surface elevations. The program has three modules:  
 - **add**, which adds specified depth of water to the DEM. Addition of water can be caused by rainfall, but in the Canadian Prairies, it is dominantly due to the melt of snow trapped in depressions and from runoff from adjacent areas [@hayashiWaterSoluteTransfer1998].  
 - **subtract**, which subtracts a specified depth of water from the DEM. Subtraction of water may be caused by infiltration to the soils, but in the Canadian Prairies, it is dominantly due to evaporation [@hayashiWaterSoluteTransfer1998].  
 - **drain**, which drains water from the lowest point in the DEM.  
